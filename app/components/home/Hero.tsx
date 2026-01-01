@@ -4,37 +4,9 @@ import styles from "./Hero.module.css";
 export function Hero() {
   const cardRef = useRef<HTMLDivElement>(null);
   const heroRef = useRef<HTMLElement>(null);
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [scrollProgress, setScrollProgress] = useState(0);
   const [isGlitching, setIsGlitching] = useState(false);
-
-  useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      if (!cardRef.current) return;
-
-      const card = cardRef.current;
-      const rect = card.getBoundingClientRect();
-      const centerX = rect.left + rect.width / 2;
-      const centerY = rect.top + rect.height / 2;
-
-      const deltaX = (e.clientX - centerX) / 25;
-      const deltaY = (e.clientY - centerY) / 25;
-
-      setMousePosition({ x: deltaX, y: deltaY });
-    };
-
-    const handleMouseLeave = () => {
-      setMousePosition({ x: 0, y: 0 });
-    };
-
-    window.addEventListener("mousemove", handleMouseMove);
-    cardRef.current?.addEventListener("mouseleave", handleMouseLeave);
-
-    return () => {
-      window.removeEventListener("mousemove", handleMouseMove);
-      cardRef.current?.removeEventListener("mouseleave", handleMouseLeave);
-    };
-  }, []);
+  const [isHovering, setIsHovering] = useState(false);
 
   // Scroll effect with glitch
   useEffect(() => {
@@ -68,10 +40,14 @@ export function Hero() {
   const cardRotate = scrollProgress * 180;
 
   return (
-    <section ref={heroRef} className={styles.hero} style={{
-      opacity: 1 - scrollProgress * 0.5,
-      transform: `translateY(${scrollProgress * 100}px)`,
-    }}>
+    <section
+      ref={heroRef}
+      className={styles.hero}
+      style={{
+        opacity: 1 - scrollProgress * 0.5,
+        transform: `translateY(${scrollProgress * 100}px)`,
+      }}
+    >
       {/* Particles background */}
       <div className={styles.particles}>
         {Array.from({ length: 30 }).map((_, i) => (
@@ -89,17 +65,24 @@ export function Hero() {
       </div>
 
       <div className={styles.heroContainer}>
-        {/* 3D Interactive Card Stack */}
+        {/* Card Stack sin efecto de ratón */}
         <div
           ref={cardRef}
           className={styles.cardStack}
           style={{
-            transform: `perspective(1000px) rotateY(${mousePosition.x}deg) rotateX(${-mousePosition.y}deg)`,
+            // Si quieres, puedes dejar sólo la perspectiva fija:
+            // transform: "perspective(1000px)",
           }}
         >
           {/* Background cards for depth effect */}
-          <div className={styles.cardBackground} style={{ transform: "translateZ(-40px) scale(0.95)" }} />
-          <div className={styles.cardBackground} style={{ transform: "translateZ(-80px) scale(0.9)" }} />
+          <div
+            className={styles.cardBackground}
+            style={{ transform: "translateZ(-40px) scale(0.95)" }}
+          />
+          <div
+            className={styles.cardBackground}
+            style={{ transform: "translateZ(-80px) scale(0.9)" }}
+          />
 
           {/* Main card with photo */}
           <div
@@ -110,29 +93,46 @@ export function Hero() {
             }}
           >
             <div className={styles.cardGlow} />
-            <div className={styles.imageContainer}>
+            <div
+              className={styles.imageContainer}
+              onMouseEnter={() => setIsHovering(true)}
+              onMouseLeave={() => setIsHovering(false)}
+            >
+              {/* Default image */}
               <img
                 src="/IMG_6490.jpeg"
                 alt="Roberto Salvador"
-                className={`${styles.profileImage} ${isGlitching ? styles.glitch : ''}`}
+                className={`${styles.profileImage} ${styles.imageDefault} ${
+                  isGlitching ? styles.glitch : ""
+                }`}
                 style={{
                   transform: `scale(${imageScale})`,
-                  filter: isGlitching ? 'hue-rotate(90deg) saturate(3)' : 'none',
+                  filter: isGlitching ? "hue-rotate(90deg) saturate(3)" : "none",
+                  opacity: isHovering ? 0 : 1,
+                }}
+              />
+              {/* Hover image */}
+              <img
+                src="/IMG_6521.jpeg"
+                alt="Roberto Salvador"
+                className={`${styles.profileImage} ${styles.imageHover} ${
+                  isGlitching ? styles.glitch : ""
+                }`}
+                style={{
+                  transform: `scale(${imageScale})`,
+                  filter: isGlitching ? "hue-rotate(90deg) saturate(3)" : "none",
+                  opacity: isHovering ? 1 : 0,
                 }}
               />
               <div className={styles.imageOverlay} />
               {isGlitching && (
                 <>
-                  <div className={styles.glitchLayer} style={{ left: '-5px' }} />
-                  <div className={styles.glitchLayer} style={{ left: '5px' }} />
+                  <div className={styles.glitchLayer} style={{ left: "-5px" }} />
+                  <div className={styles.glitchLayer} style={{ left: "5px" }} />
                 </>
               )}
             </div>
             <div className={styles.cardContent}>
-              <div className={styles.badge}>
-                <span className={styles.badgeDot} />
-                Disponible para proyectos
-              </div>
               <h3 className={styles.cardTitle}>Roberto Salvador</h3>
               <p className={styles.cardSubtitle}>React Native Specialist</p>
             </div>
@@ -146,15 +146,13 @@ export function Hero() {
             <span>Hola, soy Roberto</span>
           </div>
           <h1 className={styles.title}>
-            Creador de{" "}
-            <span className={styles.highlight}>Apps Nativas</span>
+            Creador de <span className={styles.highlight}>Apps Nativas</span>
             <br />
             que destacan
           </h1>
           <p className={styles.description}>
-            Desarrollador freelance especializado en{" "}
-            <strong>React Native</strong>. Transformo ideas en aplicaciones
-            móviles nativas de alto rendimiento para iOS y Android.
+            Desarrollador freelance especializado en <strong>React Native</strong>. Transformo
+            ideas en aplicaciones móviles nativas de alto rendimiento para iOS y Android.
           </p>
 
           <div className={styles.stats}>

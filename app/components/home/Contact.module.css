@@ -1,0 +1,806 @@
+.contactSection {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  padding: 8rem 2rem;
+  overflow: hidden;
+  background: linear-gradient(180deg, #1a1a1a 0%, #0f0f0f 50%, #1a1a1a 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Animated background */
+.backgroundPattern {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  opacity: 0.4;
+}
+
+.gridPattern {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(255, 107, 53, 0.1) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 107, 53, 0.1) 1px, transparent 1px);
+  background-size: 50px 50px;
+  animation: gridMove 20s linear infinite;
+}
+
+@keyframes gridMove {
+  0% {
+    transform: translate(0, 0);
+  }
+  100% {
+    transform: translate(50px, 50px);
+  }
+}
+
+.movingGradient {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(
+    circle,
+    rgba(255, 107, 53, 0.2) 0%,
+    transparent 50%
+  );
+  animation: gradientPulse 8s ease-in-out infinite;
+  transform: translate(-50%, -50%);
+}
+
+@keyframes gradientPulse {
+  0%, 100% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 0.3;
+  }
+  50% {
+    transform: translate(-50%, -50%) scale(1.5);
+    opacity: 0.5;
+  }
+}
+
+/* Particles */
+.particles {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.particle {
+  position: absolute;
+  width: 3px;
+  height: 3px;
+  background: #ff6b35;
+  border-radius: 50%;
+  animation: particleFloat infinite ease-in-out;
+  box-shadow: 0 0 10px rgba(255, 107, 53, 0.5);
+}
+
+@keyframes particleFloat {
+  0%, 100% {
+    transform: translateY(0) translateX(0) scale(1);
+    opacity: 0.3;
+  }
+  50% {
+    transform: translateY(-40px) translateX(30px) scale(1.5);
+    opacity: 0.8;
+  }
+}
+
+/* Container */
+.container {
+  position: relative;
+  max-width: 1200px;
+  width: 100%;
+  z-index: 1;
+}
+
+/* Header */
+.header {
+  text-align: center;
+  margin-bottom: 4rem;
+  animation: fadeInUp 0.8s ease-out;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.badge {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1.5rem;
+  border-radius: 100px;
+  background: rgba(255, 107, 53, 0.1);
+  border: 1px solid rgba(255, 107, 53, 0.3);
+  margin-bottom: 1.5rem;
+  backdrop-filter: blur(10px);
+  overflow: hidden;
+}
+
+.badgePulse {
+  position: absolute;
+  inset: 0;
+  border-radius: 100px;
+  background: rgba(255, 107, 53, 0.3);
+  animation: badgePulseAnim 2s ease-in-out infinite;
+}
+
+@keyframes badgePulseAnim {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.5);
+    opacity: 0.3;
+  }
+}
+
+.badgeIcon {
+  position: relative;
+  font-size: 1.25rem;
+  animation: bounce 2s ease-in-out infinite;
+}
+
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+.badgeText {
+  position: relative;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #ff6b35;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-family: "Sora", sans-serif;
+}
+
+.title {
+  font-size: 3.5rem;
+  font-weight: 800;
+  color: #f5f5f5;
+  margin: 0 0 1rem 0;
+  letter-spacing: -0.02em;
+  font-family: "Sora", sans-serif;
+  line-height: 1.2;
+}
+
+.highlight {
+  background: linear-gradient(135deg, #ff6b35, #ff8c42, #ffa366);
+  background-size: 200% 200%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: gradientShift 3s ease infinite;
+}
+
+@keyframes gradientShift {
+  0%, 100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+.subtitle {
+  font-size: 1.125rem;
+  color: #a3a3a3;
+  max-width: 600px;
+  margin: 0 auto;
+  line-height: 1.6;
+  font-family: "Sora", sans-serif;
+}
+
+/* Contact Cards Grid */
+.cardsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+  margin-bottom: 4rem;
+  position: relative;
+}
+
+.contactCard {
+  position: relative;
+  display: block;
+  padding: 2.5rem;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 107, 53, 0.05) 0%,
+    rgba(26, 26, 26, 0.8) 100%
+  );
+  border: 1px solid rgba(255, 107, 53, 0.2);
+  border-radius: 24px;
+  backdrop-filter: blur(20px);
+  overflow: hidden;
+  text-decoration: none;
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+  animation: cardSlideIn 0.6s ease-out backwards;
+}
+
+.contactCard:nth-child(1) {
+  animation-delay: 0.1s;
+}
+
+.contactCard:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.contactCard:nth-child(3) {
+  animation-delay: 0.3s;
+}
+
+@keyframes cardSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.contactCard:hover {
+  transform: translateY(-10px) scale(1.02);
+  border-color: rgba(255, 107, 53, 0.5);
+  box-shadow:
+    0 20px 60px rgba(0, 0, 0, 0.5),
+    0 0 80px rgba(255, 107, 53, 0.3);
+}
+
+/* Card glow that follows mouse */
+.cardGlowFollow {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 0.3s;
+  pointer-events: none;
+}
+
+.contactCard:hover .cardGlowFollow {
+  opacity: 1;
+}
+
+/* Ripple effect */
+.ripple {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: rgba(255, 107, 53, 0.4);
+  transform: translate(-50%, -50%);
+  animation: rippleEffect 1s ease-out forwards;
+  pointer-events: none;
+}
+
+@keyframes rippleEffect {
+  0% {
+    transform: translate(-50%, -50%) scale(0);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(20);
+    opacity: 0;
+  }
+}
+
+/* Card Content */
+.cardContent {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  z-index: 2;
+}
+
+/* Icon */
+.iconWrapper {
+  position: relative;
+  width: 60px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #ff6b35, #ff8c42);
+  border-radius: 16px;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.contactCard:hover .iconWrapper {
+  transform: scale(1.1) rotate(5deg);
+  box-shadow: 0 10px 30px rgba(255, 107, 53, 0.4);
+}
+
+.iconGlow {
+  position: absolute;
+  inset: -4px;
+  background: linear-gradient(135deg, #ff6b35, #ff8c42);
+  border-radius: 18px;
+  filter: blur(10px);
+  opacity: 0;
+  transition: opacity 0.4s;
+}
+
+.contactCard:hover .iconGlow {
+  opacity: 0.6;
+}
+
+.icon {
+  position: relative;
+  font-size: 1.75rem;
+  color: white;
+  z-index: 2;
+  transition: transform 0.3s;
+}
+
+.contactCard:hover .icon {
+  transform: scale(1.1);
+}
+
+.iconRing {
+  position: absolute;
+  inset: -8px;
+  border: 2px solid #ff6b35;
+  border-radius: 20px;
+  animation: ringExpand 1s ease-out infinite;
+}
+
+@keyframes ringExpand {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1.5);
+    opacity: 0;
+  }
+}
+
+/* Text Content */
+.textContent {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #a3a3a3;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-family: "Sora", sans-serif;
+  transition: color 0.3s;
+}
+
+.contactCard:hover .label {
+  color: #ff8c42;
+}
+
+.value {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #f5f5f5;
+  font-family: "Sora", sans-serif;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: transform 0.3s;
+}
+
+.contactCard:hover .value {
+  transform: translateX(5px);
+}
+
+.flag {
+  font-size: 1.5rem;
+  animation: wave 2s ease-in-out infinite;
+  transform-origin: 70% 70%;
+  display: inline-block;
+}
+
+@keyframes wave {
+  0%, 100% { transform: rotate(0deg); }
+  25% { transform: rotate(20deg); }
+  75% { transform: rotate(-20deg); }
+}
+
+/* Hover arrow */
+.arrow {
+  position: absolute;
+  top: 2rem;
+  right: 2rem;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #a3a3a3;
+  background: rgba(255, 107, 53, 0.1);
+  border-radius: 50%;
+  opacity: 0;
+  transform: translate(10px, -10px);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.contactCard:hover .arrow {
+  opacity: 1;
+  transform: translate(0, 0);
+  color: #ff6b35;
+  background: rgba(255, 107, 53, 0.2);
+}
+
+/* Corner accents */
+.cornerTopLeft,
+.cornerBottomRight {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  border: 2px solid #ff6b35;
+  opacity: 0;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.cornerTopLeft {
+  top: 1rem;
+  left: 1rem;
+  border-right: none;
+  border-bottom: none;
+  border-radius: 8px 0 0 0;
+}
+
+.cornerBottomRight {
+  bottom: 1rem;
+  right: 1rem;
+  border-left: none;
+  border-top: none;
+  border-radius: 0 0 8px 0;
+}
+
+.contactCard:hover .cornerTopLeft {
+  opacity: 1;
+  transform: translate(-5px, -5px);
+}
+
+.contactCard:hover .cornerBottomRight {
+  opacity: 1;
+  transform: translate(5px, 5px);
+}
+
+/* Animated border */
+.animatedBorder {
+  position: absolute;
+  inset: 0;
+  border-radius: 24px;
+  padding: 2px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    #ff6b35,
+    transparent
+  );
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: 0;
+  animation: borderRotate 3s linear infinite;
+}
+
+.contactCard:hover .animatedBorder {
+  opacity: 1;
+}
+
+@keyframes borderRotate {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* CTA Section */
+.ctaSection {
+  margin-top: 4rem;
+  animation: fadeInUp 0.8s ease-out 0.4s backwards;
+}
+
+.ctaCard {
+  position: relative;
+  padding: 4rem;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 107, 53, 0.1) 0%,
+    rgba(26, 26, 26, 0.9) 100%
+  );
+  border: 2px solid rgba(255, 107, 53, 0.3);
+  border-radius: 32px;
+  backdrop-filter: blur(20px);
+  text-align: center;
+  overflow: hidden;
+}
+
+.ctaGlow {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 300px;
+  height: 300px;
+  background: radial-gradient(
+    circle,
+    rgba(255, 107, 53, 0.3) 0%,
+    transparent 70%
+  );
+  transform: translate(-50%, -50%);
+  animation: ctaGlowPulse 4s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes ctaGlowPulse {
+  0%, 100% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 0.5;
+  }
+  50% {
+    transform: translate(-50%, -50%) scale(1.5);
+    opacity: 0.8;
+  }
+}
+
+.ctaTitle {
+  position: relative;
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: #f5f5f5;
+  margin: 0 0 1rem 0;
+  font-family: "Sora", sans-serif;
+  z-index: 2;
+}
+
+.ctaText {
+  position: relative;
+  font-size: 1.125rem;
+  color: #a3a3a3;
+  margin: 0 0 2.5rem 0;
+  max-width: 500px;
+  margin-left: auto;
+  margin-right: auto;
+  font-family: "Sora", sans-serif;
+  z-index: 2;
+}
+
+.ctaButtons {
+  position: relative;
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+  z-index: 2;
+}
+
+.btnPrimary,
+.btnOutline {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 1.125rem 2.5rem;
+  font-family: "Sora", sans-serif;
+  font-size: 1rem;
+  font-weight: 600;
+  border-radius: 14px;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  text-decoration: none;
+  overflow: hidden;
+}
+
+.btnPrimary {
+  background: linear-gradient(135deg, #ff6b35, #ff8c42);
+  color: white;
+  border: none;
+  box-shadow: 0 6px 20px rgba(255, 107, 53, 0.4);
+}
+
+.btnPrimary:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 30px rgba(255, 107, 53, 0.5);
+}
+
+.btnShine {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.3),
+    transparent
+  );
+  transform: translateX(-100%);
+}
+
+.btnPrimary:hover .btnShine {
+  animation: shine 0.8s ease;
+}
+
+@keyframes shine {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.btnPrimary span,
+.btnOutline span {
+  position: relative;
+  z-index: 2;
+}
+
+.btnOutline {
+  background: transparent;
+  border: 2px solid #ff6b35;
+  color: #ff6b35;
+}
+
+.btnOutline:hover {
+  background: rgba(255, 107, 53, 0.1);
+  transform: translateY(-3px);
+  border-color: #ff8c42;
+}
+
+/* Floating elements */
+.floatingElements {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.floatingCircle1,
+.floatingCircle2,
+.floatingCircle3 {
+  position: absolute;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 107, 53, 0.2) 0%, transparent 70%);
+  filter: blur(40px);
+}
+
+.floatingCircle1 {
+  top: 10%;
+  left: 10%;
+  width: 200px;
+  height: 200px;
+  animation: float1 10s ease-in-out infinite;
+}
+
+.floatingCircle2 {
+  top: 60%;
+  right: 15%;
+  width: 300px;
+  height: 300px;
+  animation: float2 12s ease-in-out infinite;
+}
+
+.floatingCircle3 {
+  bottom: 10%;
+  left: 20%;
+  width: 250px;
+  height: 250px;
+  animation: float3 14s ease-in-out infinite;
+}
+
+@keyframes float1 {
+  0%, 100% {
+    transform: translate(0, 0) scale(1);
+  }
+  50% {
+    transform: translate(50px, -50px) scale(1.2);
+  }
+}
+
+@keyframes float2 {
+  0%, 100% {
+    transform: translate(0, 0) scale(1);
+  }
+  50% {
+    transform: translate(-30px, 60px) scale(1.3);
+  }
+}
+
+@keyframes float3 {
+  0%, 100% {
+    transform: translate(0, 0) scale(1);
+  }
+  50% {
+    transform: translate(40px, -30px) scale(1.1);
+  }
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .title {
+    font-size: 3rem;
+  }
+
+  .cardsGrid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .contactSection {
+    padding: 6rem 1.5rem;
+  }
+
+  .title {
+    font-size: 2.5rem;
+  }
+
+  .ctaTitle {
+    font-size: 2rem;
+  }
+
+  .contactCard {
+    padding: 2rem;
+  }
+
+  .ctaCard {
+    padding: 3rem 2rem;
+  }
+
+  .ctaButtons {
+    flex-direction: column;
+  }
+
+  .btnPrimary,
+  .btnOutline {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .title {
+    font-size: 2rem;
+  }
+
+  .ctaTitle {
+    font-size: 1.75rem;
+  }
+
+  .subtitle,
+  .ctaText {
+    font-size: 1rem;
+  }
+
+  .value {
+    font-size: 1.125rem;
+  }
+}

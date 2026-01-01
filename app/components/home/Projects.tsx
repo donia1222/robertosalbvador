@@ -85,11 +85,11 @@ export function Projects() {
         projects.length - 1
       );
 
-      // Calculate smooth rotation within each section (0 to 1)
-      const sectionProgress = (scrollPercentage * projects.length) % 1;
+      // Calculate continuous rotation (180° per project)
+      const rotation = scrollPercentage * projects.length * 180;
 
-      // Simple 180° rotation per project
-      const rotation = sectionProgress * 180;
+      // Calculate progress within current section
+      const sectionProgress = (scrollPercentage * projects.length) % 1;
 
       setCurrentIndex(projectIndex);
       setScrollProgress(sectionProgress);
@@ -123,6 +123,9 @@ export function Projects() {
           >
             {/* FRONT FACE - Current Project */}
             <div className={styles.cardFront}>
+              {/* Large decorative number */}
+              <div className={styles.cardNumber}>{currentIndex + 1}</div>
+
               <div className={styles.glassOverlay} />
 
               <div className={styles.projectImage}>
@@ -180,6 +183,11 @@ export function Projects() {
 
             {/* BACK FACE - Next Project */}
             <div className={styles.cardBack}>
+              {/* Large decorative number */}
+              <div className={styles.cardNumber}>
+                {currentIndex < projects.length - 1 ? currentIndex + 2 : projects.length}
+              </div>
+
               <div className={styles.glassOverlay} />
 
               <div className={styles.projectImage}>
@@ -237,15 +245,17 @@ export function Projects() {
           </div>
         </div>
 
-        {/* Progress indicator */}
+        {/* Progress indicator with numbers */}
         <div className={styles.progressIndicator}>
           {projects.map((_, index) => (
             <div
               key={index}
-              className={`${styles.progressDot} ${
+              className={`${styles.progressNumber} ${
                 index === currentIndex ? styles.active : ""
               } ${index < currentIndex ? styles.completed : ""}`}
-            />
+            >
+              {index + 1}
+            </div>
           ))}
         </div>
       </div>
