@@ -4,7 +4,7 @@
   left: 0;
   right: 0;
   z-index: 1000;
-  padding: 1.5rem 2rem;
+  padding: 1rem 2rem;
   animation: slideDown 0.6s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
@@ -19,10 +19,10 @@
   }
 }
 
-/* Floating navbar */
+/* Floating navbar - minimal version */
 .navbar {
   position: relative;
-  max-width: 1200px;
+  max-width: 1400px;
   margin: 0 auto;
   background: rgba(26, 26, 26, 0.8);
   border: 2px solid rgba(255, 107, 53, 0.3);
@@ -79,8 +79,8 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 1rem 2rem;
-  gap: 2rem;
+  padding: 0.75rem 1.5rem;
+  gap: 1.5rem;
   z-index: 2;
 }
 
@@ -92,7 +92,7 @@
 }
 
 .logoText {
-  font-size: 1.5rem;
+  font-size: 1.25rem;
   font-weight: 800;
   background: linear-gradient(135deg, #ff6b35, #ff8c42, #ffa366);
   background-size: 200% 200%;
@@ -122,262 +122,436 @@
   50% { opacity: 0; }
 }
 
-/* Navigation */
-.navList {
-  display: flex;
-  gap: 0.5rem;
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  align-items: center;
-}
-
-.navItem {
-  position: relative;
-}
-
-.navLink {
-  position: relative;
+/* Phone Button */
+.phoneButton {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  padding: 0.75rem 1.5rem;
-  color: #a3a3a3;
-  text-decoration: none;
-  font-weight: 600;
-  font-size: 0.95rem;
-  font-family: "Sora", sans-serif;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  padding: 0.5rem 1.25rem;
+  background: rgba(255, 107, 53, 0.1);
+  border: 1px solid rgba(255, 107, 53, 0.3);
   border-radius: 12px;
-  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  font-family: "Sora", sans-serif;
 }
 
-.navLink:hover {
+.phoneButton:hover {
+  background: rgba(255, 107, 53, 0.2);
+  border-color: rgba(255, 107, 53, 0.5);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(255, 107, 53, 0.3);
+}
+
+.phoneIcon {
+  font-size: 1.25rem;
+  color: #ff6b35;
+  transition: transform 0.3s;
+}
+
+.phoneButton:hover .phoneIcon {
+  transform: scale(1.1) rotate(-10deg);
+}
+
+.phoneText {
+  font-size: 0.875rem;
+  font-weight: 600;
   color: #f5f5f5;
 }
 
-.navLink:hover .navIcon {
+/* Menu Hamburger Button */
+.menuButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  background: linear-gradient(135deg, #ff6b35, #ff8c42);
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 15px rgba(255, 107, 53, 0.3);
+}
+
+.menuButton:hover {
+  transform: translateY(-2px) rotate(90deg);
+  box-shadow: 0 6px 25px rgba(255, 107, 53, 0.5);
+}
+
+.menuIcon {
+  font-size: 1.75rem;
+  color: white;
+  transition: transform 0.3s;
+}
+
+/* Full Screen Menu Modal */
+.menuModal {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.menuModalOpen {
+  opacity: 1;
+  pointer-events: all;
+}
+
+/* Background image with overlay */
+.menuBackground {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+.menuBackgroundImage {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  opacity: 0;
+  transform: scale(1.1);
+  transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.menuBackgroundActive {
+  opacity: 1;
+  transform: scale(1.15);
+}
+
+.menuOverlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    135deg,
+    rgba(0, 0, 0, 0.65) 0%,
+    rgba(26, 26, 26, 0.7) 50%,
+    rgba(0, 0, 0, 0.65) 100%
+  );
+  backdrop-filter: blur(5px);
+}
+
+/* Close Button */
+.closeButton {
+  position: absolute;
+  top: 2rem;
+  right: 2rem;
+  width: 60px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 107, 53, 0.1);
+  border: 2px solid rgba(255, 107, 53, 0.3);
+  border-radius: 50%;
+  cursor: pointer;
+  z-index: 10;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  backdrop-filter: blur(10px);
+  transform: scale(0) rotate(-90deg);
+}
+
+.menuModalOpen .closeButton {
+  transform: scale(1) rotate(0deg);
+  transition-delay: 0.3s;
+}
+
+.closeButton:hover {
+  background: rgba(255, 107, 53, 0.2);
+  border-color: rgba(255, 107, 53, 0.6);
+  transform: scale(1.1) rotate(90deg);
+  box-shadow: 0 0 30px rgba(255, 107, 53, 0.4);
+}
+
+.closeIcon {
+  font-size: 2rem;
+  color: #ff6b35;
+  transition: all 0.3s;
+}
+
+.closeButton:hover .closeIcon {
+  color: #ff8c42;
+}
+
+/* Menu Content */
+.menuContent {
+  position: relative;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 2rem;
+  z-index: 5;
+  gap: 3rem;
+}
+
+/* Menu Logo */
+.menuLogo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  opacity: 0;
+  transform: translateY(-30px);
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.menuModalOpen .menuLogo {
+  opacity: 1;
+  transform: translateY(0);
+  transition-delay: 0.1s;
+}
+
+.menuLogoText {
+  font-size: 2.5rem;
+  font-weight: 800;
+  font-family: "Sora", sans-serif;
+  background: linear-gradient(135deg, #ff6b35, #ff8c42, #ffa366);
+  background-size: 200% 200%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: gradientShift 3s ease infinite;
+  letter-spacing: -0.02em;
+}
+
+.menuLogoSubtitle {
+  font-size: 1rem;
+  font-weight: 500;
+  color: #a3a3a3;
+  font-family: "Sora", sans-serif;
+}
+
+/* Menu Navigation */
+.menuNav {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  width: 100%;
+  max-width: 500px;
+}
+
+/* Menu Links */
+.menuLink {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 1.5rem 2rem;
+  background: rgba(255, 107, 53, 0.05);
+  border: 2px solid rgba(255, 107, 53, 0.2);
+  border-radius: 16px;
+  font-size: 1.5rem;
+  font-weight: 600;
+  font-family: "Sora", sans-serif;
+  color: #f5f5f5;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  backdrop-filter: blur(10px);
+  opacity: 0;
+  transform: translateX(-50px);
+}
+
+.menuModalOpen .menuLink {
+  animation: slideInLeft 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+@keyframes slideInLeft {
+  0% {
+    opacity: 0;
+    transform: translateX(-50px) scale(0.9);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+}
+
+.menuLink:hover {
+  background: rgba(255, 107, 53, 0.15);
+  border-color: rgba(255, 107, 53, 0.5);
+  transform: translateX(10px);
+  box-shadow: 0 8px 30px rgba(255, 107, 53, 0.3);
+}
+
+.menuLinkActive {
+  background: rgba(255, 107, 53, 0.2);
+  border-color: rgba(255, 107, 53, 0.6);
+}
+
+.menuLinkIcon {
+  font-size: 2rem;
+  color: #ff6b35;
+  transition: all 0.3s;
+}
+
+.menuLink:hover .menuLinkIcon {
   transform: scale(1.2) rotate(10deg);
   color: #ff8c42;
 }
 
-.navLink.active {
+.menuLinkText {
+  flex: 1;
+}
+
+.menuLinkArrow {
+  color: #a3a3a3;
+  transition: all 0.3s;
+  opacity: 0;
+  transform: translateX(-10px);
+}
+
+.menuLink:hover .menuLinkArrow {
+  opacity: 1;
+  transform: translateX(0);
   color: #ff6b35;
 }
 
-.navLink.active .navIcon {
-  color: #ff6b35;
-  animation: iconBounce 0.6s ease;
+/* Menu Footer */
+.menuFooter {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  opacity: 0;
+  transform: translateY(30px);
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-@keyframes iconBounce {
-  0%, 100% {
-    transform: scale(1) rotate(0deg);
-  }
-  50% {
-    transform: scale(1.3) rotate(15deg);
-  }
+.menuModalOpen .menuFooter {
+  opacity: 1;
+  transform: translateY(0);
+  transition-delay: 1.2s;
 }
 
-.navIcon {
-  font-size: 1.25rem;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  z-index: 2;
-}
-
-.navLinkText {
-  position: relative;
-  z-index: 2;
-}
-
-/* Active indicator that follows */
-.activeIndicator {
-  position: absolute;
-  inset: 0;
+.menuContactItem {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1.5rem;
   background: rgba(255, 107, 53, 0.1);
   border: 1px solid rgba(255, 107, 53, 0.3);
   border-radius: 12px;
-  z-index: 1;
-  animation: indicatorPulse 2s ease-in-out infinite;
-}
-
-@keyframes indicatorPulse {
-  0%, 100% {
-    box-shadow: 0 0 0 0 rgba(255, 107, 53, 0.4);
-  }
-  50% {
-    box-shadow: 0 0 20px 4px rgba(255, 107, 53, 0.2);
-  }
-}
-
-/* Sliding indicator underneath */
-.slidingIndicator {
-  position: absolute;
-  bottom: 0.5rem;
-  width: 40px;
-  height: 3px;
-  background: linear-gradient(90deg, #ff6b35, #ff8c42);
-  border-radius: 2px;
-  transition: left 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 0 10px rgba(255, 107, 53, 0.6);
-}
-
-/* CTA Button */
-.ctaButton {
-  position: relative;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.875rem 2rem;
-  background: linear-gradient(135deg, #ff6b35, #ff8c42);
-  color: white;
-  font-weight: 700;
-  font-size: 0.95rem;
+  font-size: 1rem;
+  font-weight: 600;
   font-family: "Sora", sans-serif;
-  border-radius: 12px;
+  color: #f5f5f5;
   text-decoration: none;
-  overflow: hidden;
-  transition: all 0.3s;
-  box-shadow:
-    0 4px 15px rgba(255, 107, 53, 0.3),
-    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.ctaButton::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(135deg, #ff8c42, #ffa366);
-  opacity: 0;
-  transition: opacity 0.3s;
-}
-
-.ctaButton:hover::before {
-  opacity: 1;
-}
-
-.ctaButton:hover {
+.menuContactItem:hover {
+  background: rgba(255, 107, 53, 0.2);
+  border-color: rgba(255, 107, 53, 0.5);
   transform: translateY(-2px);
-  box-shadow:
-    0 6px 25px rgba(255, 107, 53, 0.5),
-    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  box-shadow: 0 4px 15px rgba(255, 107, 53, 0.3);
 }
 
-.ctaText {
-  position: relative;
-  z-index: 2;
+.menuContactIcon {
+  font-size: 1.5rem;
+  color: #ff6b35;
+  transition: transform 0.3s;
 }
 
-/* Particles effect on CTA hover */
-.particles {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-}
-
-.particle {
-  position: absolute;
-  width: 4px;
-  height: 4px;
-  background: white;
-  border-radius: 50%;
-  opacity: 0;
-  animation: particleBurst 1s ease-out infinite;
-}
-
-.ctaButton:hover .particle {
-  animation: particleBurst 0.8s ease-out infinite;
-}
-
-.particle:nth-child(1) {
-  top: 20%;
-  left: 20%;
-  animation-delay: 0s;
-}
-
-.particle:nth-child(2) {
-  top: 80%;
-  left: 30%;
-  animation-delay: 0.1s;
-}
-
-.particle:nth-child(3) {
-  top: 40%;
-  right: 20%;
-  animation-delay: 0.2s;
-}
-
-.particle:nth-child(4) {
-  bottom: 20%;
-  right: 30%;
-  animation-delay: 0.3s;
-}
-
-.particle:nth-child(5) {
-  top: 60%;
-  left: 50%;
-  animation-delay: 0.4s;
-}
-
-.particle:nth-child(6) {
-  top: 30%;
-  left: 70%;
-  animation-delay: 0.5s;
-}
-
-@keyframes particleBurst {
-  0% {
-    transform: translate(0, 0) scale(0);
-    opacity: 1;
-  }
-  100% {
-    transform: translate(
-      calc(var(--tx, 1) * 20px),
-      calc(var(--ty, 1) * 20px)
-    ) scale(1);
-    opacity: 0;
-  }
+.menuContactItem:hover .menuContactIcon {
+  transform: scale(1.1);
 }
 
 /* Responsive */
-@media (max-width: 1024px) {
+@media (max-width: 768px) {
   .header {
     padding: 1rem;
   }
 
   .container {
-    padding: 0.75rem 1.5rem;
-  }
-
-  .navList {
-    gap: 0.25rem;
-  }
-
-  .navLink {
     padding: 0.5rem 1rem;
-    font-size: 0.875rem;
   }
 
   .logoText {
-    font-size: 1.25rem;
+    font-size: 1rem;
   }
-}
 
-@media (max-width: 768px) {
-  .navList {
+  .phoneText {
     display: none;
   }
 
-  .slidingIndicator {
-    display: none;
+  .phoneButton {
+    padding: 0.5rem;
   }
 
-  .ctaButton {
-    padding: 0.75rem 1.5rem;
+  .menuButton {
+    width: 44px;
+    height: 44px;
+  }
+
+  .menuIcon {
+    font-size: 1.5rem;
+  }
+
+  .closeButton {
+    top: 1.5rem;
+    right: 1.5rem;
+    width: 50px;
+    height: 50px;
+  }
+
+  .closeIcon {
+    font-size: 1.5rem;
+  }
+
+  .menuLogoText {
+    font-size: 2rem;
+  }
+
+  .menuLogoSubtitle {
     font-size: 0.875rem;
   }
 
-  .container {
-    padding: 0.75rem 1.25rem;
+  .menuLink {
+    padding: 1.25rem 1.5rem;
+    font-size: 1.25rem;
+  }
+
+  .menuLinkIcon {
+    font-size: 1.5rem;
+  }
+
+  .menuContent {
+    padding: 3rem 1.5rem;
+    gap: 2rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .logoText {
+    font-size: 0.875rem;
+  }
+
+  .phoneButton {
+    padding: 0.5rem;
+  }
+
+  .menuButton {
+    width: 40px;
+    height: 40px;
+  }
+
+  .menuLogoText {
+    font-size: 1.75rem;
+  }
+
+  .menuLink {
+    padding: 1rem 1.25rem;
+    font-size: 1.125rem;
+    gap: 1rem;
+  }
+
+  .menuLinkIcon {
+    font-size: 1.25rem;
   }
 }
