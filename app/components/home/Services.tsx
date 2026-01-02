@@ -1,46 +1,48 @@
 import { useEffect, useRef, useState } from "react";
 import styles from "./Services.module.css";
+import { useLanguage } from "~/context";
 
 interface Service {
-  title: string;
-  subtitle: string;
-  description: string;
+  titleKey: string;
+  subtitleKey: string;
+  descriptionKey: string;
   technologies: string[];
   backgroundImage: string;
 }
 
 const services: Service[] = [
   {
-    title: "Mobile Apps",
-    subtitle: "iOS & Android",
-    description: "Desarrollo de aplicaciones móviles nativas y multiplataforma con las tecnologías más modernas.",
+    titleKey: "services.mobile.title",
+    subtitleKey: "services.mobile.subtitle",
+    descriptionKey: "services.mobile.description",
     technologies: ["React Native", "Xcode", "Swift"],
     backgroundImage: "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=1920&q=80", // Mobile phones/apps
   },
   {
-    title: "Web Development",
-    subtitle: "Modern & Responsive",
-    description: "Sitios web y aplicaciones web responsive con rendimiento y SEO óptimos.",
+    titleKey: "services.web.title",
+    subtitleKey: "services.web.subtitle",
+    descriptionKey: "services.web.description",
     technologies: ["Next.js", "React", "TypeScript"],
     backgroundImage: "https://images.unsplash.com/photo-1547658719-da2b51169166?w=1920&q=80", // Code/laptop
   },
   {
-    title: "AI Integration",
-    subtitle: "ChatGPT & More",
-    description: "Integración de tecnologías de IA para automatizar y mejorar procesos empresariales.",
+    titleKey: "services.ai.title",
+    subtitleKey: "services.ai.subtitle",
+    descriptionKey: "services.ai.description",
     technologies: ["OpenAI API", "Automation", "Chatbots"],
     backgroundImage: "https://images.unsplash.com/photo-1677442136019-21780ecad995?w=1920&q=80", // AI/technology
   },
   {
-    title: "Tech Consulting",
-    subtitle: "Strategic Solutions",
-    description: "Consultoría estratégica para transformación digital e implementación de tecnología.",
+    titleKey: "services.consulting.title",
+    subtitleKey: "services.consulting.subtitle",
+    descriptionKey: "services.consulting.description",
     technologies: ["Architecture", "Optimization", "Scaling"],
     backgroundImage: "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=1920&q=80", // Business/consulting
   },
 ];
 
 export function Services() {
+  const { t } = useLanguage();
   const containerRef = useRef<HTMLDivElement>(null);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [scrollProgress, setScrollProgress] = useState(0);
@@ -129,13 +131,13 @@ export function Services() {
                   <span className={styles.serviceNumber}>
                     0{index + 1}
                   </span>
-                  <h2 className={styles.serviceTitle}>{service.title}</h2>
+                  <h2 className={styles.serviceTitle}>{t(service.titleKey)}</h2>
                 </div>
 
-                <h3 className={styles.serviceSubtitle}>{service.subtitle}</h3>
+                <h3 className={styles.serviceSubtitle}>{t(service.subtitleKey)}</h3>
 
                 <p className={styles.serviceDescription}>
-                  {service.description}
+                  {t(service.descriptionKey)}
                 </p>
 
                 <div className={styles.technologies}>

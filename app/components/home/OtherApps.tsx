@@ -1,11 +1,12 @@
 import { useEffect, useRef, useState } from "react";
 import styles from "./OtherApps.module.css";
+import { useLanguage } from "~/context";
 
 const otherProjects = [
   {
     name: "BuyVoice",
     category: "Remix",
-    description: "Habla y la lista se crea automáticamente. Lista de compras con IA.",
+    descriptionKey: "apps.buyvoice.description",
     tags: ["React Native", "OpenAI"],
     image: "/app-icon.png",
     platforms: ["ios", "android"],
@@ -14,7 +15,7 @@ const otherProjects = [
   {
     name: "Hundezonen",
     category: "APP",
-    description: "La app para ti y tu perro. Encuentra zonas para perros cerca de ti.",
+    descriptionKey: "apps.hundezonen.description",
     tags: ["React", "Next.js"],
     image: "/hnde.png",
     platforms: ["ios", "android"],
@@ -24,7 +25,7 @@ const otherProjects = [
   {
     name: "FoodScan AI",
     category: "APP",
-    description: "¡Transforma tu nevera en recetas! Sugerencias de recetas con IA.",
+    descriptionKey: "apps.foodscan.description",
     tags: ["React Native", "OpenAI", "Next.js"],
     image: "/foof.png",
     platforms: ["ios", "android"],
@@ -33,7 +34,7 @@ const otherProjects = [
   {
     name: "DogMentor KI",
     category: "React",
-    description: "¡Todo lo que necesitas saber sobre perros!",
+    descriptionKey: "apps.dogmentor.description",
     tags: ["React Native"],
     image: "/dog.jpg",
     platforms: ["ios", "android"],
@@ -43,7 +44,7 @@ const otherProjects = [
     {
     name: "KetoRecipeLab",
     category: "APP",
-    description: "Create unique recipes Keto & Paleo",
+    descriptionKey: "apps.keto.description",
     tags: ["React", "Next.js"],
     image: "/iconoapp.png",
     platforms: ["ios", "android"],
@@ -53,7 +54,7 @@ const otherProjects = [
     {
     name: "Work Ti",
     category: "APP",
-    description: "Control de tiempo inteligente para equipos y freelancers.",
+    descriptionKey: "apps.workti.description",
     tags: ["React", "Next.js"],
     image: "/workti.png",
     platforms: ["ios", "android"],
@@ -62,6 +63,7 @@ const otherProjects = [
 ];
 
 export function OtherApps() {
+  const { t } = useLanguage();
   const [isVisible, setIsVisible] = useState(false);
   const sectionRef = useRef<HTMLElement>(null);
 
@@ -131,7 +133,7 @@ export function OtherApps() {
             <span className={styles.badgeText}>Portfolio</span>
           </div>
           <h2 className={styles.title}>
-            Mis apps <span className={styles.highlight}>publicadas</span>
+            {t("apps.title")} <span className={styles.highlight}>{t("apps.subtitle")}</span>
           </h2>
         </div>
 
@@ -148,7 +150,7 @@ export function OtherApps() {
                 <img src={project.image} alt={project.name} />
                 <div className={styles.cardOverlay}>
                   <h4 className={styles.cardTitle}>{project.name}</h4>
-                  <p className={styles.cardDescription}>{project.description}</p>
+                  <p className={styles.cardDescription}>{t(project.descriptionKey)}</p>
                   <div className={styles.platforms}>
                     {project.platforms.includes("ios") && (
                       <span className={styles.platform} title="iOS"></span>

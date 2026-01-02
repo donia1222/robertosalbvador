@@ -1,7 +1,9 @@
 import { useState } from "react";
 import styles from "./Footer.module.css";
+import { useLanguage } from "~/context";
 
 export function Footer() {
+  const { t } = useLanguage();
   const [showImpressum, setShowImpressum] = useState(false);
   const [showPrivacy, setShowPrivacy] = useState(false);
 
@@ -10,20 +12,20 @@ export function Footer() {
       <footer className={styles.footer}>
         <div className={styles.container}>
           <p className={styles.copyright}>
-            © 2026 Roberto Salvador Schweiz. Todos los derechos reservados.
+            {t("footer.copyright")}
           </p>
           <div className={styles.links}>
             <button
               onClick={() => setShowImpressum(true)}
               className={styles.link}
             >
-              Aviso Legal
+              {t("footer.legal")}
             </button>
             <button
               onClick={() => setShowPrivacy(true)}
               className={styles.link}
             >
-              Privacidad
+              {t("footer.privacy")}
             </button>
           </div>
         </div>
@@ -39,7 +41,7 @@ export function Footer() {
             >
               ✕
             </button>
-            <h2 className={styles.modalTitle}>Aviso Legal</h2>
+            <h2 className={styles.modalTitle}>{t("footer.legal")}</h2>
             <div className={styles.modalBody}>
               <p><strong>Roberto Salvador</strong></p>
               <p>Chalberweidstrasse 38, 9475 Sevelen, Schweiz</p>
@@ -61,7 +63,7 @@ export function Footer() {
             >
               ✕
             </button>
-            <h2 className={styles.modalTitle}>Política de Privacidad</h2>
+            <h2 className={styles.modalTitle}>{t("footer.privacy")}</h2>
             <div className={styles.modalBody}>
               <h3>Declaración de Privacidad de Roberto Salvador</h3>
               <p>

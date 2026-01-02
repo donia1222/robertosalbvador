@@ -14,6 +14,7 @@ import {
   SiTailwindcss
 } from "react-icons/si";
 import { TbBrandReactNative } from "react-icons/tb";
+import { useLanguage } from "~/context";
 
 const technologies = [
   { name: 'React Native', icon: TbBrandReactNative, color: '#61dafb' },
@@ -31,6 +32,7 @@ const technologies = [
 ];
 
 export function TechCarousel() {
+  const { t } = useLanguage();
   const [isClient, setIsClient] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
   const [startX, setStartX] = useState(0);
@@ -107,13 +109,13 @@ export function TechCarousel() {
       <div className={styles.header}>
         <div className={styles.badge}>
           <span className={styles.badgeIcon}>✨</span>
-          <span className={styles.badgeText}>Tech Stack</span>
+          <span className={styles.badgeText}>{t("tech.badge")}</span>
         </div>
         <h2 className={styles.title}>
-          Tecnologías que <span className={styles.highlight}>domino</span>
+          {t("tech.title.part1")} <span className={styles.highlight}>{t("tech.title.highlight")}</span>
         </h2>
         <p className={styles.subtitle}>
-          Herramientas y frameworks que uso para crear experiencias increíbles
+          {t("tech.subtitle")}
         </p>
       </div>
 

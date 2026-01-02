@@ -786,6 +786,44 @@
   }
 }
 
+/* Language Selector - Discrete */
+.languageSelector {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: center;
+  margin-top: 3rem;
+  padding-top: 2rem;
+  border-top: 1px solid rgba(255, 107, 53, 0.1);
+}
+
+.langButton {
+  padding: 0.5rem 1rem;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  font-family: "Sora", sans-serif;
+  color: #666;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.langButton:hover {
+  background: rgba(255, 107, 53, 0.1);
+  border-color: rgba(255, 107, 53, 0.3);
+  color: #999;
+}
+
+.langButtonActive {
+  background: rgba(255, 107, 53, 0.15);
+  border-color: rgba(255, 107, 53, 0.4);
+  color: #ff6b35;
+  box-shadow: 0 0 15px rgba(255, 107, 53, 0.2);
+}
+
 /* Responsive */
 @media (max-width: 1024px) {
   .title {
@@ -826,6 +864,16 @@
   .btnPrimary,
   .btnOutline {
     width: 100%;
+  }
+
+  .languageSelector {
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+  }
+
+  .langButton {
+    padding: 0.4rem 0.85rem;
+    font-size: 0.7rem;
   }
 }
 

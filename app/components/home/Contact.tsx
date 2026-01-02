@@ -2,30 +2,33 @@ import { useEffect, useRef, useState } from "react";
 import { HiLocationMarker, HiPhone, HiMail, HiDownload } from "react-icons/hi";
 import styles from "./Contact.module.css";
 import handleDownloadVCard from "~/utils/downloadVCard";
+import { useLanguage } from "~/context";
 
 const contactInfo = [
   {
     icon: HiLocationMarker,
-    label: "Dirección",
-    value: "9475 Sevelen, Schweiz",
+    labelKey: "contact.location.title",
+    valueKey: "contact.location.address",
+    postalKey: "contact.location.postal",
     flag: "🇨🇭",
     link: "https://maps.google.com/?q=9475+Sevelen+Switzerland",
   },
   {
     icon: HiPhone,
-    label: "Teléfono",
+    labelKey: "contact.phone.title",
     value: "076 560 86 45",
     link: "tel:+41765608645",
   },
   {
     icon: HiMail,
-    label: "E-Mail",
+    labelKey: "contact.email.title",
     value: "info@lweb.ch",
     link: "mailto:info@lweb.ch",
   },
 ];
 
 export function Contact() {
+  const { t, language, setLanguage } = useLanguage();
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const [ripples, setRipples] = useState<{ id: number; x: number; y: number }[]>([]);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -83,14 +86,13 @@ export function Contact() {
           <div className={styles.badge}>
             <div className={styles.badgePulse} />
             <span className={styles.badgeIcon}>📬</span>
-            <span className={styles.badgeText}>Contáctame</span>
+            <span className={styles.badgeText}>Contacto</span>
           </div>
           <h2 className={styles.title}>
-            ¿Listo para <span className={styles.highlight}>trabajar juntos</span>?
+            {t("contact.header.title.part1")} <span className={styles.highlight}>{t("contact.header.title.highlight")}</span>{t("contact.header.title.part2")}
           </h2>
           <p className={styles.subtitle}>
-            Estoy disponible para proyectos freelance. No dudes en contactarme para
-            discutir tu próxima gran idea.
+            {t("contact.cta.subtitle")}
           </p>
         </div>
 
@@ -148,9 +150,9 @@ export function Contact() {
 
                   {/* Label and value */}
                   <div className={styles.textContent}>
-                    <span className={styles.label}>{item.label}</span>
+                    <span className={styles.label}>{t(item.labelKey)}</span>
                     <span className={styles.value}>
-                      {item.value}
+                      {item.valueKey ? `${t(item.postalKey!)} ${t(item.valueKey)}` : item.value}
                       {item.flag && (
                         <span className={styles.flag}>{item.flag}</span>
                       )}
@@ -209,20 +211,36 @@ export function Contact() {
             <div className={styles.ctaContent}>
               <div className={styles.ctaGlow} />
               <h3 className={styles.ctaTitle}>
-                ¿Tienes un proyecto en mente?
+                {t("contact.cta.title")}
               </h3>
               <p className={styles.ctaText}>
-                Hablemos sobre cómo puedo ayudarte a hacer realidad tu aplicación
+                {t("contact.cta.subtitle")}
               </p>
               <div className={styles.ctaButtons}>
                 <button onClick={handleDownloadVCard} className={styles.btnPrimary}>
                   <HiDownload className={styles.btnIcon} />
-                  <span>Descargar Tarjeta de Visita</span>
+                  <span>{t("contact.cta.button")}</span>
                   <div className={styles.btnShine} />
                 </button>
               </div>
             </div>
           </div>
+        </div>
+
+        {/* Language selector - discrete */}
+        <div className={styles.languageSelector}>
+          <button
+            onClick={() => setLanguage('es')}
+            className={`${styles.langButton} ${language === 'es' ? styles.langButtonActive : ''}`}
+          >
+            ES
+          </button>
+          <button
+            onClick={() => setLanguage('de')}
+            className={`${styles.langButton} ${language === 'de' ? styles.langButtonActive : ''}`}
+          >
+            DE
+          </button>
         </div>
       </div>
 

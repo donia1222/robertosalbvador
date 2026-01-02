@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import styles from "./Websites.module.css";
+import { useLanguage } from "~/context";
 
 const websites = [
   {
@@ -125,6 +126,7 @@ const frameworkColors: { [key: string]: { bg: string; border: string; text: stri
 };
 
 export function Websites() {
+  const { t } = useLanguage();
   const [isVisible, setIsVisible] = useState(false);
   const sectionRef = useRef<HTMLElement>(null);
 
@@ -159,7 +161,7 @@ export function Websites() {
             <span className={styles.badgeText}>Portfolio Web</span>
           </div>
           <h2 className={styles.title}>
-            Sitios web <span className={styles.highlight}>publicados</span>
+            {t("websites.title.part1")} <span className={styles.highlight}>{t("websites.title.highlight")}</span>
           </h2>
         </div>
 

@@ -3,13 +3,14 @@ import { useEffect, useState, useRef } from "react";
 import { HiHome, HiSparkles, HiFolder, HiCubeTransparent, HiMail, HiPhone, HiMenu, HiX, HiDownload } from "react-icons/hi";
 import styles from "./Header.module.css";
 import handleDownloadVCard from "~/utils/downloadVCard";
+import { useLanguage } from "~/context";
 
-const navigation = [
-  { name: "Inicio", href: "#inicio", icon: HiHome },
-  { name: "Servicios", href: "#servicios", icon: HiSparkles },
-  { name: "Proyectos", href: "#proyectos", icon: HiFolder },
-  { name: "Tech Stack", href: "#tech", icon: HiCubeTransparent },
-  { name: "Contacto", href: "#contacto", icon: HiMail },
+const navigationKeys = [
+  { key: "nav.inicio", href: "#inicio", icon: HiHome },
+  { key: "nav.servicios", href: "#servicios", icon: HiSparkles },
+  { key: "nav.proyectos", href: "#proyectos", icon: HiFolder },
+  { key: "nav.tech", href: "#tech", icon: HiCubeTransparent },
+  { key: "nav.contacto", href: "#contacto", icon: HiMail },
 ];
 
 const menuBackgrounds = [
@@ -21,6 +22,7 @@ const menuBackgrounds = [
 ];
 
 export function Header() {
+  const { t, language, setLanguage } = useLanguage();
   const [activeSection, setActiveSection] = useState(0);
   const [displayedText, setDisplayedText] = useState("");
   const [displayedSubtitle, setDisplayedSubtitle] = useState("");
@@ -71,7 +73,7 @@ export function Header() {
   // Track active section on scroll
   useEffect(() => {
     const handleScroll = () => {
-      const sections = navigation.map(item => item.href.slice(1));
+      const sections = navigationKeys.map(item => item.href.slice(1));
       const scrollPosition = window.scrollY + 200;
 
       for (let i = sections.length - 1; i >= 0; i--) {
@@ -187,17 +189,17 @@ export function Header() {
 
           {/* Navigation links */}
           <nav className={styles.menuNav}>
-            {navigation.map((item, index) => {
+            {navigationKeys.map((item, index) => {
               const Icon = item.icon;
               return (
                 <button
-                  key={item.name}
+                  key={item.key}
                   onClick={() => handleMenuClick(item.href)}
                   className={`${styles.menuLink} ${activeSection === index ? styles.menuLinkActive : ''}`}
                   style={{ animationDelay: `${0.2 + index * 0.15}s` }}
                 >
                   <Icon className={styles.menuLinkIcon} />
-                  <span className={styles.menuLinkText}>{item.name}</span>
+                  <span className={styles.menuLinkText}>{t(item.key)}</span>
                   <svg
                     className={styles.menuLinkArrow}
                     width="24"
@@ -229,6 +231,22 @@ export function Header() {
             </a>
             <button onClick={handleDownloadVCard} className={styles.menuContactItem}>
               <HiDownload className={styles.menuContactIcon} />
+            </button>
+          </div>
+
+          {/* Language selector */}
+          <div className={styles.languageSelector}>
+            <button
+              onClick={() => setLanguage('es')}
+              className={`${styles.languageButton} ${language === 'es' ? styles.languageButtonActive : ''}`}
+            >
+              Español
+            </button>
+            <button
+              onClick={() => setLanguage('de')}
+              className={`${styles.languageButton} ${language === 'de' ? styles.languageButtonActive : ''}`}
+            >
+              Deutsch
             </button>
           </div>
         </div>

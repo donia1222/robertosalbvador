@@ -9,7 +9,7 @@ import {
 } from "@remix-run/react";
 import type { LinksFunction } from "@remix-run/node";
 
-import { ThemeProvider } from "~/context";
+import { ThemeProvider, LanguageProvider } from "~/context";
 import styles from "~/styles/global.css?url";
 
 // Script para evitar flash de tema incorrecto
@@ -40,7 +40,7 @@ export const links: LinksFunction = () => [
 
 export function Layout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="es" suppressHydrationWarning>
+    <html lang="de" suppressHydrationWarning>
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -59,23 +59,47 @@ export function Layout({ children }: { children: React.ReactNode }) {
 
 export default function App() {
   return (
-    <ThemeProvider>
-      <Outlet />
-    </ThemeProvider>
+    <LanguageProvider>
+      <ThemeProvider>
+        <Outlet />
+      </ThemeProvider>
+    </LanguageProvider>
   );
 }
 
 export function ErrorBoundary() {
   const error = useRouteError();
 
-  let message = "Oops!";
-  let details = "Ha ocurrido un error inesperado.";
+  // Detectar idioma (por defecto alemán)
+  const lang = typeof window !== "undefined"
+    ? (localStorage.getItem("portfolio-language") || "de")
+    : "de";
+
+  const translations = {
+    es: {
+      oops: "¡Ups!",
+      unexpected: "Ha ocurrido un error inesperado.",
+      notFound: "La página que buscas no existe.",
+      error: "Error",
+    },
+    de: {
+      oops: "Hoppla!",
+      unexpected: "Ein unerwarteter Fehler ist aufgetreten.",
+      notFound: "Die gesuchte Seite existiert nicht.",
+      error: "Fehler",
+    },
+  };
+
+  const t = translations[lang as keyof typeof translations] || translations.de;
+
+  let message = t.oops;
+  let details = t.unexpected;
 
   if (isRouteErrorResponse(error)) {
-    message = error.status === 404 ? "404" : "Error";
+    message = error.status === 404 ? "404" : t.error;
     details =
       error.status === 404
-        ? "La página que buscas no existe."
+        ? t.notFound
         : error.statusText || details;
   }
 

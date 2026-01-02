@@ -1,8 +1,10 @@
 import { useEffect, useRef, useState } from "react";
 import { SiReact } from "react-icons/si";
 import styles from "./Hero.module.css";
+import { useLanguage } from "~/context";
 
 export function Hero() {
+  const { t } = useLanguage();
   const cardRef = useRef<HTMLDivElement>(null);
   const heroRef = useRef<HTMLElement>(null);
   const [scrollProgress, setScrollProgress] = useState(0);
@@ -158,36 +160,39 @@ export function Hero() {
         <div className={styles.content}>
           <div className={styles.greeting}>
             <span className={styles.wave}>👋</span>
-            <span>Hola, soy Roberto</span>
+            <span>{t("hero.greeting")} Roberto</span>
           </div>
           <h1 className={styles.title}>
-            Creador de <span className={styles.highlight}>Apps Nativas</span>
-            <br />
-            que destacan
+            {t("hero.title.part1")} <span className={styles.highlight}>{t("hero.title.highlight")}</span>
+            {t("hero.title.part2") && (
+              <>
+                <br />
+
+              </>
+            )}
           </h1>
           <p className={styles.description}>
-            Desarrollador freelance especializado en <strong>React Native</strong>. Transformo
-            ideas en aplicaciones móviles nativas de alto rendimiento para iOS y Android.
+            {t("hero.subtitle")}
           </p>
 
           <div className={styles.stats}>
             <div className={styles.stat}>
               <div className={styles.statNumber}>5+</div>
-              <div className={styles.statLabel}>Años de experiencia</div>
+              <div className={styles.statLabel}>{t("hero.experience")}</div>
             </div>
             <div className={styles.stat}>
               <div className={styles.statNumber}>30+</div>
-              <div className={styles.statLabel}>Apps desarrolladas</div>
+              <div className={styles.statLabel}>{t("hero.apps")}</div>
             </div>
             <div className={styles.stat}>
               <div className={styles.statNumber}>100%</div>
-              <div className={styles.statLabel}>Clientes satisfechos</div>
+              <div className={styles.statLabel}>{t("hero.satisfaction")}</div>
             </div>
           </div>
 
           <div className={styles.cta}>
             <a href="#proyectos" className={styles.btnPrimary}>
-              <span>Ver Proyectos</span>
+              <span>{t("hero.cta.projects")}</span>
               <svg
                 width="20"
                 height="20"
