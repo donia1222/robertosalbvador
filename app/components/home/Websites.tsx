@@ -128,6 +128,7 @@ const frameworkColors: { [key: string]: { bg: string; border: string; text: stri
 export function Websites() {
   const { t } = useLanguage();
   const [isVisible, setIsVisible] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
   const sectionRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
@@ -153,7 +154,11 @@ export function Websites() {
 
   return (
     <section ref={sectionRef} className={styles.websitesSection}>
-      <div className={styles.container}>
+      <div
+        className={styles.container}
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
+      >
         {/* Header */}
         <div className={styles.header}>
           <div className={styles.badge}>
@@ -166,7 +171,7 @@ export function Websites() {
         </div>
 
         {/* Bento Grid */}
-        <div className={`${styles.bentoGrid} ${isVisible ? styles.animate : ""}`}>
+        <div className={`${styles.bentoGrid} ${isVisible ? styles.animate : ""} ${isHovered ? styles.hoveredGrid : ""}`}>
           {websites.map((site, index) => {
             const colors = frameworkColors[site.framework] || frameworkColors["Next.js"];
 
