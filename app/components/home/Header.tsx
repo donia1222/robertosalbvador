@@ -164,8 +164,6 @@ export function Header() {
                 <button
                   key={item.name}
                   onClick={() => handleMenuClick(item.href)}
-                  onMouseEnter={() => setCurrentBackground(index)}
-                  onMouseLeave={() => setCurrentBackground(0)}
                   className={`${styles.menuLink} ${activeSection === index ? styles.menuLinkActive : ''}`}
                   style={{ animationDelay: `${0.2 + index * 0.15}s` }}
                 >

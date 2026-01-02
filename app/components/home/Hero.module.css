@@ -267,6 +267,24 @@
   font-size: 1rem;
   color: rgba(255, 255, 255, 0.8);
   margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.reactIcon {
+  font-size: 1.25rem;
+  color: #61dafb;
+  animation: spin 10s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 /* Content section */

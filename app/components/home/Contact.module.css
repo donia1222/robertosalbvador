@@ -531,17 +531,52 @@
 
 .ctaCard {
   position: relative;
-  padding: 4rem;
-  background: linear-gradient(
-    135deg,
-    rgba(255, 107, 53, 0.1) 0%,
-    rgba(26, 26, 26, 0.9) 100%
-  );
   border: 2px solid rgba(255, 107, 53, 0.3);
   border-radius: 32px;
-  backdrop-filter: blur(20px);
-  text-align: center;
   overflow: hidden;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+/* Video Background */
+.ctaVideoContainer {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+.ctaVideo {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  min-width: 100%;
+  min-height: 100%;
+  width: auto;
+  height: auto;
+  transform: translate(-50%, -50%) scale(1.1);
+  object-fit: cover;
+  filter: grayscale(0.2);
+}
+
+.ctaVideoOverlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    135deg,
+    rgba(0, 0, 0, 0.637) 0%,
+    rgba(26, 26, 26, 0.73) 50%,
+    rgba(0, 0, 0, 0.686) 100%
+  );
+  backdrop-filter: blur(1px);
+}
+
+/* Content over video */
+.ctaContent {
+  position: relative;
+  z-index: 2;
+  padding: 3rem 2rem;
+  text-align: center;
 }
 
 .ctaGlow {
@@ -572,34 +607,31 @@
 }
 
 .ctaTitle {
-  position: relative;
-  font-size: 2.5rem;
+  font-size: 2rem;
   font-weight: 800;
-  color: #f5f5f5;
-  margin: 0 0 1rem 0;
+  color: #ffffff;
+  margin: 0 0 0.75rem 0;
   font-family: "Sora", sans-serif;
-  z-index: 2;
+  text-shadow: 0 4px 30px rgba(0, 0, 0, 0.8),
+               0 8px 60px rgba(0, 0, 0, 0.6);
 }
 
 .ctaText {
-  position: relative;
-  font-size: 1.125rem;
-  color: #a3a3a3;
-  margin: 0 0 2.5rem 0;
+  font-size: 1rem;
+  color: rgba(255, 255, 255, 0.9);
+  margin: 0 0 2rem 0;
   max-width: 500px;
   margin-left: auto;
   margin-right: auto;
   font-family: "Sora", sans-serif;
-  z-index: 2;
+  text-shadow: 0 2px 20px rgba(0, 0, 0, 0.8);
 }
 
 .ctaButtons {
-  position: relative;
   display: flex;
   gap: 1rem;
   justify-content: center;
   flex-wrap: wrap;
-  z-index: 2;
 }
 
 .btnPrimary,
@@ -772,7 +804,7 @@
     padding: 2rem;
   }
 
-  .ctaCard {
+  .ctaContent {
     padding: 3rem 2rem;
   }
 
@@ -802,5 +834,9 @@
 
   .value {
     font-size: 1.125rem;
+  }
+
+  .ctaContent {
+    padding: 2rem 1.5rem;
   }
 }

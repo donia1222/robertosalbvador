@@ -190,21 +190,38 @@ export function Contact() {
         {/* CTA Section */}
         <div className={styles.ctaSection}>
           <div className={styles.ctaCard}>
-            <div className={styles.ctaGlow} />
-            <h3 className={styles.ctaTitle}>
-              ¿Tienes un proyecto en mente?
-            </h3>
-            <p className={styles.ctaText}>
-              Hablemos sobre cómo puedo ayudarte a hacer realidad tu aplicación
-            </p>
-            <div className={styles.ctaButtons}>
-              <a href="mailto:info@lweb.ch" className={styles.btnPrimary}>
-                <span>Enviar Email</span>
-                <div className={styles.btnShine} />
-              </a>
-              <a href="tel:+41765608645" className={styles.btnOutline}>
-                <span>Llamar Ahora</span>
-              </a>
+            {/* Video Background */}
+            <div className={styles.ctaVideoContainer}>
+              <video
+                autoPlay
+                loop
+                muted
+                playsInline
+                className={styles.ctaVideo}
+              >
+                <source src="/copy_7C1BBA34-F73A-4C24-BBCD-896761F89D78.mp4" type="video/mp4" />
+              </video>
+              <div className={styles.ctaVideoOverlay} />
+            </div>
+
+            {/* Content */}
+            <div className={styles.ctaContent}>
+              <div className={styles.ctaGlow} />
+              <h3 className={styles.ctaTitle}>
+                ¿Tienes un proyecto en mente?
+              </h3>
+              <p className={styles.ctaText}>
+                Hablemos sobre cómo puedo ayudarte a hacer realidad tu aplicación
+              </p>
+              <div className={styles.ctaButtons}>
+                <a href="mailto:info@lweb.ch" className={styles.btnPrimary}>
+                  <span>Enviar Email</span>
+                  <div className={styles.btnShine} />
+                </a>
+                <a href="tel:+41765608645" className={styles.btnOutline}>
+                  <span>Llamar Ahora</span>
+                </a>
+              </div>
             </div>
           </div>
         </div>

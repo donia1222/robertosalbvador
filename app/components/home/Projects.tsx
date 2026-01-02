@@ -7,7 +7,7 @@ const projects = [
     category: "Remix",
     description: "Habla y la lista se crea automáticamente. Lista de compras con IA.",
     tags: ["React Native", "OpenAI"],
-    image: "https://images.unsplash.com/photo-1557821552-17105176677c?w=800&q=80",
+    image: "/buy.png",
     platforms: ["ios", "android"],
     featured: false,
   },
@@ -16,7 +16,7 @@ const projects = [
     category: "APP",
     description: "La app para ti y tu perro. Encuentra zonas para perros cerca de ti.",
     tags: ["React", "Next.js"],
-    image: "https://images.unsplash.com/photo-1548199973-03cce0bbc87b?w=800&q=80",
+    image: "/hundezonen.png",
     platforms: ["ios", "android"],
     featured: true,
   },
@@ -25,7 +25,7 @@ const projects = [
     category: "APP",
     description: "Control de tiempo inteligente para equipos y freelancers.",
     tags: ["React", "Next.js"],
-    image: "https://images.unsplash.com/photo-1551650975-87deedd944c3?w=800&q=80",
+    image: "/vixtime.png",
     platforms: ["web"],
     featured: false,
   },
@@ -34,7 +34,7 @@ const projects = [
     category: "APP",
     description: "¡Transforma tu nevera en recetas! Sugerencias de recetas con IA.",
     tags: ["React Native", "OpenAI", "Next.js"],
-    image: "https://images.unsplash.com/photo-1498837167922-ddd27525d352?w=800&q=80",
+    image: "/foodscan.png",
     platforms: ["ios", "android"],
     featured: true,
   },
@@ -43,7 +43,7 @@ const projects = [
     category: "React",
     description: "¡Todo lo que necesitas saber sobre perros!",
     tags: ["React Native"],
-    image: "https://images.unsplash.com/photo-1587300003388-59208cc962cb?w=800&q=80",
+    image: "/dogmentor.png",
     platforms: ["ios", "android"],
     featured: false,
   },
@@ -52,7 +52,7 @@ const projects = [
     category: "APP",
     description: "Crea recetas únicas Keto & Paleo en segundos con IA.",
     tags: ["React Native", "OpenAI", "Recipe AI"],
-    image: "https://images.unsplash.com/photo-1490645935967-10de6ba17061?w=800&q=80",
+    image: "/keto.png",
     platforms: ["ios", "android"],
     featured: true,
   },
@@ -109,7 +109,7 @@ export function Projects() {
         <div className={styles.header}>
           <span className={styles.badge}>Portfolio</span>
           <h2 className={styles.title}>
-            Apps & <span className={styles.highlight}>Proyectos</span>
+            Apps <span className={styles.highlight}>Nativas</span>
           </h2>
         </div>
 

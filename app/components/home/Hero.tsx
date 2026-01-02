@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { SiReact } from "react-icons/si";
 import styles from "./Hero.module.css";
 
 export function Hero() {
@@ -7,6 +8,16 @@ export function Hero() {
   const [scrollProgress, setScrollProgress] = useState(0);
   const [isGlitching, setIsGlitching] = useState(false);
   const [isHovering, setIsHovering] = useState(false);
+  const [autoShowSecond, setAutoShowSecond] = useState(false);
+
+  // Auto change image every 3 seconds
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setAutoShowSecond((prev) => !prev);
+    }, 3000);
+
+    return () => clearInterval(interval);
+  }, []);
 
   // Scroll effect with glitch
   useEffect(() => {
@@ -108,7 +119,7 @@ export function Hero() {
                 style={{
                   transform: `scale(${imageScale})`,
                   filter: isGlitching ? "hue-rotate(90deg) saturate(3)" : "none",
-                  opacity: isHovering ? 0 : 1,
+                  opacity: (autoShowSecond || isHovering) ? 0 : 1,
                 }}
               />
               {/* Hover image */}
@@ -121,7 +132,7 @@ export function Hero() {
                 style={{
                   transform: `scale(${imageScale})`,
                   filter: isGlitching ? "hue-rotate(90deg) saturate(3)" : "none",
-                  opacity: isHovering ? 1 : 0,
+                  opacity: (autoShowSecond || isHovering) ? 1 : 0,
                 }}
               />
               <div className={styles.imageOverlay} />
@@ -134,7 +145,10 @@ export function Hero() {
             </div>
             <div className={styles.cardContent}>
               <h3 className={styles.cardTitle}>Roberto Salvador</h3>
-              <p className={styles.cardSubtitle}>React Native Specialist</p>
+              <p className={styles.cardSubtitle}>
+                <SiReact className={styles.reactIcon} />
+                React Native Specialist
+              </p>
             </div>
           </div>
         </div>
