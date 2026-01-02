@@ -462,8 +462,7 @@
 
 .btnOutline {
   background: transparent;
-  border: 2px solid var(--color-primary);
-  color: var(--color-primary);
+
 }
 
 .btnOutline:hover {

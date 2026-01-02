@@ -204,7 +204,7 @@ export function Hero() {
               </svg>
             </a>
             <a href="#contacto" className={styles.btnOutline}>
-              Hablemos
+
             </a>
           </div>
         </div>
