@@ -2,8 +2,26 @@
   position: relative;
   width: 100%;
   padding: 6rem 2rem;
-  background: linear-gradient(180deg, #1a1a1a 0%, #0f0f0f 100%);
   overflow: hidden;
+}
+
+.websitesSection::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url('/black-prism-concept-ai-generated.jpg');
+  background-size: cover;
+  background-position: center;
+  opacity: 0.8;
+  z-index: 0;
+}
+
+.websitesSection::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(26, 26, 26, 0.4) 0%, rgba(15, 15, 15, 0.6) 100%);
+  z-index: 0;
 }
 
 .container {
@@ -105,6 +123,17 @@
 .bentoGrid.animate .bentoItem {
   animation: morphIn 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
 }
+
+.bentoGrid.animate .bentoItem:nth-child(1) { animation-delay: 0.1s; }
+.bentoGrid.animate .bentoItem:nth-child(2) { animation-delay: 0.2s; }
+.bentoGrid.animate .bentoItem:nth-child(3) { animation-delay: 0.3s; }
+.bentoGrid.animate .bentoItem:nth-child(4) { animation-delay: 0.4s; }
+.bentoGrid.animate .bentoItem:nth-child(5) { animation-delay: 0.5s; }
+.bentoGrid.animate .bentoItem:nth-child(6) { animation-delay: 0.6s; }
+.bentoGrid.animate .bentoItem:nth-child(7) { animation-delay: 0.7s; }
+.bentoGrid.animate .bentoItem:nth-child(8) { animation-delay: 0.8s; }
+.bentoGrid.animate .bentoItem:nth-child(9) { animation-delay: 0.9s; }
+.bentoGrid.animate .bentoItem:nth-child(10) { animation-delay: 1.0s; }
 
 @keyframes morphIn {
   0% {

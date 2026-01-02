@@ -4,11 +4,121 @@
   margin-bottom: 40px;
   padding: 4rem 2rem;
   position: relative;
+  overflow: hidden;
+
+}
+
+/* Background Icons */
+.bgIcons {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.bgIcon {
+  position: absolute;
+  width: 80px;
+  height: 80px;
+  color: rgba(220, 220, 220, 0.25);
+  opacity: 1;
+  filter: blur(0px);
+}
+
+.icon1 {
+  top: 10%;
+  left: 8%;
+  animation: floatIcon1 25s ease-in-out infinite;
+}
+
+.icon2 {
+  top: 60%;
+  left: 15%;
+  animation: floatIcon2 30s ease-in-out infinite;
+}
+
+.icon3 {
+  top: 25%;
+  right: 12%;
+  animation: floatIcon3 28s ease-in-out infinite;
+}
+
+.icon4 {
+  bottom: 20%;
+  right: 20%;
+  animation: floatIcon4 32s ease-in-out infinite;
+}
+
+.icon5 {
+  top: 45%;
+  left: 45%;
+  animation: floatIcon5 26s ease-in-out infinite;
+}
+
+.icon6 {
+  top: 75%;
+  left: 60%;
+  animation: floatIcon6 29s ease-in-out infinite;
+}
+
+.icon7 {
+  top: 15%;
+  right: 35%;
+  animation: floatIcon7 27s ease-in-out infinite;
+}
+
+.icon8 {
+  bottom: 15%;
+  left: 30%;
+  animation: floatIcon8 31s ease-in-out infinite;
+}
+
+@keyframes floatIcon1 {
+  0%, 100% { transform: translate(0, 0) rotate(0deg); }
+  50% { transform: translate(20px, 30px) rotate(5deg); }
+}
+
+@keyframes floatIcon2 {
+  0%, 100% { transform: translate(0, 0) rotate(0deg); }
+  50% { transform: translate(-25px, -20px) rotate(-5deg); }
+}
+
+@keyframes floatIcon3 {
+  0%, 100% { transform: translate(0, 0) rotate(0deg); }
+  50% { transform: translate(-30px, 25px) rotate(8deg); }
+}
+
+@keyframes floatIcon4 {
+  0%, 100% { transform: translate(0, 0) rotate(0deg); }
+  50% { transform: translate(20px, -30px) rotate(-6deg); }
+}
+
+@keyframes floatIcon5 {
+  0%, 100% { transform: translate(0, 0) rotate(0deg); }
+  50% { transform: translate(-20px, 20px) rotate(4deg); }
+}
+
+@keyframes floatIcon6 {
+  0%, 100% { transform: translate(0, 0) rotate(0deg); }
+  50% { transform: translate(30px, -25px) rotate(-7deg); }
+}
+
+@keyframes floatIcon7 {
+  0%, 100% { transform: translate(0, 0) rotate(0deg); }
+  50% { transform: translate(-15px, 35px) rotate(6deg); }
+}
+
+@keyframes floatIcon8 {
+  0%, 100% { transform: translate(0, 0) rotate(0deg); }
+  50% { transform: translate(25px, 20px) rotate(-4deg); }
 }
 
 .container {
   max-width: 1400px;
   margin: 0 auto;
+  position: relative;
+  z-index: 2;
 }
 
 /* Header */
