@@ -1,6 +1,6 @@
 .projectsWrapper {
-  /* Create enough height for all projects to scroll through */
-  height: 600vh;
+  /* Create enough height for flip animation */
+  height: 90vh;
   position: relative;
 }
 
@@ -67,6 +67,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  margin-bottom: 3rem;
 }
 
 .cardFlip {
@@ -177,12 +178,12 @@
   padding: 3rem;
 }
 
-.featuredBadge {
+.latestBadge {
   position: absolute;
   top: 2rem;
   right: 2rem;
   padding: 0.5rem 1rem;
-  background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+  background: linear-gradient(135deg, #ff6b35, #ff8c42);
   color: white;
   font-size: 0.75rem;
   font-weight: 700;
@@ -191,6 +192,18 @@
   letter-spacing: 0.5px;
   box-shadow: 0 4px 12px rgba(255, 107, 53, 0.4);
   font-family: "Sora", sans-serif;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 0 4px 12px rgba(255, 107, 53, 0.4);
+  }
+  50% {
+    transform: scale(1.05);
+    box-shadow: 0 6px 20px rgba(255, 107, 53, 0.6);
+  }
 }
 
 .category {
@@ -414,7 +427,7 @@
 
 @media (max-width: 480px) {
   .projectsWrapper {
-    height: 650vh;
+    height: 200vh;
   }
 
   .cardPerspective {

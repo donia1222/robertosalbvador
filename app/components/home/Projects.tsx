@@ -2,51 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import styles from "./Projects.module.css";
 
 const projects = [
-  {
-    name: "BuyVoice",
-    category: "Remix",
-    description: "Habla y la lista se crea automáticamente. Lista de compras con IA.",
-    tags: ["React Native", "OpenAI"],
-    image: "/buy.png",
-    platforms: ["ios", "android"],
-    featured: false,
-  },
-  {
-    name: "Hundezonen",
-    category: "APP",
-    description: "La app para ti y tu perro. Encuentra zonas para perros cerca de ti.",
-    tags: ["React", "Next.js"],
-    image: "/hundezonen.png",
-    platforms: ["ios", "android"],
-    featured: true,
-  },
-  {
-    name: "Vix Time",
-    category: "APP",
-    description: "Control de tiempo inteligente para equipos y freelancers.",
-    tags: ["React", "Next.js"],
-    image: "/vixtime.png",
-    platforms: ["web"],
-    featured: false,
-  },
-  {
-    name: "FoodScan AI",
-    category: "APP",
-    description: "¡Transforma tu nevera en recetas! Sugerencias de recetas con IA.",
-    tags: ["React Native", "OpenAI", "Next.js"],
-    image: "/foodscan.png",
-    platforms: ["ios", "android"],
-    featured: true,
-  },
-  {
-    name: "DogMentor KI",
-    category: "React",
-    description: "¡Todo lo que necesitas saber sobre perros!",
-    tags: ["React Native"],
-    image: "/dogmentor.png",
-    platforms: ["ios", "android"],
-    featured: false,
-  },
+
   {
     name: "KetoRecipeLab",
     category: "APP",
@@ -141,7 +97,7 @@ export function Projects() {
 
               <div className={styles.projectContent}>
                 {projects[currentIndex].featured && (
-                  <span className={styles.featuredBadge}>FEATURED</span>
+                  <span className={styles.latestBadge}>ÚLTIMA APP</span>
                 )}
 
                 <span className={styles.category}>{projects[currentIndex].category}</span>
@@ -203,7 +159,7 @@ export function Projects() {
 
               <div className={styles.projectContent}>
                 {projects[Math.min(currentIndex + 1, projects.length - 1)].featured && (
-                  <span className={styles.featuredBadge}>FEATURED</span>
+                  <span className={styles.latestBadge}>ÚLTIMA APP</span>
                 )}
 
                 <span className={styles.category}>{projects[Math.min(currentIndex + 1, projects.length - 1)].category}</span>
@@ -245,19 +201,6 @@ export function Projects() {
           </div>
         </div>
 
-        {/* Progress indicator with numbers */}
-        <div className={styles.progressIndicator}>
-          {projects.map((_, index) => (
-            <div
-              key={index}
-              className={`${styles.progressNumber} ${
-                index === currentIndex ? styles.active : ""
-              } ${index < currentIndex ? styles.completed : ""}`}
-            >
-              {index + 1}
-            </div>
-          ))}
-        </div>
       </div>
     </div>
   );
