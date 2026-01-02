@@ -8,7 +8,7 @@ import {
   useRouteError,
 } from "@remix-run/react";
 import type { LinksFunction } from "@remix-run/node";
-
+import { Analytics } from "@vercel/analytics/remix"
 import { ThemeProvider, LanguageProvider } from "~/context";
 import styles from "~/styles/global.css?url";
 
@@ -51,6 +51,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
       <body>
         {children}
         <ScrollRestoration />
+        <Analytics/>
         <Scripts />
       </body>
     </html>
