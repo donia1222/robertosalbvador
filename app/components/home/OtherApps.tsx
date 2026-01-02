@@ -49,7 +49,7 @@ export function OtherApps() {
   return (
     <section className={styles.otherAppsSection}>
       <div className={styles.container}>
-        <h3 className={styles.title}>Otras Apps</h3>
+     
         <div className={styles.grid}>
           {otherProjects.map((project) => (
             <div key={project.name} className={styles.card}>
