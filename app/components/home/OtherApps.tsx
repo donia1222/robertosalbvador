@@ -87,7 +87,7 @@ export function OtherApps() {
   }, []);
 
   return (
-    <section ref={sectionRef} className={styles.otherAppsSection}>
+    <section id="proyectos" ref={sectionRef} className={styles.otherAppsSection}>
       <div className={styles.container}>
         {/* Header */}
         <div className={styles.header}>
@@ -116,13 +116,13 @@ export function OtherApps() {
                   <p className={styles.cardDescription}>{project.description}</p>
                   <div className={styles.platforms}>
                     {project.platforms.includes("ios") && (
-                      <span className={styles.platform} title="iOS">📱</span>
+                      <span className={styles.platform} title="iOS"></span>
                     )}
                     {project.platforms.includes("android") && (
-                      <span className={styles.platform} title="Android">🤖</span>
+                      <span className={styles.platform} title="Android"></span>
                     )}
                     {project.platforms.includes("web") && (
-                      <span className={styles.platform} title="Web">🌐</span>
+                      <span className={styles.platform} title="Web"></span>
                     )}
                   </div>
                 </div>

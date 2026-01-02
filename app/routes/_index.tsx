@@ -18,7 +18,6 @@ export default function Index() {
       <div id="servicios">
         <Services />
       </div>
- 
       <OtherApps />
       <div id="tech">
         <TechCarousel />

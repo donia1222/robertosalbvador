@@ -115,14 +115,16 @@ export function Services() {
 
         {/* Content overlay */}
         <div className={styles.contentContainer}>
-          {services.map((service, index) => (
-            <div
-              key={index}
-              className={`${styles.serviceContent} ${
-                index === currentIndex ? styles.active : ""
-              }`}
-            >
-              <div className={styles.serviceCard}>
+          {services.map((service, index) => {
+            const colorVariant = index % 2 === 0 ? styles.orange : index === 1 ? styles.darkGray : styles.lightGray;
+            return (
+              <div
+                key={index}
+                className={`${styles.serviceContent} ${
+                  index === currentIndex ? styles.active : ""
+                }`}
+              >
+                <div className={`${styles.serviceCard} ${colorVariant}`}>
                 <div className={styles.serviceHeader}>
                   <span className={styles.serviceNumber}>
                     0{index + 1}
@@ -145,7 +147,8 @@ export function Services() {
                 </div>
               </div>
             </div>
-          ))}
+            );
+          })}
         </div>
 
         {/* Progress indicator */}
