@@ -10,6 +10,7 @@ import {
 import type { LinksFunction } from "@remix-run/node";
 import { Analytics } from "@vercel/analytics/remix"
 import { ThemeProvider, LanguageProvider } from "~/context";
+import { PageLoader } from "~/components/PageLoader";
 import styles from "~/styles/global.css?url";
 
 // Script para evitar flash de tema incorrecto
@@ -62,6 +63,7 @@ export default function App() {
   return (
     <LanguageProvider>
       <ThemeProvider>
+        <PageLoader />
         <Outlet />
       </ThemeProvider>
     </LanguageProvider>

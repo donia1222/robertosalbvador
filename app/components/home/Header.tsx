@@ -30,6 +30,7 @@ export function Header() {
   const [isTypingSubtitle, setIsTypingSubtitle] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [currentBackground, setCurrentBackground] = useState(0);
+  const [isTransitioning, setIsTransitioning] = useState(false);
   const navRef = useRef<HTMLElement>(null);
   const fullText = "Roberto Salvador";
   const fullSubtitle = "Full-Stack Developer";
@@ -112,13 +113,18 @@ export function Header() {
 
   const handleMenuClick = (href: string) => {
     setIsMenuOpen(false);
-    // Small delay to allow animation before scrolling
+    setIsTransitioning(true);
+
     setTimeout(() => {
       const element = document.querySelector(href);
       if (element) {
-        element.scrollIntoView({ behavior: 'smooth' });
+        element.scrollIntoView({ behavior: 'auto' });
+
+        setTimeout(() => {
+          setIsTransitioning(false);
+        }, 500);
       }
-    }, 300);
+    }, 800);
   };
 
   return (
@@ -251,6 +257,17 @@ export function Header() {
           </div>
         </div>
       </div>
+
+      {/* Transition overlay with DEV animation */}
+      {isTransitioning && (
+        <div className={styles.transitionOverlay}>
+          <div className={styles.devLoader}>
+            <span className={styles.devLetter} style={{ animationDelay: '0s' }}>D</span>
+            <span className={styles.devLetter} style={{ animationDelay: '0.2s' }}>E</span>
+            <span className={styles.devLetter} style={{ animationDelay: '0.4s' }}>V</span>
+          </div>
+        </div>
+      )}
     </header>
   );
 }

@@ -10,15 +10,15 @@ export function Hero() {
   const [scrollProgress, setScrollProgress] = useState(0);
   const [isGlitching, setIsGlitching] = useState(false);
   const [isHovering, setIsHovering] = useState(false);
-  const [autoShowSecond, setAutoShowSecond] = useState(false);
+  const [showSecondImage, setShowSecondImage] = useState(false);
 
-  // Auto change image every 3 seconds
+  // Auto change to second image only once after 3 seconds
   useEffect(() => {
-    const interval = setInterval(() => {
-      setAutoShowSecond((prev) => !prev);
+    const timeout = setTimeout(() => {
+      setShowSecondImage(true);
     }, 3000);
 
-    return () => clearInterval(interval);
+    return () => clearTimeout(timeout);
   }, []);
 
   // Scroll effect with glitch
@@ -121,11 +121,11 @@ export function Hero() {
                 style={{
                   transform: `scale(${imageScale})`,
                   filter: isGlitching ? "hue-rotate(90deg) saturate(3)" : "none",
-                  opacity: (autoShowSecond || isHovering) ? 0 : 1,
+                  opacity: (!showSecondImage || isHovering) ? 1 : 0,
                 }}
               />
-              
-              {/* Hover image */}
+
+              {/* Second image */}
               <img
                 src="/IMG_657.jpeg"
                 alt="Roberto Salvador"
@@ -135,7 +135,7 @@ export function Hero() {
                 style={{
                   transform: `scale(${imageScale})`,
                   filter: isGlitching ? "hue-rotate(90deg) saturate(3)" : "none",
-                  opacity: (autoShowSecond || isHovering) ? 1 : 0,
+                  opacity: (showSecondImage && !isHovering) ? 1 : 0,
                 }}
               />
               <div className={styles.imageOverlay} />
