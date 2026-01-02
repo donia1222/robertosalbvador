@@ -13,11 +13,11 @@ const navigation = [
 ];
 
 const menuBackgrounds = [
-  "/IMG_6521.jpeg", // Inicio
-  "/IMG_6490.jpeg", // Servicios
-  "/IMG_6523.jpeg", // Proyectos
-  "/IMG_6577.jpeg", // Tech Stack
-  "/IMG_6514.jpeg", // Contacto
+  "/5_07_29.png", // Inicio
+  "/5_07_29.png", // Servicios
+  "/5_07_29.png", // Proyectos
+  "/15_07_35.png", // Tech Stack
+  "/15_07_35.png", // Contacto
 ];
 
 export function Header() {
