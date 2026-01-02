@@ -122,6 +122,7 @@ export function Hero() {
                   opacity: (autoShowSecond || isHovering) ? 0 : 1,
                 }}
               />
+              
               {/* Hover image */}
               <img
                 src="/IMG_657.jpeg"
