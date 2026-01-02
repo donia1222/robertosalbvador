@@ -1,6 +1,6 @@
 .projectsWrapper {
   /* Create enough height for flip animation */
-  height: 90vh;
+  height: 120vh;
   position: relative;
 }
 
