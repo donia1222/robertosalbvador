@@ -3,6 +3,7 @@ export { Hero } from "./Hero";
 export { Services } from "./Services";
 export { Projects } from "./Projects";
 export { OtherApps } from "./OtherApps";
+export { Websites } from "./Websites";
 export { TechCarousel } from "./TechCarousel";
 export { Contact } from "./Contact";
 export { Footer } from "./Footer";
