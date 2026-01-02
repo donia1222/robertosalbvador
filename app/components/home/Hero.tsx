@@ -150,7 +150,7 @@ export function Hero() {
               <h3 className={styles.cardTitle}>Roberto Salvador</h3>
               <p className={styles.cardSubtitle}>
                 <SiReact className={styles.reactIcon} />
-                React Native Specialist
+                React Native Developer
               </p>
             </div>
           </div>
