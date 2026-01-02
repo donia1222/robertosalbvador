@@ -2,7 +2,7 @@ const handleDownloadVCard = () => {
   console.log("Iniciando descarga de la tarjeta de visita...");
 
   // URL de la imagen local
-  const imageUrl = "https://www.lweb.ch/programming-background-with-person-working-with-codes-computer.jpg";
+  const imageUrl = "https://robertosalbvador.vercel.app/IMG_6514.jpeg";
 
   fetch(imageUrl)
     .then((res) => {
@@ -21,7 +21,7 @@ const handleDownloadVCard = () => {
 VERSION:3.0
 FN:Roberto Salvador
 ORG:Roberto Salvador
-ADR:;;Chalberweidstrasse 38;Sevelen;;9475;Switzerland
+ADR:;;Sevelen;St Gallen;;9475;Switzerland
 TEL:0765608645
 EMAIL:info@lweb.ch
 URL:https://lweb.ch

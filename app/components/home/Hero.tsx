@@ -124,7 +124,7 @@ export function Hero() {
               />
               {/* Hover image */}
               <img
-                src="/IMG_6521.jpeg"
+                src="/IMG_657.jpeg"
                 alt="Roberto Salvador"
                 className={`${styles.profileImage} ${styles.imageHover} ${
                   isGlitching ? styles.glitch : ""
