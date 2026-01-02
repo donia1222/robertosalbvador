@@ -87,7 +87,7 @@ export function OtherApps() {
   }, []);
 
   return (
-    <section id="proyectos" ref={sectionRef} className={styles.otherAppsSection}>
+    <section ref={sectionRef} className={styles.otherAppsSection}>
       <div className={styles.container}>
         {/* Header */}
         <div className={styles.header}>

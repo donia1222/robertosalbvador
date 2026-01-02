@@ -695,6 +695,17 @@
   z-index: 2;
 }
 
+.btnIcon {
+  font-size: 1.25rem;
+  position: relative;
+  z-index: 2;
+  transition: transform 0.3s;
+}
+
+.btnPrimary:hover .btnIcon {
+  transform: scale(1.1) rotate(10deg);
+}
+
 .btnOutline {
   background: transparent;
   border: 2px solid #ff6b35;

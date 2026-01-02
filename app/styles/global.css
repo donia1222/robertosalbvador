@@ -196,3 +196,8 @@ a:hover {
 ::-webkit-scrollbar-thumb:hover {
   background: var(--color-secondary);
 }
+
+/* Scroll margin for navigation anchors */
+div[id] {
+  scroll-margin-top: 100px;
+}

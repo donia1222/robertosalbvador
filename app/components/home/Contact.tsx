@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
-import { HiLocationMarker, HiPhone, HiMail } from "react-icons/hi";
+import { HiLocationMarker, HiPhone, HiMail, HiDownload } from "react-icons/hi";
 import styles from "./Contact.module.css";
+import handleDownloadVCard from "~/utils/downloadVCard";
 
 const contactInfo = [
   {
@@ -214,13 +215,11 @@ export function Contact() {
                 Hablemos sobre cómo puedo ayudarte a hacer realidad tu aplicación
               </p>
               <div className={styles.ctaButtons}>
-                <a href="mailto:info@lweb.ch" className={styles.btnPrimary}>
-                  <span>Enviar Email</span>
+                <button onClick={handleDownloadVCard} className={styles.btnPrimary}>
+                  <HiDownload className={styles.btnIcon} />
+                  <span>Descargar Tarjeta de Visita</span>
                   <div className={styles.btnShine} />
-                </a>
-                <a href="tel:+41765608645" className={styles.btnOutline}>
-                  <span>Llamar Ahora</span>
-                </a>
+                </button>
               </div>
             </div>
           </div>

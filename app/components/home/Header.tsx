@@ -1,7 +1,8 @@
 import { Link } from "@remix-run/react";
 import { useEffect, useState, useRef } from "react";
-import { HiHome, HiSparkles, HiFolder, HiCubeTransparent, HiMail, HiPhone, HiMenu, HiX } from "react-icons/hi";
+import { HiHome, HiSparkles, HiFolder, HiCubeTransparent, HiMail, HiPhone, HiMenu, HiX, HiDownload } from "react-icons/hi";
 import styles from "./Header.module.css";
+import handleDownloadVCard from "~/utils/downloadVCard";
 
 const navigation = [
   { name: "Inicio", href: "#inicio", icon: HiHome },
@@ -22,11 +23,14 @@ const menuBackgrounds = [
 export function Header() {
   const [activeSection, setActiveSection] = useState(0);
   const [displayedText, setDisplayedText] = useState("");
+  const [displayedSubtitle, setDisplayedSubtitle] = useState("");
   const [isTyping, setIsTyping] = useState(true);
+  const [isTypingSubtitle, setIsTypingSubtitle] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [currentBackground, setCurrentBackground] = useState(0);
   const navRef = useRef<HTMLElement>(null);
   const fullText = "Roberto Salvador";
+  const fullSubtitle = "Full-Stack Developer";
 
   // Typing animation for logo
   useEffect(() => {
@@ -39,11 +43,30 @@ export function Header() {
         } else {
           setIsTyping(false);
           clearInterval(typingInterval);
+          // Start subtitle typing after a short delay
+          setTimeout(() => setIsTypingSubtitle(true), 300);
         }
       }, 100);
       return () => clearInterval(typingInterval);
     }
   }, [isTyping]);
+
+  // Typing animation for subtitle
+  useEffect(() => {
+    if (isTypingSubtitle) {
+      let currentIndex = 0;
+      const typingInterval = setInterval(() => {
+        if (currentIndex <= fullSubtitle.length) {
+          setDisplayedSubtitle(fullSubtitle.slice(0, currentIndex));
+          currentIndex++;
+        } else {
+          setIsTypingSubtitle(false);
+          clearInterval(typingInterval);
+        }
+      }, 80);
+      return () => clearInterval(typingInterval);
+    }
+  }, [isTypingSubtitle]);
 
   // Track active section on scroll
   useEffect(() => {
@@ -105,10 +128,16 @@ export function Header() {
         <div className={styles.container}>
           {/* Logo with typing effect */}
           <Link to="/" className={styles.logo}>
-            <span className={styles.logoText}>
-              {displayedText}
-              <span className={styles.cursor}>|</span>
-            </span>
+            <div className={styles.logoContainer}>
+              <span className={styles.logoText}>
+                {displayedText}
+                {isTyping && <span className={styles.cursor}>|</span>}
+              </span>
+              <span className={styles.logoSubtitle}>
+                {displayedSubtitle}
+                {isTypingSubtitle && <span className={styles.cursor}>|</span>}
+              </span>
+            </div>
           </Link>
 
           {/* Menu hamburger button */}
@@ -194,12 +223,13 @@ export function Header() {
           <div className={styles.menuFooter}>
             <a href="tel:+41765608645" className={styles.menuContactItem}>
               <HiPhone className={styles.menuContactIcon} />
-              <span>076 560 86 45</span>
             </a>
             <a href="mailto:info@lweb.ch" className={styles.menuContactItem}>
               <HiMail className={styles.menuContactIcon} />
-              <span>info@lweb.ch</span>
             </a>
+            <button onClick={handleDownloadVCard} className={styles.menuContactItem}>
+              <HiDownload className={styles.menuContactIcon} />
+            </button>
           </div>
         </div>
       </div>
