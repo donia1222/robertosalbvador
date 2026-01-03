@@ -305,3 +305,92 @@
     height: 28px;
   }
 }
+
+/* Variant: Normal Orange (default) */
+.variantNormal {
+  /* Uses default styles */
+}
+
+/* Variant: Orange Background with White Text */
+.variantOrangeBgGrayText {
+  background: linear-gradient(135deg, #ff6b35 0%, #ff8c42 100%) !important;
+  border-color: rgba(255, 255, 255, 0.3) !important;
+}
+
+.variantOrangeBgGrayText .cardNumber {
+  color: rgba(255, 255, 255, 0.15) !important;
+}
+
+.variantOrangeBgGrayText .cardTitle {
+  color: #ffffff !important;
+}
+
+.variantOrangeBgGrayText .cardDescription {
+  color: rgba(255, 255, 255, 0.9) !important;
+}
+
+.variantOrangeBgGrayText .tag {
+  background: rgba(255, 255, 255, 0.2) !important;
+  border: 1px solid rgba(255, 255, 255, 0.3) !important;
+  color: #ffffff !important;
+}
+
+.variantOrangeBgGrayText:hover .tag {
+  background: rgba(255, 255, 255, 0.3) !important;
+  border-color: rgba(255, 255, 255, 0.5) !important;
+}
+
+.variantOrangeBgGrayText .platformIcon {
+  color: rgba(255, 255, 255, 0.8) !important;
+}
+
+.variantOrangeBgGrayText .platformIcon:hover {
+  color: #ffffff !important;
+}
+
+.variantOrangeBgGrayText:hover {
+  border-color: rgba(255, 255, 255, 0.5) !important;
+  box-shadow: 0 30px 80px rgba(255, 107, 53, 0.5) !important;
+}
+
+/* Variant: Gray Background with Orange Text */
+.variantGrayBgOrangeText {
+  background: linear-gradient(135deg, #4a4a4a 0%, #5a5a5a 100%) !important;
+  border-color: rgba(255, 107, 53, 0.3) !important;
+}
+
+.variantGrayBgOrangeText .cardNumber {
+  color: rgba(255, 107, 53, 0.15) !important;
+}
+
+.variantGrayBgOrangeText .cardTitle {
+  color: #ff6b35 !important;
+}
+
+.variantGrayBgOrangeText .cardDescription {
+  color: rgba(255, 255, 255, 0.85) !important;
+}
+
+.variantGrayBgOrangeText .tag {
+  background: rgba(255, 107, 53, 0.2) !important;
+  border: 1px solid rgba(255, 107, 53, 0.4) !important;
+  color: #ff6b35 !important;
+}
+
+.variantGrayBgOrangeText:hover .tag {
+  background: rgba(255, 107, 53, 0.3) !important;
+  border-color: rgba(255, 107, 53, 0.6) !important;
+}
+
+.variantGrayBgOrangeText .platformIcon {
+  color: rgba(255, 107, 53, 0.8) !important;
+}
+
+.variantGrayBgOrangeText .platformIcon:hover {
+  color: #ff6b35 !important;
+}
+
+.variantGrayBgOrangeText:hover {
+  border-color: rgba(255, 107, 53, 0.6) !important;
+  box-shadow: 0 30px 80px rgba(255, 107, 53, 0.4) !important;
+}

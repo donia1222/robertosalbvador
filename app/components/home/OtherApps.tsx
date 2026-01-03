@@ -106,15 +106,23 @@ export function OtherApps() {
         </div>
 
         <div className={styles.stackContainer}>
-          {otherProjects.map((project, index) => (
-            <div key={project.name} className={styles.stackCard}>
-              <a
-                href={project.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className={styles.cardLink}
-              >
-                <div className={styles.cardContent}>
+          {otherProjects.map((project, index) => {
+            // Pattern: 0,3,5 = orange bg/gray text | 1 = normal orange | 2,4 = gray bg/orange text
+            const getVariantClass = (idx: number) => {
+              if (idx === 0 || idx === 3 || idx === 5) return styles.variantOrangeBgGrayText;
+              if (idx === 2 || idx === 4) return styles.variantGrayBgOrangeText;
+              return styles.variantNormal;
+            };
+
+            return (
+              <div key={project.name} className={styles.stackCard}>
+                <a
+                  href={project.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={styles.cardLink}
+                >
+                  <div className={`${styles.cardContent} ${getVariantClass(index)}`}>
                   <div className={styles.cardImageSection}>
                     <img src={project.image} alt={project.name} />
                   </div>
@@ -143,7 +151,8 @@ export function OtherApps() {
                 </div>
               </a>
             </div>
-          ))}
+            );
+          })}
         </div>
       </div>
     </section>
