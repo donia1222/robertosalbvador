@@ -129,7 +129,9 @@ export function Websites() {
   const { t } = useLanguage();
   const [isVisible, setIsVisible] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
+  const [cardVisibility, setCardVisibility] = useState<boolean[]>(new Array(websites.length).fill(false));
   const sectionRef = useRef<HTMLElement>(null);
+  const cardRefs = useRef<(HTMLAnchorElement | null)[]>([]);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -150,6 +152,43 @@ export function Websites() {
         observer.unobserve(sectionRef.current);
       }
     };
+  }, []);
+
+  // Scroll interaction for cards
+  useEffect(() => {
+    let ticking = false;
+
+    const handleScroll = () => {
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          if (!sectionRef.current) return;
+
+          const newVisibility = [...cardVisibility];
+
+          cardRefs.current.forEach((card, index) => {
+            if (!card) return;
+
+            const rect = card.getBoundingClientRect();
+            const windowHeight = window.innerHeight;
+
+            // Card is visible when it's in the viewport with some threshold
+            const isInView = rect.top < windowHeight * 0.85 && rect.bottom > windowHeight * 0.15;
+
+            newVisibility[index] = isInView;
+          });
+
+          setCardVisibility(newVisibility);
+          ticking = false;
+        });
+
+        ticking = true;
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    handleScroll(); // Initial check
+
+    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   return (
@@ -178,10 +217,13 @@ export function Websites() {
             return (
               <a
                 key={site.id}
+                ref={(el) => (cardRefs.current[index] = el)}
                 href={site.projectUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className={`${styles.bentoItem} ${styles[site.size]} ${site.featured ? styles.featured : ""}`}
+                className={`${styles.bentoItem} ${styles[site.size]} ${site.featured ? styles.featured : ""} ${
+                  cardVisibility[index] ? styles.cardVisible : styles.cardHidden
+                }`}
                 style={{ animationDelay: `${index * 0.1}s` }}
               >
                 {/* Background Image */}
