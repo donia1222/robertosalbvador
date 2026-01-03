@@ -1,131 +1,22 @@
 .otherAppsSection {
   width: 100%;
-  margin-top: 40px;
-  margin-bottom: 40px;
-  padding: 4rem 2rem;
+  min-height: 300vh;
+  padding: 8rem 2rem;
   position: relative;
-  overflow: hidden;
-
-}
-
-/* Background Icons */
-.bgIcons {
-  position: absolute;
-  inset: 0;
-  overflow: hidden;
-  z-index: 0;
-  pointer-events: none;
-}
-
-.bgIcon {
-  position: absolute;
-  width: 80px;
-  height: 80px;
-  color: rgba(220, 220, 220, 0.25);
-  opacity: 1;
-  filter: blur(0px);
-}
-
-.icon1 {
-  top: 10%;
-  left: 8%;
-  animation: floatIcon1 25s ease-in-out infinite;
-}
-
-.icon2 {
-  top: 60%;
-  left: 15%;
-  animation: floatIcon2 30s ease-in-out infinite;
-}
-
-.icon3 {
-  top: 25%;
-  right: 12%;
-  animation: floatIcon3 28s ease-in-out infinite;
-}
-
-.icon4 {
-  bottom: 20%;
-  right: 20%;
-  animation: floatIcon4 32s ease-in-out infinite;
-}
-
-.icon5 {
-  top: 45%;
-  left: 45%;
-  animation: floatIcon5 26s ease-in-out infinite;
-}
-
-.icon6 {
-  top: 75%;
-  left: 60%;
-  animation: floatIcon6 29s ease-in-out infinite;
-}
-
-.icon7 {
-  top: 15%;
-  right: 35%;
-  animation: floatIcon7 27s ease-in-out infinite;
-}
-
-.icon8 {
-  bottom: 15%;
-  left: 30%;
-  animation: floatIcon8 31s ease-in-out infinite;
-}
-
-@keyframes floatIcon1 {
-  0%, 100% { transform: translate(0, 0) rotate(0deg); }
-  50% { transform: translate(20px, 30px) rotate(5deg); }
-}
-
-@keyframes floatIcon2 {
-  0%, 100% { transform: translate(0, 0) rotate(0deg); }
-  50% { transform: translate(-25px, -20px) rotate(-5deg); }
-}
-
-@keyframes floatIcon3 {
-  0%, 100% { transform: translate(0, 0) rotate(0deg); }
-  50% { transform: translate(-30px, 25px) rotate(8deg); }
-}
-
-@keyframes floatIcon4 {
-  0%, 100% { transform: translate(0, 0) rotate(0deg); }
-  50% { transform: translate(20px, -30px) rotate(-6deg); }
-}
-
-@keyframes floatIcon5 {
-  0%, 100% { transform: translate(0, 0) rotate(0deg); }
-  50% { transform: translate(-20px, 20px) rotate(4deg); }
-}
-
-@keyframes floatIcon6 {
-  0%, 100% { transform: translate(0, 0) rotate(0deg); }
-  50% { transform: translate(30px, -25px) rotate(-7deg); }
-}
-
-@keyframes floatIcon7 {
-  0%, 100% { transform: translate(0, 0) rotate(0deg); }
-  50% { transform: translate(-15px, 35px) rotate(6deg); }
-}
-
-@keyframes floatIcon8 {
-  0%, 100% { transform: translate(0, 0) rotate(0deg); }
-  50% { transform: translate(25px, 20px) rotate(-4deg); }
+  background: linear-gradient(180deg, #0a0a0a 0%, #1a1a1a 100%);
 }
 
 .container {
-  max-width: 1400px;
+  max-width: 1200px;
   margin: 0 auto;
   position: relative;
-  z-index: 2;
 }
 
 /* Header */
 .header {
   position: relative;
   text-align: center;
-  margin-bottom: 4rem;
+  margin-bottom: 6rem;
   padding: 0 2rem;
 }
 
@@ -155,7 +46,7 @@
 }
 
 .title {
-  font-size: 3rem;
+  font-size: 3.5rem;
   font-weight: 800;
   color: #f5f5f5;
   margin: 0 0 1rem 0;
@@ -170,199 +61,247 @@
   -webkit-text-fill-color: transparent;
 }
 
-.grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 1.5rem;
+/* Stack Container */
+.stackContainer {
+  position: relative;
+  width: 100%;
   max-width: 900px;
   margin: 0 auto;
+  padding: 2rem 0;
 }
 
-.card {
-  position: relative;
-  display: block;
-  border-radius: 20px;
-  overflow: hidden;
-  cursor: pointer;
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  background: linear-gradient(135deg, #1a1a1a 0%, #242424 100%);
-  border: 1px solid rgba(255, 107, 53, 0.2);
-  text-decoration: none;
-  opacity: 0;
-  transform: perspective(1000px) rotateY(15deg) rotateX(10deg) scale(0.8);
-}
-
-.grid.animate .card {
-  animation: flipIn 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
-}
-
-.grid.animate .card:nth-child(1) { animation-delay: 0.1s; }
-.grid.animate .card:nth-child(2) { animation-delay: 0.2s; }
-.grid.animate .card:nth-child(3) { animation-delay: 0.3s; }
-.grid.animate .card:nth-child(4) { animation-delay: 0.4s; }
-.grid.animate .card:nth-child(5) { animation-delay: 0.5s; }
-.grid.animate .card:nth-child(6) { animation-delay: 0.6s; }
-
-@keyframes flipIn {
-  0% {
-    opacity: 0;
-    transform: perspective(1000px) rotateY(15deg) rotateX(10deg) scale(0.8);
-  }
-  50% {
-    opacity: 0.8;
-    transform: perspective(1000px) rotateY(-5deg) rotateX(-3deg) scale(1.05);
-  }
-  100% {
-    opacity: 1;
-    transform: perspective(1000px) rotateY(0) rotateX(0) scale(1);
-  }
-}
-
-.card:hover {
-  transform: translateY(-8px);
-  border-color: rgba(255, 107, 53, 0.5);
-  box-shadow: 0 12px 40px rgba(255, 107, 53, 0.3);
-}
-
-.cardImage {
-  position: relative;
+.stackCard {
+  position: sticky;
+  top: 10vh;
   width: 100%;
-  padding-top: 100%;
-  overflow: hidden;
+  height: 70vh;
+  margin-bottom: 2rem;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: transform;
 }
 
-.cardImage img {
-  position: absolute;
-  top: 0;
-  left: 0;
+.cardLink {
+  display: block;
   width: 100%;
   height: 100%;
-  object-fit: cover;
-  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  text-decoration: none;
+  color: inherit;
 }
 
-.card:hover .cardImage img {
-  transform: scale(1.15);
+.cardContent {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #1a1a1a 0%, #242424 100%);
+  border-radius: 30px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 107, 53, 0.3);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
 }
 
-.cardOverlay {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    180deg,
-    transparent 0%,
-    transparent 30%,
-    rgba(0, 0, 0, 0.8) 60%,
-    rgba(0, 0, 0, 0.98) 100%
-  );
+.cardContent:hover {
+  border-color: rgba(255, 107, 53, 0.6);
+  box-shadow: 0 30px 80px rgba(255, 107, 53, 0.3);
+  transform: translateY(-10px);
+}
+
+.cardImageSection {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: linear-gradient(135deg, #2a2a2a, #1a1a1a);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cardImageSection img {
+  width: 70%;
+  height: 70%;
+  object-fit: contain;
+  transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  filter: drop-shadow(0 10px 30px rgba(0, 0, 0, 0.5));
+}
+
+.cardContent:hover .cardImageSection img {
+  transform: scale(1.1) rotate(5deg);
+}
+
+.cardInfo {
+  padding: 4rem 3rem;
   display: flex;
   flex-direction: column;
-  justify-content: flex-end;
-  padding: 1rem 1rem 0.5rem 1rem;
-  opacity: 1;
-  transition: background 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  justify-content: center;
+  position: relative;
 }
 
-.card:hover .cardOverlay {
-  background: linear-gradient(
-    180deg,
-    rgba(0, 0, 0, 0.2) 0%,
-    rgba(0, 0, 0, 0.6) 40%,
-    rgba(0, 0, 0, 0.98) 100%
-  );
+.cardNumber {
+  font-size: 8rem;
+  font-weight: 900;
+  color: rgba(255, 107, 53, 0.1);
+  position: absolute;
+  top: -2rem;
+  right: 2rem;
+  font-family: "Sora", sans-serif;
+  line-height: 1;
+  z-index: 0;
 }
 
 .cardTitle {
-  font-size: 1.1rem;
-  font-weight: 700;
+  font-size: 2.5rem;
+  font-weight: 800;
   color: #ff6b35;
-  margin: 0;
+  margin: 0 0 1rem 0;
   font-family: "Sora", sans-serif;
-  letter-spacing: 0.3px;
-  transform: translateY(0);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  letter-spacing: -0.02em;
+  position: relative;
+  z-index: 1;
 }
 
 .cardDescription {
-  font-size: 0.75rem;
-  color: rgba(255, 255, 255, 0.7);
-  margin: 0.5rem 0 0 0;
+  font-size: 1.1rem;
+  color: rgba(255, 255, 255, 0.8);
+  margin: 0 0 2rem 0;
   font-family: "Sora", sans-serif;
-  line-height: 1.4;
-  opacity: 1;
-  transform: translateY(0);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  line-height: 1.6;
+  position: relative;
+  z-index: 1;
 }
 
-.card:hover .cardDescription {
-  color: rgba(255, 255, 255, 0.9);
+.cardTags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-bottom: 2rem;
+  position: relative;
+  z-index: 1;
+}
+
+.tag {
+  padding: 0.5rem 1rem;
+  background: rgba(255, 107, 53, 0.15);
+  border: 1px solid rgba(255, 107, 53, 0.3);
+  border-radius: 20px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #ff6b35;
+  font-family: "Sora", sans-serif;
+  transition: all 0.3s;
+}
+
+.cardContent:hover .tag {
+  background: rgba(255, 107, 53, 0.25);
+  border-color: rgba(255, 107, 53, 0.5);
 }
 
 .platforms {
   display: flex;
-  gap: 0.5rem;
-  opacity: 0;
-  transform: translateY(20px);
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1) 0.1s;
+  gap: 1rem;
+  position: relative;
+  z-index: 1;
 }
 
-.card:hover .platforms {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-.platform {
-  font-size: 1.25rem;
-  filter: grayscale(0.3);
+.platformIcon {
+  width: 32px;
+  height: 32px;
+  color: rgba(255, 255, 255, 0.6);
   transition: all 0.3s;
 }
 
-.platform:hover {
-  filter: grayscale(0);
+.platformIcon:hover {
+  color: #ff6b35;
   transform: scale(1.2);
 }
 
 /* Responsive */
-@media (max-width: 900px) {
-  .title {
+@media (max-width: 1024px) {
+  .stackCard {
+    height: 60vh;
+  }
+
+  .cardContent {
+    grid-template-columns: 1fr;
+    grid-template-rows: 40% 60%;
+  }
+
+  .cardInfo {
+    padding: 2rem;
+  }
+
+  .cardNumber {
+    font-size: 5rem;
+    top: 1rem;
+    right: 1rem;
+  }
+
+  .cardTitle {
     font-size: 2rem;
   }
 
-  .otherAppsSection {
-    padding: 3rem 1.5rem;
+  .cardDescription {
+    font-size: 1rem;
   }
 }
 
 @media (max-width: 640px) {
-  .grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 1rem;
+  .otherAppsSection {
+    padding: 4rem 1rem;
+    min-height: 250vh;
   }
 
   .title {
-    font-size: 1.75rem;
-    margin-bottom: 2rem;
+    font-size: 2rem;
   }
 
-  .otherAppsSection {
-    padding: 2.5rem 1rem;
+  .header {
+    margin-bottom: 4rem;
+  }
+
+  .stackCard {
+    height: 70vh;
+    top: 5vh;
+  }
+
+  .cardContent {
+    border-radius: 20px;
+  }
+
+  .cardInfo {
+    padding: 1.5rem;
+  }
+
+  .cardNumber {
+    font-size: 4rem;
+    top: 0.5rem;
+    right: 0.5rem;
   }
 
   .cardTitle {
-    font-size: 1rem;
+    font-size: 1.75rem;
   }
 
   .cardDescription {
-    font-size: 0.8rem;
-  }
-}
-
-@media (max-width: 480px) {
-  .grid {
-    gap: 0.75rem;
+    font-size: 0.95rem;
+    margin-bottom: 1.5rem;
   }
 
-  .cardOverlay {
-    padding: 1rem;
+  .cardTags {
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .tag {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.75rem;
+  }
+
+  .platformIcon {
+    width: 28px;
+    height: 28px;
   }
 }

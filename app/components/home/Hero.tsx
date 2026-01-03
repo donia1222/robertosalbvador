@@ -7,10 +7,10 @@ export function Hero() {
   const { t } = useLanguage();
   const cardRef = useRef<HTMLDivElement>(null);
   const heroRef = useRef<HTMLElement>(null);
-  const [scrollProgress, setScrollProgress] = useState(0);
-  const [isGlitching, setIsGlitching] = useState(false);
   const [isHovering, setIsHovering] = useState(false);
   const [showSecondImage, setShowSecondImage] = useState(false);
+  const [showFlash, setShowFlash] = useState(false);
+  const [hasScrolled, setHasScrolled] = useState(false);
 
   // Auto change to second image only once after 3 seconds
   useEffect(() => {
@@ -21,45 +21,30 @@ export function Hero() {
     return () => clearTimeout(timeout);
   }, []);
 
-  // Scroll effect with glitch
+  // Flash effect when scroll starts
   useEffect(() => {
     const handleScroll = () => {
-      if (!heroRef.current) return;
+      if (!hasScrolled && window.scrollY > 50) {
+        setHasScrolled(true);
+        setShowFlash(true);
 
-      const heroRect = heroRef.current.getBoundingClientRect();
-      const heroHeight = heroRect.height;
-      const scrolled = -heroRect.top;
-      const progress = Math.min(Math.max(scrolled / heroHeight, 0), 1);
-
-      setScrollProgress(progress);
-
-      // Trigger glitch effect at specific scroll points
-      if (progress > 0.2 && progress < 0.25 && !isGlitching) {
-        setIsGlitching(true);
-        setTimeout(() => setIsGlitching(false), 200);
-      }
-      if (progress > 0.5 && progress < 0.55 && !isGlitching) {
-        setIsGlitching(true);
-        setTimeout(() => setIsGlitching(false), 150);
+        // Multiple flashes
+        setTimeout(() => setShowFlash(false), 100);
+        setTimeout(() => setShowFlash(true), 200);
+        setTimeout(() => setShowFlash(false), 300);
+        setTimeout(() => setShowFlash(true), 400);
+        setTimeout(() => setShowFlash(false), 500);
       }
     };
 
-    window.addEventListener("scroll", handleScroll);
+    window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
-  }, [isGlitching]);
-
-  const imageScale = 1 - scrollProgress * 0.3;
-  const imageOpacity = 1 - scrollProgress * 0.8;
-  const cardRotate = scrollProgress * 180;
+  }, [hasScrolled]);
 
   return (
     <section
       ref={heroRef}
       className={styles.hero}
-      style={{
-        opacity: 1 - scrollProgress * 0.5,
-        transform: `translateY(${scrollProgress * 100}px)`,
-      }}
     >
       {/* Particles background */}
       <div className={styles.particles}>
@@ -98,13 +83,7 @@ export function Hero() {
           />
 
           {/* Main card with photo */}
-          <div
-            className={styles.card}
-            style={{
-              transform: `rotateY(${cardRotate}deg)`,
-              opacity: imageOpacity,
-            }}
-          >
+          <div className={styles.card}>
             <div className={styles.cardGlow} />
             <div
               className={styles.imageContainer}
@@ -115,12 +94,8 @@ export function Hero() {
               <img
                 src="/IMG_6490.jpeg"
                 alt="Roberto Salvador"
-                className={`${styles.profileImage} ${styles.imageDefault} ${
-                  isGlitching ? styles.glitch : ""
-                }`}
+                className={`${styles.profileImage} ${styles.imageDefault}`}
                 style={{
-                  transform: `scale(${imageScale})`,
-                  filter: isGlitching ? "hue-rotate(90deg) saturate(3)" : "none",
                   opacity: (!showSecondImage || isHovering) ? 1 : 0,
                 }}
               />
@@ -129,20 +104,20 @@ export function Hero() {
               <img
                 src="/IMG_657.jpeg"
                 alt="Roberto Salvador"
-                className={`${styles.profileImage} ${styles.imageHover} ${
-                  isGlitching ? styles.glitch : ""
-                }`}
+                className={`${styles.profileImage} ${styles.imageHover}`}
                 style={{
-                  transform: `scale(${imageScale})`,
-                  filter: isGlitching ? "hue-rotate(90deg) saturate(3)" : "none",
                   opacity: (showSecondImage && !isHovering) ? 1 : 0,
                 }}
               />
               <div className={styles.imageOverlay} />
-              {isGlitching && (
+
+              {/* Flash/Lightning effect */}
+              {showFlash && (
                 <>
-                  <div className={styles.glitchLayer} style={{ left: "-5px" }} />
-                  <div className={styles.glitchLayer} style={{ left: "5px" }} />
+                  <div className={styles.flashOverlay} />
+                  <div className={styles.lightning} style={{ left: '20%', animationDelay: '0s' }} />
+                  <div className={styles.lightning} style={{ left: '50%', animationDelay: '0.1s' }} />
+                  <div className={styles.lightning} style={{ left: '80%', animationDelay: '0.05s' }} />
                 </>
               )}
             </div>
