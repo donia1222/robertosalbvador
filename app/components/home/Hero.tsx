@@ -11,19 +11,15 @@ export function Hero() {
   const [showSecondImage, setShowSecondImage] = useState(false);
   const [showFlash, setShowFlash] = useState(false);
 
-  // Auto change to second image only once after 3 seconds
-  useEffect(() => {
-    const timeout = setTimeout(() => {
-      setShowSecondImage(true);
-    }, 3000);
-
-    return () => clearTimeout(timeout);
-  }, []);
-
   // Permanent flash effect - constant lightning strikes
   useEffect(() => {
     const triggerFlash = () => {
       setShowFlash(true);
+
+      // Change to second image on first flash
+      if (!showSecondImage) {
+        setShowSecondImage(true);
+      }
 
       // Random multiple flashes
       const flashCount = Math.floor(Math.random() * 2) + 3; // 3-4 flashes
@@ -41,13 +37,13 @@ export function Hero() {
       }, (Math.random() * 2000) + 1000);
     };
 
-    // Start first flash after 500ms
+    // Start first flash after 3 seconds (this will trigger the image change)
     const initialTimeout = setTimeout(() => {
       triggerFlash();
-    }, 500);
+    }, 3000);
 
     return () => clearTimeout(initialTimeout);
-  }, []);
+  }, [showSecondImage]);
 
   return (
     <section
@@ -104,7 +100,7 @@ export function Hero() {
                 alt="Roberto Salvador"
                 className={`${styles.profileImage} ${styles.imageDefault}`}
                 style={{
-                  opacity: (!showSecondImage || isHovering || showFlash) ? 1 : 0,
+                  opacity: (!showSecondImage || isHovering) ? 1 : 0,
                 }}
               />
 
@@ -114,7 +110,7 @@ export function Hero() {
                 alt="Roberto Salvador"
                 className={`${styles.profileImage} ${styles.imageHover}`}
                 style={{
-                  opacity: (showSecondImage && !isHovering && !showFlash) ? 1 : 0,
+                  opacity: (showSecondImage && !isHovering) ? 1 : 0,
                 }}
               />
               <div className={styles.imageOverlay} />

@@ -57,6 +57,7 @@ const websites = [
     framework: "Next.js",
     description: "Premium Cocktail, Hookah & Terrace. Luxuriöse Bar-Lounge in Buchs.",
     imageUrl: "/abstract-smoke.png",
+    videoUrl: "/ushuaia.mp4",
     projectUrl: "https://www.ushuaia-bar.ch",
     technologies: ["Next.js", "React"],
     featured: true,
@@ -226,9 +227,21 @@ export function Websites() {
                 }`}
                 style={{ animationDelay: `${index * 0.1}s` }}
               >
-                {/* Background Image */}
+                {/* Background Image or Video */}
                 <div className={styles.bentoImage}>
-                  <img src={site.imageUrl} alt={site.title} />
+                  {site.videoUrl ? (
+                    <video
+                      autoPlay
+                      loop
+                      muted
+                      playsInline
+                      className={styles.bentoVideo}
+                    >
+                      <source src={site.videoUrl} type="video/mp4" />
+                    </video>
+                  ) : (
+                    <img src={site.imageUrl} alt={site.title} />
+                  )}
                   <div className={styles.bentoOverlay} />
                 </div>
 
