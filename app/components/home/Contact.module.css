@@ -238,19 +238,54 @@
   text-decoration: none;
   transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
   cursor: pointer;
-  animation: cardSlideIn 0.6s ease-out backwards;
+  animation: cardSlideIn 0.6s ease-out backwards, cardFloat 4s ease-in-out infinite;
 }
 
 .contactCard:nth-child(1) {
-  animation-delay: 0.1s;
+  animation-delay: 0.1s, 0s;
+}
+
+.contactCard:nth-child(1) .iconWrapper {
+  animation-delay: 0s;
+}
+
+.contactCard:nth-child(1) .animatedBorder {
+  animation-delay: 0s;
 }
 
 .contactCard:nth-child(2) {
-  animation-delay: 0.2s;
+  animation-delay: 0.2s, 1.3s;
+}
+
+.contactCard:nth-child(2) .iconWrapper {
+  animation-delay: 1s;
+}
+
+.contactCard:nth-child(2) .animatedBorder {
+  animation-delay: 1.5s;
 }
 
 .contactCard:nth-child(3) {
-  animation-delay: 0.3s;
+  animation-delay: 0.3s, 2.6s;
+}
+
+.contactCard:nth-child(3) .iconWrapper {
+  animation-delay: 2s;
+}
+
+.contactCard:nth-child(3) .animatedBorder {
+  animation-delay: 3s;
+}
+
+@keyframes cardFloat {
+  0%, 100% {
+    transform: translateY(0);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  }
+  50% {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 40px rgba(255, 107, 53, 0.2);
+  }
 }
 
 @keyframes cardSlideIn {
@@ -328,6 +363,18 @@
   background: linear-gradient(135deg, #ff6b35, #ff8c42);
   border-radius: 16px;
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  animation: iconPulse 3s ease-in-out infinite;
+}
+
+@keyframes iconPulse {
+  0%, 100% {
+    transform: scale(1) rotate(0deg);
+    box-shadow: 0 5px 15px rgba(255, 107, 53, 0.3);
+  }
+  50% {
+    transform: scale(1.05) rotate(3deg);
+    box-shadow: 0 10px 30px rgba(255, 107, 53, 0.5);
+  }
 }
 
 .contactCard:hover .iconWrapper {
@@ -341,12 +388,22 @@
   background: linear-gradient(135deg, #ff6b35, #ff8c42);
   border-radius: 18px;
   filter: blur(10px);
-  opacity: 0;
+  opacity: 0.4;
   transition: opacity 0.4s;
+  animation: glowPulse 3s ease-in-out infinite;
+}
+
+@keyframes glowPulse {
+  0%, 100% {
+    opacity: 0.3;
+  }
+  50% {
+    opacity: 0.6;
+  }
 }
 
 .contactCard:hover .iconGlow {
-  opacity: 0.6;
+  opacity: 0.8;
 }
 
 .icon {
@@ -461,8 +518,18 @@
   width: 20px;
   height: 20px;
   border: 2px solid #ff6b35;
-  opacity: 0;
+  opacity: 0.3;
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  animation: cornerPulse 3s ease-in-out infinite;
+}
+
+@keyframes cornerPulse {
+  0%, 100% {
+    opacity: 0.2;
+  }
+  50% {
+    opacity: 0.5;
+  }
 }
 
 .cornerTopLeft {
@@ -506,8 +573,8 @@
   -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   -webkit-mask-composite: xor;
   mask-composite: exclude;
-  opacity: 0;
-  animation: borderRotate 3s linear infinite;
+  opacity: 0.5;
+  animation: borderRotate 4s linear infinite;
 }
 
 .contactCard:hover .animatedBorder {
