@@ -111,8 +111,9 @@ export function Header() {
     };
   }, [isMenuOpen]);
 
-  const handleMenuClick = (href: string) => {
+  const handleMenuClick = (href: string, index: number) => {
     setIsMenuOpen(false);
+    setActiveSection(index);
     setIsTransitioning(true);
 
     setTimeout(() => {
@@ -200,7 +201,7 @@ export function Header() {
               return (
                 <button
                   key={item.key}
-                  onClick={() => handleMenuClick(item.href)}
+                  onClick={() => handleMenuClick(item.href, index)}
                   className={`${styles.menuLink} ${activeSection === index ? styles.menuLinkActive : ''}`}
                   style={{ animationDelay: `${0.2 + index * 0.15}s` }}
                 >
