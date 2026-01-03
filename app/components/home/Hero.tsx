@@ -10,7 +10,6 @@ export function Hero() {
   const [isHovering, setIsHovering] = useState(false);
   const [showSecondImage, setShowSecondImage] = useState(false);
   const [showFlash, setShowFlash] = useState(false);
-  const [hasScrolled, setHasScrolled] = useState(false);
 
   // Auto change to second image only once after 3 seconds
   useEffect(() => {
@@ -21,25 +20,34 @@ export function Hero() {
     return () => clearTimeout(timeout);
   }, []);
 
-  // Flash effect when scroll starts
+  // Permanent flash effect - constant lightning strikes
   useEffect(() => {
-    const handleScroll = () => {
-      if (!hasScrolled && window.scrollY > 50) {
-        setHasScrolled(true);
-        setShowFlash(true);
+    const triggerFlash = () => {
+      setShowFlash(true);
 
-        // Multiple flashes
-        setTimeout(() => setShowFlash(false), 100);
-        setTimeout(() => setShowFlash(true), 200);
-        setTimeout(() => setShowFlash(false), 300);
-        setTimeout(() => setShowFlash(true), 400);
-        setTimeout(() => setShowFlash(false), 500);
+      // Random multiple flashes
+      const flashCount = Math.floor(Math.random() * 2) + 3; // 3-4 flashes
+      const flashDuration = 120;
+
+      for (let i = 0; i < flashCount; i++) {
+        setTimeout(() => {
+          setShowFlash(i % 2 === 0);
+        }, i * flashDuration);
       }
+
+      // Schedule next flash randomly between 1-3 seconds (much more frequent)
+      setTimeout(() => {
+        triggerFlash();
+      }, (Math.random() * 2000) + 1000);
     };
 
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, [hasScrolled]);
+    // Start first flash after 500ms
+    const initialTimeout = setTimeout(() => {
+      triggerFlash();
+    }, 500);
+
+    return () => clearTimeout(initialTimeout);
+  }, []);
 
   return (
     <section
@@ -96,7 +104,7 @@ export function Hero() {
                 alt="Roberto Salvador"
                 className={`${styles.profileImage} ${styles.imageDefault}`}
                 style={{
-                  opacity: (!showSecondImage || isHovering) ? 1 : 0,
+                  opacity: (!showSecondImage || isHovering || showFlash) ? 1 : 0,
                 }}
               />
 
@@ -106,7 +114,7 @@ export function Hero() {
                 alt="Roberto Salvador"
                 className={`${styles.profileImage} ${styles.imageHover}`}
                 style={{
-                  opacity: (showSecondImage && !isHovering) ? 1 : 0,
+                  opacity: (showSecondImage && !isHovering && !showFlash) ? 1 : 0,
                 }}
               />
               <div className={styles.imageOverlay} />
