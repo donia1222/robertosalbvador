@@ -20,18 +20,29 @@ export function ScrollTextReveal() {
   const currentWords = words[language as keyof typeof words] || words.en;
 
   useEffect(() => {
+    let ticking = false;
+
     const handleScroll = () => {
-      if (!sectionRef.current) return;
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          if (!sectionRef.current) {
+            ticking = false;
+            return;
+          }
 
-      const rect = sectionRef.current.getBoundingClientRect();
-      const sectionHeight = sectionRef.current.offsetHeight;
-      const windowHeight = window.innerHeight;
+          const rect = sectionRef.current.getBoundingClientRect();
+          const sectionHeight = sectionRef.current.offsetHeight;
+          const windowHeight = window.innerHeight;
 
-      // Progreso: 0 cuando entra, 1 cuando sale
-      // Ajuste: empieza antes con un offset
-      const offset = windowHeight * 0.3; // Empieza 30% antes
-      const progress = Math.max(0, Math.min(1, (-rect.top + offset) / (sectionHeight - windowHeight + offset)));
-      setScrollProgress(progress);
+          // Progreso: 0 cuando entra, 1 cuando sale
+          // Ajuste: empieza antes con un offset
+          const offset = windowHeight * 0.3; // Empieza 30% antes
+          const progress = Math.max(0, Math.min(1, (-rect.top + offset) / (sectionHeight - windowHeight + offset)));
+          setScrollProgress(progress);
+          ticking = false;
+        });
+        ticking = true;
+      }
     };
 
     window.addEventListener("scroll", handleScroll, { passive: true });
@@ -85,7 +96,7 @@ export function ScrollTextReveal() {
         <h2
           className={styles.text}
           style={{
-            transform: `scale(${scale})`,
+            transform: `scale3d(${scale}, ${scale}, 1)`,
             opacity: opacity,
             color: currentColor,
             textShadow: `0 0 20px ${currentColor}80, 0 0 40px ${currentColor}50`,
