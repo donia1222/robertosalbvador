@@ -403,17 +403,108 @@
 
 .menuLinkIcon {
   font-size: 2rem;
-  color: #ff6b35;
   transition: all 0.3s;
 }
 
 .menuLink:hover .menuLinkIcon {
   transform: scale(1.2) rotate(10deg);
-  color: #ff8c42;
+}
+
+/* Colores diferentes para cada tab que van cambiando */
+.menuLink:nth-child(1) .menuLinkIcon {
+  animation: iconColor1 3s ease-in-out infinite;
+}
+
+.menuLink:nth-child(2) .menuLinkIcon {
+  animation: iconColor2 3s ease-in-out infinite;
+}
+
+.menuLink:nth-child(3) .menuLinkIcon {
+  animation: iconColor3 3s ease-in-out infinite;
+}
+
+.menuLink:nth-child(4) .menuLinkIcon {
+  animation: iconColor4 3s ease-in-out infinite;
+}
+
+.menuLink:nth-child(5) .menuLinkIcon {
+  animation: iconColor5 3s ease-in-out infinite;
+}
+
+@keyframes iconColor1 {
+  0%, 100% { color: #ff6b35; }
+  50% { color: #a3a3a3; }
+}
+
+@keyframes iconColor2 {
+  0%, 100% { color: #d4d4d4; }
+  50% { color: #ff8c42; }
+}
+
+@keyframes iconColor3 {
+  0%, 100% { color: #ff8c42; }
+  50% { color: #6b6b6b; }
+}
+
+@keyframes iconColor4 {
+  0%, 100% { color: #ffa366; }
+  50% { color: #8a8a8a; }
+}
+
+@keyframes iconColor5 {
+  0%, 100% { color: #ff6b35; }
+  50% { color: #d4d4d4; }
 }
 
 .menuLinkText {
   flex: 1;
+  transition: color 0.3s;
+}
+
+/* Textos de tabs también cambian de color */
+.menuLink:nth-child(1) .menuLinkText {
+  animation: textColor1 3s ease-in-out infinite;
+}
+
+.menuLink:nth-child(2) .menuLinkText {
+  animation: textColor2 3s ease-in-out infinite;
+}
+
+.menuLink:nth-child(3) .menuLinkText {
+  animation: textColor3 3s ease-in-out infinite;
+}
+
+.menuLink:nth-child(4) .menuLinkText {
+  animation: textColor4 3s ease-in-out infinite;
+}
+
+.menuLink:nth-child(5) .menuLinkText {
+  animation: textColor5 3s ease-in-out infinite;
+}
+
+@keyframes textColor1 {
+  0%, 100% { color: #ffffff; }
+  50% { color: #ff8c42; }
+}
+
+@keyframes textColor2 {
+  0%, 100% { color: #f5f5f5; }
+  50% { color: #d4d4d4; }
+}
+
+@keyframes textColor3 {
+  0%, 100% { color: #ffffff; }
+  50% { color: #ffa366; }
+}
+
+@keyframes textColor4 {
+  0%, 100% { color: #f5f5f5; }
+  50% { color: #a3a3a3; }
+}
+
+@keyframes textColor5 {
+  0%, 100% { color: #ffffff; }
+  50% { color: #ff6b35; }
 }
 
 .menuLinkArrow {
@@ -564,23 +655,35 @@
   font-size: 5rem;
   font-weight: 900;
   font-family: "Sora", sans-serif;
-  color: #ff6b35;
   opacity: 0;
   transform: translateY(30px) scale(0.5);
   animation: letterAppear 0.6s ease-out forwards;
-  text-shadow: 0 0 20px rgba(255, 107, 53, 0.5);
 }
 
+/* D - Naranja a Gris claro */
 .devLetter:nth-child(1) {
-  color: #ff6b35;
+  animation:
+    letterAppear 0.6s ease-out forwards,
+    colorShift1 2s ease-in-out infinite;
+  text-shadow: 0 0 30px currentColor;
 }
 
+/* E - Gris a Naranja medio */
 .devLetter:nth-child(2) {
-  color: #ff8c42;
+  animation:
+    letterAppear 0.6s ease-out forwards,
+    colorShift2 2s ease-in-out infinite;
+  animation-delay: 0s, 0.3s;
+  text-shadow: 0 0 30px currentColor;
 }
 
+/* V - Naranja claro a Gris oscuro */
 .devLetter:nth-child(3) {
-  color: #ffa366;
+  animation:
+    letterAppear 0.6s ease-out forwards,
+    colorShift3 2s ease-in-out infinite;
+  animation-delay: 0s, 0.6s;
+  text-shadow: 0 0 30px currentColor;
 }
 
 @keyframes letterAppear {
@@ -594,6 +697,52 @@
   100% {
     opacity: 1;
     transform: translateY(0) scale(1) rotate(0deg);
+  }
+}
+
+/* Animaciones de color para cada letra */
+@keyframes colorShift1 {
+  0%, 100% {
+    color: #ff6b35;
+    filter: brightness(1.2);
+  }
+  33% {
+    color: #a3a3a3;
+    filter: brightness(1);
+  }
+  66% {
+    color: #ff8c42;
+    filter: brightness(1.3);
+  }
+}
+
+@keyframes colorShift2 {
+  0%, 100% {
+    color: #d4d4d4;
+    filter: brightness(1.1);
+  }
+  33% {
+    color: #ff8c42;
+    filter: brightness(1.3);
+  }
+  66% {
+    color: #8a8a8a;
+    filter: brightness(0.9);
+  }
+}
+
+@keyframes colorShift3 {
+  0%, 100% {
+    color: #ffa366;
+    filter: brightness(1.2);
+  }
+  33% {
+    color: #6b6b6b;
+    filter: brightness(0.8);
+  }
+  66% {
+    color: #ff6b35;
+    filter: brightness(1.4);
   }
 }
 
