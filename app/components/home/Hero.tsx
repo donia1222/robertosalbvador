@@ -10,16 +10,25 @@ export function Hero() {
   const [isHovering, setIsHovering] = useState(false);
   const [showSecondImage, setShowSecondImage] = useState(false);
   const [showFlash, setShowFlash] = useState(false);
+  const [hasScrolled, setHasScrolled] = useState(false);
+
+  // Detect scroll and change image immediately
+  useEffect(() => {
+    const handleScroll = () => {
+      if (!hasScrolled && window.scrollY > 0) {
+        setHasScrolled(true);
+        setShowSecondImage(true);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [hasScrolled]);
 
   // Permanent flash effect - constant lightning strikes
   useEffect(() => {
     const triggerFlash = () => {
       setShowFlash(true);
-
-      // Change to second image on first flash
-      if (!showSecondImage) {
-        setShowSecondImage(true);
-      }
 
       // Random multiple flashes
       const flashCount = Math.floor(Math.random() * 2) + 3; // 3-4 flashes
@@ -37,13 +46,13 @@ export function Hero() {
       }, (Math.random() * 5000) + 5000);
     };
 
-    // Start first flash after 3 seconds (this will trigger the image change)
+    // Start first flash after 3 seconds
     const initialTimeout = setTimeout(() => {
       triggerFlash();
     }, 3000);
 
     return () => clearTimeout(initialTimeout);
-  }, [showSecondImage]);
+  }, []);
 
   return (
     <section
@@ -96,7 +105,7 @@ export function Hero() {
             >
               {/* Default image */}
               <img
-                src="/IMG_6490.jpeg"
+                src="/IMG_657.jpeg"
                 alt="Roberto Salvador"
                 className={`${styles.profileImage} ${styles.imageDefault}`}
                 style={{
@@ -106,7 +115,7 @@ export function Hero() {
 
               {/* Second image */}
               <img
-                src="/IMG_657.jpeg"
+                src="/IMG_6490.jpeg"
                 alt="Roberto Salvador"
                 className={`${styles.profileImage} ${styles.imageHover}`}
                 style={{
