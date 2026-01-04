@@ -1,7 +1,7 @@
 import type { MetaFunction, LoaderFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
-import { Header, Hero, Services, Projects, OtherApps, Websites, TechCarousel, Contact, Footer } from "~/components/home";
+import { Header, Hero, Services, Projects, OtherApps, Websites, RainEffect, TechCarousel, Contact, Footer } from "~/components/home";
 
 type Language = "es" | "de";
 
@@ -93,6 +93,7 @@ export default function Index() {
         <OtherApps />
       </div>
       <Websites />
+
       <div id="tech">
         <TechCarousel />
       </div>
