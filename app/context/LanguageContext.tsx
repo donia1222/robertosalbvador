@@ -80,7 +80,16 @@ const translations: Record<Language, Record<string, string>> = {
     "tech.title.highlight": "domino",
     "tech.subtitle": "Herramientas y frameworks que uso para crear experiencias increíbles",
 
+    // Claude Code Banner
+    "claudeCode.badge": "DESDE 2025",
+    "claudeCode.title": "Mi copiloto: Claude Code",
+    "claudeCode.description": "4 agentes especializados entrenados para mis requerimientos. Trabajo mucho más rápido y puedo ofrecer precios inmejorables gracias a esta tecnología de vanguardia.",
+    "claudeCode.agents": "Agentes IA",
+    "claudeCode.speed": "Más rápido",
+    "claudeCode.prices": "Mejores precios",
+
     // Contact
+    "contact.badge": "Contacto",
     "contact.title": "Contacto",
     "contact.location.title": "Dirección",
     "contact.location.address": "Sevelen, Schweiz",
@@ -174,7 +183,16 @@ const translations: Record<Language, Record<string, string>> = {
     "tech.title.highlight": "beherrsche",
     "tech.subtitle": "Tools und Frameworks, die ich verwende, um unglaubliche Erfahrungen zu schaffen",
 
+    // Claude Code Banner
+    "claudeCode.badge": "SEIT 2025",
+    "claudeCode.title": "Mein Copilot: Claude Code",
+    "claudeCode.description": "4 spezialisierte Agenten, die für meine Anforderungen trainiert wurden. Ich arbeite viel schneller und kann dank dieser Spitzentechnologie unschlagbare Preise anbieten.",
+    "claudeCode.agents": "KI-Agenten",
+    "claudeCode.speed": "Schneller",
+    "claudeCode.prices": "Beste Preise",
+
     // Contact
+    "contact.badge": "Kontakt",
     "contact.title": "Kontakt",
     "contact.location.title": "Adresse",
     "contact.location.address": "Sevelen, Schweiz",

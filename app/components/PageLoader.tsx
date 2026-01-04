@@ -6,6 +6,9 @@ export function PageLoader() {
   const [fadeOut, setFadeOut] = useState(false);
 
   useEffect(() => {
+    // Mostrar el contenido principal cuando el componente se monte
+    document.documentElement.style.setProperty('--initial-display', 'block');
+
     // Duración total de la animación (4 segundos)
     const timer = setTimeout(() => {
       setFadeOut(true);

@@ -86,7 +86,7 @@ export function Contact() {
           <div className={styles.badge}>
             <div className={styles.badgePulse} />
             <span className={styles.badgeIcon}>📬</span>
-            <span className={styles.badgeText}>Contacto</span>
+            <span className={styles.badgeText}>{t("contact.badge")}</span>
           </div>
           <h2 className={styles.title}>
             {t("contact.header.title.part1")} <span className={styles.highlight}>{t("contact.header.title.highlight")}</span>{t("contact.header.title.part2")}

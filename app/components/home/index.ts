@@ -5,5 +5,6 @@ export { Projects } from "./Projects";
 export { OtherApps } from "./OtherApps";
 export { Websites } from "./Websites";
 export { TechCarousel } from "./TechCarousel";
+export { ClaudeCodeBanner } from "./ClaudeCodeBanner";
 export { Contact } from "./Contact";
 export { Footer } from "./Footer";

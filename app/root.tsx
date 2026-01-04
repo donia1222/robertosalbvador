@@ -23,6 +23,13 @@ const themeScript = `
   })();
 `;
 
+// Script para ocultar contenido hasta que cargue el loader
+const loaderScript = `
+  (function() {
+    document.documentElement.style.setProperty('--initial-display', 'none');
+  })();
+`;
+
 export const links: LinksFunction = () => [
   { rel: "icon", type: "image/jpg", href: "/favicon.jpg" },
   { rel: "apple-touch-icon", href: "/favicon.jpg" },
@@ -48,9 +55,17 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Meta />
         <Links />
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
+        <script dangerouslySetInnerHTML={{ __html: loaderScript }} />
+        <style dangerouslySetInnerHTML={{ __html: `
+          #root-content {
+            display: var(--initial-display, block);
+          }
+        ` }} />
       </head>
       <body>
-        {children}
+        <div id="root-content">
+          {children}
+        </div>
         <ScrollRestoration />
         <Analytics/>
         <Scripts />
