@@ -135,7 +135,7 @@ const translations: Record<Language, Record<string, string>> = {
     // Hero
     "hero.greeting": "Hallo, ich bin",
     "hero.title.part1": "Entwickler von",
-    "hero.title.highlight": "herausragenden nativen Apps",
+    "hero.title.highlight": "Mobile Apps",
     "hero.title.part2": "",
     "hero.subtitle": "Spezialisiert auf React Native und Full-Stack-Entwicklung. Ich verwandle Ideen in leistungsstarke mobile und Web-Anwendungen.",
     "hero.experience": "Jahre Erfahrung",
@@ -239,7 +239,7 @@ const translations: Record<Language, Record<string, string>> = {
     // Hero
     "hero.greeting": "Hi, I'm",
     "hero.title.part1": "Creator of",
-    "hero.title.highlight": "Outstanding Native Apps",
+    "hero.title.highlight": "Native Apps", 
     "hero.title.part2": "",
     "hero.subtitle": "Specialized in React Native and Full-Stack development. I transform ideas into high-performance mobile and web applications.",
     "hero.experience": "Years of Experience",

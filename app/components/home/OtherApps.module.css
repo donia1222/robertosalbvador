@@ -208,6 +208,16 @@
   z-index: 1;
 }
 
+.platformLink {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
 .platformIcon {
   width: 32px;
   height: 32px;
@@ -215,7 +225,7 @@
   transition: all 0.3s;
 }
 
-.platformIcon:hover {
+.platformLink:hover .platformIcon {
   color: #ff6b35;
   transform: scale(1.2);
 }
@@ -346,7 +356,7 @@
   color: rgba(255, 255, 255, 0.8) !important;
 }
 
-.variantOrangeBgGrayText .platformIcon:hover {
+.variantOrangeBgGrayText .platformLink:hover .platformIcon {
   color: #ffffff !important;
 }
 
@@ -388,7 +398,7 @@
   color: rgba(255, 107, 53, 0.8) !important;
 }
 
-.variantGrayBgOrangeText .platformIcon:hover {
+.variantGrayBgOrangeText .platformLink:hover .platformIcon {
   color: #ff6b35 !important;
 }
 
