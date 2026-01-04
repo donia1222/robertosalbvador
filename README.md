@@ -157,6 +157,7 @@ The portfolio uses a custom React Context-based i18n solution:
 **Roberto Salvador**
 📍 Sevelen, Switzerland (9475)
 🌐 [roberto-salvador.dev](https://www.roberto-salvador.dev)
+[![GitHub](https://img.shields.io/badge/GitHub-donia1222-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/donia1222)
 
 ---
 

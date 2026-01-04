@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { HiLocationMarker, HiPhone, HiMail, HiDownload } from "react-icons/hi";
+import { FaGithub } from "react-icons/fa";
 import styles from "./Contact.module.css";
 import handleDownloadVCard from "~/utils/downloadVCard";
 import { useLanguage } from "~/context";
@@ -222,6 +223,16 @@ export function Contact() {
                   <span>{t("contact.cta.button")}</span>
                   <div className={styles.btnShine} />
                 </button>
+                <a
+                  href="https://github.com/donia1222"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={styles.btnOutline}
+                >
+                  <FaGithub className={styles.btnIcon} />
+                  <span>{t("contact.cta.github")}</span>
+                  <div className={styles.btnShine} />
+                </a>
               </div>
             </div>
           </div>

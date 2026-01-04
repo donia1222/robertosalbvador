@@ -102,6 +102,7 @@ const translations: Record<Language, Record<string, string>> = {
     "contact.cta.title": "¿Tienes un proyecto en mente?",
     "contact.cta.subtitle": "Hablemos sobre cómo puedo ayudarte a hacer realidad tu aplicación",
     "contact.cta.button": "Descargar Tarjeta de Visita",
+    "contact.cta.github": "Ver GitHub",
 
     // Footer
     "footer.copyright": "© 2026 Roberto Salvador Schweiz",
@@ -205,6 +206,7 @@ const translations: Record<Language, Record<string, string>> = {
     "contact.cta.title": "Haben Sie ein Projekt im Kopf?",
     "contact.cta.subtitle": "Lassen Sie uns darüber sprechen, wie ich Ihnen helfen kann, Ihre Anwendung zu verwirklichen",
     "contact.cta.button": "Visitenkarte herunterladen",
+    "contact.cta.github": "GitHub ansehen",
 
     // Footer
     "footer.copyright": "© 2026 Roberto Salvador Schweiz",
@@ -308,6 +310,7 @@ const translations: Record<Language, Record<string, string>> = {
     "contact.cta.title": "Have a project in mind?",
     "contact.cta.subtitle": "Let's talk about how I can help you bring your application to life",
     "contact.cta.button": "Download Business Card",
+    "contact.cta.github": "View GitHub",
 
     // Footer
     "footer.copyright": "© 2026 Roberto Salvador Switzerland",
