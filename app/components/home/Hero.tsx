@@ -31,10 +31,10 @@ export function Hero() {
         }, i * flashDuration);
       }
 
-      // Schedule next flash randomly between 1-3 seconds (much more frequent)
+      // Schedule next flash randomly between 5-10 seconds (less frequent)
       setTimeout(() => {
         triggerFlash();
-      }, (Math.random() * 2000) + 1000);
+      }, (Math.random() * 5000) + 5000);
     };
 
     // Start first flash after 3 seconds (this will trigger the image change)
