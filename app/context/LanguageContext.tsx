@@ -1,6 +1,6 @@
 import { createContext, useContext, useState, useEffect, type ReactNode } from "react";
 
-type Language = "es" | "de";
+type Language = "es" | "de" | "en";
 
 interface LanguageContextType {
   language: Language;
@@ -223,6 +223,109 @@ const translations: Record<Language, Record<string, string>> = {
     "error.notFound": "Die gesuchte Seite existiert nicht.",
     "error.error": "Fehler",
   },
+  en: {
+    // Header
+    "nav.inicio": "Home",
+    "nav.servicios": "Services",
+    "nav.proyectos": "Projects",
+    "nav.tech": "Tech Stack",
+    "nav.contacto": "Contact",
+    "header.phone": "Phone",
+    "header.email": "Email",
+    "header.download": "Download Contact",
+
+    // Hero
+    "hero.greeting": "Hi, I'm",
+    "hero.title.part1": "Creator of",
+    "hero.title.highlight": "Outstanding Native Apps",
+    "hero.title.part2": "",
+    "hero.subtitle": "Specialized in React Native and Full-Stack development. I transform ideas into high-performance mobile and web applications.",
+    "hero.experience": "Years of Experience",
+    "hero.apps": "Developed Apps",
+    "hero.satisfaction": "Client Satisfaction",
+    "hero.cta.projects": "View Projects",
+    "hero.cta.contact": "Contact",
+
+    // Services
+    "services.title": "Services",
+    "services.mobile.title": "Mobile Applications",
+    "services.mobile.subtitle": "iOS & Android",
+    "services.mobile.description": "Native mobile app development with React Native, optimized for iOS and Android.",
+    "services.web.title": "Web Development",
+    "services.web.subtitle": "Modern & Responsive",
+    "services.web.description": "Modern websites and web applications with Next.js, Remix and the latest technologies.",
+    "services.ai.title": "AI Integration",
+    "services.ai.subtitle": "ChatGPT & More",
+    "services.ai.description": "Integration of artificial intelligence in your applications with OpenAI, chatbots and automation.",
+    "services.consulting.title": "Tech Consulting",
+    "services.consulting.subtitle": "Strategic Solutions",
+    "services.consulting.description": "Specialized technical consulting in architecture, optimization and scalability of projects.",
+
+    // OtherApps
+    "apps.title": "My apps",
+    "apps.subtitle": "published",
+    "apps.buyvoice.description": "Speak and the list is created automatically. Shopping list with AI.",
+    "apps.hundezonen.description": "The app for you and your dog. Find dog zones near you.",
+    "apps.foodscan.description": "Transform your fridge into recipes! Recipe suggestions with AI.",
+    "apps.dogmentor.description": "Everything you need to know about dogs!",
+    "apps.keto.description": "Create unique Keto and Paleo recipes",
+    "apps.workti.description": "Smart time tracking for teams and freelancers.",
+    "apps.visit": "Visit site",
+    "apps.ios": "iOS",
+    "apps.android": "Android",
+
+    // Websites
+    "websites.title.part1": "Published",
+    "websites.title.highlight": "Websites",
+    "websites.subtitle": "Professional websites developed",
+    "websites.visit": "Visit",
+
+    // TechCarousel
+    "tech.badge": "Tech Stack",
+    "tech.title.part1": "Technologies I",
+    "tech.title.highlight": "master",
+    "tech.subtitle": "Tools and frameworks I use to create incredible experiences",
+
+    // Claude Code Banner
+    "claudeCode.badge": "SINCE 2025",
+    "claudeCode.title": "My copilot: Claude Code",
+    "claudeCode.description": "4 specialized agents trained for my requirements. I work much faster and can offer unbeatable prices thanks to this cutting-edge technology.",
+    "claudeCode.agents": "AI Agents",
+    "claudeCode.speed": "Faster",
+    "claudeCode.prices": "Best prices",
+
+    // Contact
+    "contact.badge": "Contact",
+    "contact.title": "Contact",
+    "contact.location.title": "Address",
+    "contact.location.address": "Sevelen, Switzerland",
+    "contact.location.postal": "9475",
+    "contact.phone.title": "Phone",
+    "contact.email.title": "Email",
+    "contact.header.title.part1": "Ready to",
+    "contact.header.title.highlight": "work together",
+    "contact.header.title.part2": "?",
+    "contact.cta.title": "Have a project in mind?",
+    "contact.cta.subtitle": "Let's talk about how I can help you bring your application to life",
+    "contact.cta.button": "Download Business Card",
+
+    // Footer
+    "footer.copyright": "© 2026 Roberto Salvador Switzerland",
+    "footer.legal": "Legal Notice",
+    "footer.privacy": "Privacy",
+
+    // Metadata
+    "meta.title": "Roberto Salvador | Modern App & Web Developer in Switzerland | St. Gallen & Liechtenstein",
+    "meta.description": "Freelance developer specialized in mobile applications and modern websites in Switzerland. React Native, Next.js, Remix. Services in St. Gallen, Liechtenstein and all of Switzerland. +5 years of experience, 30+ developed apps.",
+    "meta.keywords": "app developer Switzerland, web developer St. Gallen, React Native Liechtenstein, modern websites Switzerland, mobile development iOS Android, Next.js developer Switzerland, Remix developer, freelance developer Switzerland, app developer St. Gallen, web development Liechtenstein, React Native developer Switzerland",
+
+    // Error messages
+    "error.oops": "Oops!",
+    "error.unexpected": "An unexpected error has occurred.",
+    "error.404": "404",
+    "error.notFound": "The page you are looking for does not exist.",
+    "error.error": "Error",
+  },
 };
 
 export function LanguageProvider({ children }: LanguageProviderProps) {
@@ -232,7 +335,7 @@ export function LanguageProvider({ children }: LanguageProviderProps) {
   // Solo en cliente: cargar idioma guardado
   useEffect(() => {
     const savedLanguage = localStorage.getItem("portfolio-language") as Language | null;
-    if (savedLanguage && (savedLanguage === "es" || savedLanguage === "de")) {
+    if (savedLanguage && (savedLanguage === "es" || savedLanguage === "de" || savedLanguage === "en")) {
       setLanguageState(savedLanguage);
     }
     setMounted(true);

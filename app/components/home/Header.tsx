@@ -255,6 +255,12 @@ export function Header() {
             >
               Deutsch
             </button>
+            <button
+              onClick={() => setLanguage('en')}
+              className={`${styles.languageButton} ${language === 'en' ? styles.languageButtonActive : ''}`}
+            >
+              English
+            </button>
           </div>
         </div>
       </div>

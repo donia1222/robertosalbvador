@@ -106,6 +106,12 @@ export function ErrorBoundary() {
       notFound: "Die gesuchte Seite existiert nicht.",
       error: "Fehler",
     },
+    en: {
+      oops: "Oops!",
+      unexpected: "An unexpected error has occurred.",
+      notFound: "The page you are looking for does not exist.",
+      error: "Error",
+    },
   };
 
   const t = translations[lang as keyof typeof translations] || translations.de;

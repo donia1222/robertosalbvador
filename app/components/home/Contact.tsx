@@ -241,6 +241,12 @@ export function Contact() {
           >
             DE
           </button>
+          <button
+            onClick={() => setLanguage('en')}
+            className={`${styles.langButton} ${language === 'en' ? styles.langButtonActive : ''}`}
+          >
+            EN
+          </button>
         </div>
       </div>
 
