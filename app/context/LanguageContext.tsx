@@ -332,12 +332,27 @@ export function LanguageProvider({ children }: LanguageProviderProps) {
   const [language, setLanguageState] = useState<Language>("de");
   const [mounted, setMounted] = useState(false);
 
-  // Solo en cliente: cargar idioma guardado
+  // Solo en cliente: cargar idioma guardado o detectar idioma del navegador
   useEffect(() => {
     const savedLanguage = localStorage.getItem("portfolio-language") as Language | null;
+
     if (savedLanguage && (savedLanguage === "es" || savedLanguage === "de" || savedLanguage === "en")) {
+      // Si hay un idioma guardado, usarlo
       setLanguageState(savedLanguage);
+    } else {
+      // Si no hay idioma guardado, detectar el idioma del navegador
+      const browserLang = navigator.language || navigator.languages?.[0] || "en";
+      const langCode = browserLang.toLowerCase().split('-')[0]; // Extraer código: "es-ES" → "es"
+
+      // Si el idioma detectado es español, alemán o inglés, usarlo
+      // De lo contrario, usar inglés por defecto
+      if (langCode === "es" || langCode === "de" || langCode === "en") {
+        setLanguageState(langCode as Language);
+      } else {
+        setLanguageState("en");
+      }
     }
+
     setMounted(true);
   }, []);
 
