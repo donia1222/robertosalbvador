@@ -621,9 +621,19 @@
   min-height: 100%;
   width: auto;
   height: auto;
-  transform: translate(-50%, -50%) scale(1.1);
+  transform: translate(-50%, -50%) scale(1);
   object-fit: cover;
   filter: grayscale(0.2);
+  animation: zoomEffect 20s ease-in-out infinite;
+}
+
+@keyframes zoomEffect {
+  0%, 100% {
+    transform: translate(-50%, -50%) scale(1);
+  }
+  50% {
+    transform: translate(-50%, -50%) scale(1.15);
+  }
 }
 
 .ctaVideoOverlay {

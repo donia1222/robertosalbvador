@@ -194,17 +194,13 @@ export function Contact() {
         {/* CTA Section */}
         <div className={styles.ctaSection}>
           <div className={styles.ctaCard}>
-            {/* Video Background */}
+            {/* Image Background */}
             <div className={styles.ctaVideoContainer}>
-              <video
-                autoPlay
-                loop
-                muted
-                playsInline
+              <img
+                src="IMG_657.jpeg"
+                alt="Background"
                 className={styles.ctaVideo}
-              >
-                <source src="/copy_7C1BBA34-F73A-4C24-BBCD-896761F89D78.mp4" type="video/mp4" />
-              </video>
+              />
               <div className={styles.ctaVideoOverlay} />
             </div>
 
