@@ -1,6 +1,7 @@
 import { useEffect, useRef } from "react";
 import styles from "./OtherApps.module.css";
 import { useLanguage } from "~/context";
+import { MakingOfBanner } from "./MakingOfBanner";
 
 const otherProjects = [
   {
@@ -187,27 +188,8 @@ export function OtherApps() {
           ))}
         </div>
 
-        {/* View Projects Button */}
-        <div className={styles.ctaContainer}>
-          <a href="#proyectos" className={styles.btnPrimary}>
-            <span>{t("hero.cta.projects")}</span>
-            <svg
-              width="20"
-              height="20"
-              viewBox="0 0 20 20"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M7.5 15L12.5 10L7.5 5"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
-          </a>
-        </div>
+        {/* Making Of Banner */}
+        <MakingOfBanner />
       </div>
     </section>
   );
