@@ -102,7 +102,7 @@ export function OtherApps() {
   }, []);
 
   return (
-    <section ref={sectionRef} className={styles.otherAppsSection}>
+    <section id="apps" ref={sectionRef} className={styles.otherAppsSection}>
       <div className={styles.container}>
         {/* Header */}
         <div className={styles.header}>
