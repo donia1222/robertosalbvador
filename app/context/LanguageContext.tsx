@@ -69,6 +69,11 @@ const translations: Record<Language, Record<string, string>> = {
     "apps.android": "Android",
     "apps.makingOf": "Ver cómo se hicieron",
 
+    // Making Of Banner
+    "makingOfBanner.tag": "Detrás de Escena",
+    "makingOfBanner.subtitle": "Descubre el proceso creativo, herramientas y tecnologías detrás del desarrollo de estas aplicaciones",
+    "makingOfBanner.button": "Explora el Proceso",
+
     // Websites
     "websites.title.part1": "Sitios web",
     "websites.title.highlight": "publicados",
@@ -292,6 +297,11 @@ const translations: Record<Language, Record<string, string>> = {
     "apps.android": "Android",
     "apps.makingOf": "Siehe wie sie gemacht wurden",
 
+    // Making Of Banner
+    "makingOfBanner.tag": "Hinter den Kulissen",
+    "makingOfBanner.subtitle": "Entdecken Sie den kreativen Prozess, die Werkzeuge und Technologien hinter der Entwicklung dieser Anwendungen",
+    "makingOfBanner.button": "Erkunden Sie den Prozess",
+
     // Websites
     "websites.title.part1": "Veröffentlichte",
     "websites.title.highlight": "Websites",
@@ -514,6 +524,11 @@ const translations: Record<Language, Record<string, string>> = {
     "apps.ios": "iOS",
     "apps.android": "Android",
     "apps.makingOf": "See how they were made",
+
+    // Making Of Banner
+    "makingOfBanner.tag": "Behind the Scenes",
+    "makingOfBanner.subtitle": "Discover the creative process, tools, and technologies behind the development of these applications",
+    "makingOfBanner.button": "Explore the Journey",
 
     // Websites
     "websites.title.part1": "Published",

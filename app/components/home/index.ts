@@ -8,5 +8,6 @@ export { ScrollTextReveal } from "./ScrollTextReveal";
 export { RainEffect } from "./RainEffect";
 export { TechCarousel } from "./TechCarousel";
 export { ClaudeCodeBanner } from "./ClaudeCodeBanner";
+export { MakingOfBanner } from "./MakingOfBanner";
 export { Contact } from "./Contact";
 export { Footer } from "./Footer";
