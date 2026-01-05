@@ -1,4 +1,5 @@
 import { useEffect, useRef } from "react";
+import { Link } from "@remix-run/react";
 import styles from "./OtherApps.module.css";
 import { useLanguage } from "~/context";
 
@@ -185,6 +186,16 @@ export function OtherApps() {
               </a>
             </div>
           ))}
+        </div>
+
+        {/* Making Of Button */}
+        <div className={styles.makingOfButtonContainer}>
+          <Link to="/making-of" className={styles.makingOfButton}>
+            <span className={styles.buttonIcon}>🎬</span>
+            <span className={styles.buttonText}>{t("apps.makingOf")}</span>
+            <span className={styles.buttonArrow}>→</span>
+            <div className={styles.buttonGlow} />
+          </Link>
         </div>
       </div>
     </section>

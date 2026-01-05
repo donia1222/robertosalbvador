@@ -1,0 +1,231 @@
+/* Wheel container */
+.wheelContainer {
+  position: relative;
+  width: 600px;
+  height: 600px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+}
+
+/* Center display */
+.centerDisplay {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  text-align: center;
+  background: rgba(26, 26, 26, 0.95);
+  border: 2px solid rgba(255, 107, 53, 0.5);
+  border-radius: 24px;
+  padding: 2rem;
+  backdrop-filter: blur(20px);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), 0 0 60px rgba(255, 107, 53, 0.3);
+  min-width: 200px;
+}
+
+.centerIcon {
+  width: 100px;
+  height: 100px;
+  border-radius: 22px;
+  object-fit: cover;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+}
+
+.centerTitle {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--color-text);
+  margin: 0;
+}
+
+.centerPlaceholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.placeholderIcon {
+  font-size: 3rem;
+  opacity: 0.5;
+}
+
+.placeholderText {
+  font-size: 1rem;
+  color: var(--color-text-muted);
+  margin: 0;
+}
+
+/* Rotating wheel with CSS animation */
+.wheel {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  animation: rotateWheel 30s linear infinite;
+}
+
+@keyframes rotateWheel {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* App items */
+.appItem {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 120px;
+  height: 120px;
+  margin: -60px 0 0 -60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(26, 26, 26, 0.9);
+  border: 2px solid rgba(255, 107, 53, 0.4);
+  border-radius: 24px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+  padding: 1rem;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  animation: counterRotate 30s linear infinite;
+}
+
+@keyframes counterRotate {
+  from {
+    transform: translate(var(--x), var(--y)) rotate(0deg);
+  }
+  to {
+    transform: translate(var(--x), var(--y)) rotate(-360deg);
+  }
+}
+
+.appItem:hover {
+  transform: translate(var(--x), var(--y)) scale(1.15);
+  border-color: rgba(255, 107, 53, 0.7);
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.5), 0 0 40px rgba(255, 107, 53, 0.4);
+  z-index: 5;
+}
+
+.appItemSelected {
+  border-color: rgba(255, 107, 53, 0.8);
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.5), 0 0 60px rgba(255, 107, 53, 0.6);
+}
+
+.appIcon {
+  width: 90px;
+  height: 90px;
+  border-radius: 18px;
+  object-fit: cover;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+/* Orbit ring */
+.orbitRing {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 440px;
+  height: 440px;
+  border: 1px dashed rgba(255, 107, 53, 0.3);
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .wheelContainer {
+    width: 100%;
+    max-width: 380px;
+    height: 380px;
+  }
+
+  .centerDisplay {
+    padding: 1.25rem;
+    min-width: 140px;
+  }
+
+  .centerIcon {
+    width: 70px;
+    height: 70px;
+  }
+
+  .centerTitle {
+    font-size: 1.125rem;
+  }
+
+  .placeholderIcon {
+    font-size: 2rem;
+  }
+
+  .placeholderText {
+    font-size: 0.875rem;
+  }
+
+  .appItem {
+    width: 90px;
+    height: 90px;
+    margin: -45px 0 0 -45px;
+    padding: 0.75rem;
+  }
+
+  .appIcon {
+    width: 65px;
+    height: 65px;
+  }
+
+  .orbitRing {
+    width: 300px;
+    height: 300px;
+  }
+}
+
+@media (max-width: 480px) {
+  .wheelContainer {
+    max-width: 340px;
+    height: 340px;
+  }
+
+  .centerDisplay {
+    padding: 1rem;
+    min-width: 120px;
+  }
+
+  .centerIcon {
+    width: 60px;
+    height: 60px;
+  }
+
+  .centerTitle {
+    font-size: 1rem;
+  }
+
+  .appItem {
+    width: 75px;
+    height: 75px;
+    margin: -37.5px 0 0 -37.5px;
+    padding: 0.5rem;
+  }
+
+  .appIcon {
+    width: 55px;
+    height: 55px;
+  }
+
+  .orbitRing {
+    width: 260px;
+    height: 260px;
+  }
+}

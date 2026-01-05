@@ -1,0 +1,253 @@
+/* Main page wrapper */
+.pageWrapper {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  padding: 2rem;
+  overflow-x: hidden;
+  background: linear-gradient(180deg, #0f0f0f 0%, #1a1a1a 50%, #0f0f0f 100%);
+}
+
+/* Background effects */
+.backgroundGradient {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(
+    circle at 50% 50%,
+    rgba(255, 107, 53, 0.1) 0%,
+    rgba(26, 26, 26, 0) 70%
+  );
+  pointer-events: none;
+  z-index: 0;
+}
+
+.particlesContainer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.particle {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  background: rgba(255, 107, 53, 0.4);
+  border-radius: 50%;
+  animation: floatParticle 10s infinite ease-in-out;
+}
+
+@keyframes floatParticle {
+  0%, 100% {
+    transform: translateY(0) translateX(0) scale(1);
+    opacity: 0.3;
+  }
+  50% {
+    transform: translateY(-30px) translateX(20px) scale(1.2);
+    opacity: 0.6;
+  }
+}
+
+/* Content wrapper */
+.contentWrapper {
+  position: relative;
+  z-index: 1;
+  max-width: 1400px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4rem;
+}
+
+/* Header */
+.header {
+  text-align: center;
+  margin-top: 8rem;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1.25rem;
+  background: rgba(255, 107, 53, 0.1);
+  border: 1px solid rgba(255, 107, 53, 0.3);
+  border-radius: 50px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--color-primary);
+  margin-bottom: 1.5rem;
+  backdrop-filter: blur(10px);
+}
+
+.badgeIcon {
+  font-size: 1.25rem;
+}
+
+.badgeText {
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.title {
+  font-size: 3.5rem;
+  font-weight: 800;
+  color: var(--color-text);
+  margin-bottom: 1rem;
+  line-height: 1.2;
+}
+
+.highlight {
+  background: linear-gradient(135deg, #ff6b35, #ff8c42, #ffa366);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.description {
+  font-size: 1.25rem;
+  color: var(--color-text-secondary);
+  max-width: 600px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+/* Action button */
+.actionButtonContainer {
+  display: flex;
+  justify-content: center;
+  margin-top: 2rem;
+  animation: fadeInUp 0.6s ease-out;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.viewDetailsButton {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem 2.5rem;
+  background: linear-gradient(135deg, #ff6b35, #ff8c42);
+  border: none;
+  border-radius: 50px;
+  font-family: inherit;
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: white;
+  cursor: pointer;
+  overflow: hidden;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+              box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 8px 32px rgba(255, 107, 53, 0.3),
+              0 0 0 1px rgba(255, 255, 255, 0.1) inset;
+}
+
+.viewDetailsButton:hover {
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 12px 48px rgba(255, 107, 53, 0.5),
+              0 0 0 1px rgba(255, 255, 255, 0.2) inset;
+}
+
+.viewDetailsButton:active {
+  transform: translateY(0) scale(0.98);
+}
+
+.buttonIcon {
+  font-size: 1.5rem;
+}
+
+.buttonText {
+  letter-spacing: 0.02em;
+}
+
+.buttonGlow {
+  position: absolute;
+  inset: -2px;
+  background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+  border-radius: 50px;
+  opacity: 0;
+  transition: opacity 0.3s;
+  filter: blur(20px);
+  z-index: -1;
+}
+
+.viewDetailsButton:hover .buttonGlow {
+  opacity: 0.6;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .header {
+    margin-top: 6rem;
+  }
+
+  .title {
+    font-size: 2.5rem;
+  }
+
+  .description {
+    font-size: 1.125rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .pageWrapper {
+    padding: 1.5rem;
+  }
+
+  .header {
+    margin-top: 5rem;
+  }
+
+  .title {
+    font-size: 2rem;
+  }
+
+  .description {
+    font-size: 1rem;
+  }
+
+  .contentWrapper {
+    gap: 3rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .pageWrapper {
+    padding: 1rem;
+  }
+
+  .header {
+    margin-top: 4rem;
+  }
+
+  .title {
+    font-size: 1.75rem;
+  }
+
+  .badge {
+    font-size: 0.75rem;
+    padding: 0.4rem 1rem;
+  }
+
+  .badgeIcon {
+    font-size: 1rem;
+  }
+}

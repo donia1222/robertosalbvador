@@ -3,6 +3,7 @@ import { json } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import { Header, Hero, Services, Projects, OtherApps, Websites, ScrollTextReveal, RainEffect, TechCarousel, Contact, Footer } from "~/components/home";
 
+
 type Language = "es" | "de";
 
 // Metadatos por idioma
@@ -91,6 +92,7 @@ export default function Index() {
       </div>
       <div id="proyectos">
         <OtherApps />
+
       </div>
       <Websites />
       <ScrollTextReveal />
