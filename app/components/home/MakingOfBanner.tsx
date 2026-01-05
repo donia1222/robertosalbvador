@@ -1,13 +1,24 @@
-import { useEffect, useRef } from "react";
-import { Link } from "@remix-run/react";
+import { useEffect, useRef, useState } from "react";
+import { useNavigate } from "@remix-run/react";
 import styles from "./MakingOfBanner.module.css";
 import { useLanguage } from "~/context";
 
 export function MakingOfBanner() {
   const { t } = useLanguage();
+  const navigate = useNavigate();
+  const [showOverlay, setShowOverlay] = useState(false);
   const bannerRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
   const circlesRef = useRef<HTMLDivElement>(null);
+
+  const handleNavigate = () => {
+    setShowOverlay(true);
+
+    // Navigate after overlay animation
+    setTimeout(() => {
+      navigate("/making-of");
+    }, 1200);
+  };
 
   useEffect(() => {
     const handleScroll = () => {
@@ -90,7 +101,7 @@ export function MakingOfBanner() {
           </p>
         </div>
 
-        <Link to="/making-of" className={styles.ctaButton}>
+        <button onClick={handleNavigate} className={styles.ctaButton}>
           <span className={styles.buttonContent}>
             <span className={styles.cameraIcon}>🎬</span>
             <span className={styles.buttonLabel}>{t("makingOfBanner.button")}</span>
@@ -104,7 +115,7 @@ export function MakingOfBanner() {
 
           {/* Brillo del botón */}
           <div className={styles.buttonGlow}></div>
-        </Link>
+        </button>
 
         {/* Líneas decorativas */}
         <div className={styles.decorativeLines}>
@@ -116,6 +127,23 @@ export function MakingOfBanner() {
 
       {/* Efecto de luz radial */}
       <div className={styles.radialLight}></div>
+
+      {/* Transition Overlay */}
+      {showOverlay && (
+        <div className={styles.transitionOverlay}>
+          <div className={styles.overlayLoader}>
+            <span className={styles.overlayLetter} style={{ animationDelay: '0s' }}>M</span>
+            <span className={styles.overlayLetter} style={{ animationDelay: '0.1s' }}>a</span>
+            <span className={styles.overlayLetter} style={{ animationDelay: '0.2s' }}>k</span>
+            <span className={styles.overlayLetter} style={{ animationDelay: '0.3s' }}>i</span>
+            <span className={styles.overlayLetter} style={{ animationDelay: '0.4s' }}>n</span>
+            <span className={styles.overlayLetter} style={{ animationDelay: '0.5s' }}>g</span>
+            <span className={styles.overlayLetter} style={{ animationDelay: '0.6s' }}>&nbsp;</span>
+            <span className={styles.overlayLetter} style={{ animationDelay: '0.7s' }}>o</span>
+            <span className={styles.overlayLetter} style={{ animationDelay: '0.8s' }}>f</span>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
