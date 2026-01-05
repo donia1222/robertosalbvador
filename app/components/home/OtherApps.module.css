@@ -544,3 +544,82 @@
     font-size: 1.125rem;
   }
 }
+
+/* CTA Button Section */
+.ctaContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 6rem;
+  padding-bottom: 2rem;
+}
+
+.btnPrimary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 1rem 2rem;
+  font-family: "Sora", sans-serif;
+  font-size: 1rem;
+  font-weight: 600;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  position: relative;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: white;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+.btnPrimary::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(255, 255, 255, 0.05);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.btnPrimary:hover::before {
+  opacity: 1;
+}
+
+.btnPrimary:hover {
+  transform: translateY(-2px);
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.3);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+}
+
+.btnPrimary span,
+.btnPrimary svg {
+  position: relative;
+  z-index: 1;
+}
+
+/* Responsive for CTA Button */
+@media (max-width: 768px) {
+  .ctaContainer {
+    margin-top: 4rem;
+  }
+
+  .btnPrimary {
+    padding: 0.875rem 1.75rem;
+    font-size: 0.9375rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .ctaContainer {
+    margin-top: 3rem;
+  }
+
+  .btnPrimary {
+    padding: 0.75rem 1.5rem;
+    font-size: 0.875rem;
+  }
+}
