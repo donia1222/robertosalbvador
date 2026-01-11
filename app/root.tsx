@@ -9,7 +9,7 @@ import {
 } from "@remix-run/react";
 import type { LinksFunction } from "@remix-run/node";
 import { Analytics } from "@vercel/analytics/remix"
-import { ThemeProvider, LanguageProvider } from "~/context";
+import { ThemeProvider, LanguageProvider, ColorProvider } from "~/context";
 import { PageLoader } from "~/components/PageLoader";
 import styles from "~/styles/global.css?url";
 
@@ -19,6 +19,33 @@ const themeScript = `
     const theme = localStorage.getItem('portfolio-theme');
     if (theme === 'dark' || (!theme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
       document.documentElement.setAttribute('data-theme', 'dark');
+    }
+  })();
+`;
+
+// Script para aplicar colores guardados antes del render
+const colorScript = `
+  (function() {
+    const colors = {
+      cyan: { primary: '#06b6d4', secondary: '#22d3ee', accent: '#67e8f9' },
+      orange: { primary: '#ff6b35', secondary: '#ff8c42', accent: '#ffa366' },
+      blue: { primary: '#2563eb', secondary: '#3b82f6', accent: '#60a5fa' },
+      green: { primary: '#10b981', secondary: '#34d399', accent: '#6ee7b7' },
+      purple: { primary: '#8b5cf6', secondary: '#a78bfa', accent: '#c4b5fd' },
+      red: { primary: '#ef4444', secondary: '#f87171', accent: '#fca5a5' },
+      pink: { primary: '#ec4899', secondary: '#f472b6', accent: '#f9a8d4' }
+    };
+    const savedColor = localStorage.getItem('portfolio-color') || 'cyan';
+    const scheme = colors[savedColor] || colors.cyan;
+    document.documentElement.style.setProperty('--color-primary', scheme.primary);
+    document.documentElement.style.setProperty('--color-secondary', scheme.secondary);
+    document.documentElement.style.setProperty('--color-accent', scheme.accent);
+    document.documentElement.style.setProperty('--shadow-glow', '0 0 40px ' + scheme.primary + '66');
+
+    // Actualizar meta theme-color
+    const metaThemeColor = document.querySelector('meta[name="theme-color"]');
+    if (metaThemeColor) {
+      metaThemeColor.setAttribute('content', scheme.primary);
     }
   })();
 `;
@@ -55,6 +82,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Meta />
         <Links />
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
+        <script dangerouslySetInnerHTML={{ __html: colorScript }} />
         <script dangerouslySetInnerHTML={{ __html: loaderScript }} />
         <style dangerouslySetInnerHTML={{ __html: `
           #root-content {
@@ -78,8 +106,10 @@ export default function App() {
   return (
     <LanguageProvider>
       <ThemeProvider>
-        <PageLoader />
-        <Outlet />
+        <ColorProvider>
+          <PageLoader />
+          <Outlet />
+        </ColorProvider>
       </ThemeProvider>
     </LanguageProvider>
   );

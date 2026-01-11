@@ -55,8 +55,11 @@ export function ScrollTextReveal() {
   const wordIndex = Math.floor(scrollProgress * currentWords.length);
   const currentWord = currentWords[Math.min(wordIndex, currentWords.length - 1)];
 
-  // Colores alternados: naranja y gris
-  const colors = ['#ff6b35', '#9ca3af'];
+  // Colores alternados: primario dinámico y gris
+  const primaryColor = typeof window !== 'undefined'
+    ? getComputedStyle(document.documentElement).getPropertyValue('--color-primary').trim()
+    : '#ff6b35';
+  const colors = [primaryColor, '#9ca3af'];
   const currentColor = colors[wordIndex % colors.length];
 
   // Escala: de 0.3 (pequeño) a 1.2 (grande pero legible)

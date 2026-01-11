@@ -29,8 +29,8 @@
 .badge {
   display: inline-block;
   padding: 0.5rem 1.25rem;
-  background: rgba(255, 107, 53, 0.2);
-  border: 1px solid rgba(255, 107, 53, 0.4);
+  background: color-mix(in srgb, var(--color-primary) 20%, transparent);
+  border: 1px solid color-mix(in srgb, var(--color-primary) 40%, transparent);
   border-radius: 100px;
   font-size: 0.875rem;
   font-weight: 600;
@@ -52,7 +52,7 @@
 }
 
 .highlight {
-  background: linear-gradient(135deg, #ff6b35, #ff8c42);
+  background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -92,11 +92,11 @@
     rgba(26, 26, 26, 0.95) 0%,
     rgba(36, 36, 36, 0.9) 100%
   );
-  border: 1px solid rgba(255, 107, 53, 0.3);
+  border: 1px solid color-mix(in srgb, var(--color-primary) 30%, transparent);
   backdrop-filter: blur(20px);
   box-shadow:
     0 20px 60px rgba(0, 0, 0, 0.5),
-    0 0 40px rgba(255, 107, 53, 0.2);
+    0 0 40px color-mix(in srgb, var(--color-primary) 20%, transparent);
 }
 
 .cardBack {
@@ -113,7 +113,7 @@
   font-weight: 900;
   background: linear-gradient(
     135deg,
-    rgba(255, 107, 53, 0.25) 0%,
+    color-mix(in srgb, var(--color-primary) 25%, transparent) 0%,
     rgba(255, 140, 66, 0.15) 50%,
     rgba(255, 163, 102, 0.1) 100%
   );
@@ -125,7 +125,7 @@
   font-family: "Sora", sans-serif;
   user-select: none;
   pointer-events: none;
-  filter: drop-shadow(0 0 40px rgba(255, 107, 53, 0.4));
+  filter: drop-shadow(0 0 40px color-mix(in srgb, var(--color-primary) 40%, transparent));
 }
 
 /* Glass overlay effect */
@@ -134,9 +134,9 @@
   inset: 0;
   background: linear-gradient(
     135deg,
-    rgba(255, 107, 53, 0.1) 0%,
+    color-mix(in srgb, var(--color-primary) 10%, transparent) 0%,
     transparent 50%,
-    rgba(255, 107, 53, 0.05) 100%
+    color-mix(in srgb, var(--color-primary) 5%, transparent) 100%
   );
   backdrop-filter: blur(10px);
   z-index: 1;
@@ -183,14 +183,14 @@
   top: 2rem;
   right: 2rem;
   padding: 0.5rem 1rem;
-  background: linear-gradient(135deg, #ff6b35, #ff8c42);
+  background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
   color: white;
   font-size: 0.75rem;
   font-weight: 700;
   border-radius: 100px;
   text-transform: uppercase;
   letter-spacing: 0.5px;
-  box-shadow: 0 4px 12px rgba(255, 107, 53, 0.4);
+  box-shadow: 0 4px 12px color-mix(in srgb, var(--color-primary) 40%, transparent);
   font-family: "Sora", sans-serif;
   animation: pulse 2s ease-in-out infinite;
 }
@@ -198,19 +198,19 @@
 @keyframes pulse {
   0%, 100% {
     transform: scale(1);
-    box-shadow: 0 4px 12px rgba(255, 107, 53, 0.4);
+    box-shadow: 0 4px 12px color-mix(in srgb, var(--color-primary) 40%, transparent);
   }
   50% {
     transform: scale(1.05);
-    box-shadow: 0 6px 20px rgba(255, 107, 53, 0.6);
+    box-shadow: 0 6px 20px color-mix(in srgb, var(--color-primary) 60%, transparent);
   }
 }
 
 .category {
   display: inline-block;
   padding: 0.4rem 1rem;
-  background: rgba(255, 107, 53, 0.2);
-  border: 1px solid rgba(255, 107, 53, 0.4);
+  background: color-mix(in srgb, var(--color-primary) 20%, transparent);
+  border: 1px solid color-mix(in srgb, var(--color-primary) 40%, transparent);
   border-radius: 8px;
   font-size: 0.875rem;
   font-weight: 600;
@@ -252,19 +252,19 @@
 
 .tag {
   padding: 0.5rem 1.25rem;
-  background: rgba(255, 107, 53, 0.1);
-  border: 1px solid rgba(255, 107, 53, 0.3);
+  background: color-mix(in srgb, var(--color-primary) 10%, transparent);
+  border: 1px solid color-mix(in srgb, var(--color-primary) 30%, transparent);
   border-radius: 100px;
   font-size: 0.875rem;
   font-weight: 600;
-  color: #ff6b35;
+  color: var(--color-primary);
   transition: all 0.3s;
   backdrop-filter: blur(10px);
   font-family: "Sora", sans-serif;
 }
 
 .tag:hover {
-  background: rgba(255, 107, 53, 0.2);
+  background: color-mix(in srgb, var(--color-primary) 20%, transparent);
   transform: translateY(-2px);
 }
 
@@ -289,12 +289,12 @@
   text-decoration: none;
   transition: all 0.3s;
   font-family: "Sora", sans-serif;
-  box-shadow: 0 4px 15px rgba(255, 107, 53, 0.3);
+  box-shadow: 0 4px 15px color-mix(in srgb, var(--color-primary) 30%, transparent);
 }
 
 .btnView:hover {
   transform: translateX(4px) translateY(-2px);
-  box-shadow: 0 6px 20px rgba(255, 107, 53, 0.5);
+  box-shadow: 0 6px 20px color-mix(in srgb, var(--color-primary) 50%, transparent);
 }
 
 /* Platforms */
@@ -344,23 +344,23 @@
 }
 
 .progressNumber:hover {
-  background: rgba(255, 107, 53, 0.2);
-  border-color: rgba(255, 107, 53, 0.4);
+  background: color-mix(in srgb, var(--color-primary) 20%, transparent);
+  border-color: color-mix(in srgb, var(--color-primary) 40%, transparent);
   transform: scale(1.1);
 }
 
 .progressNumber.active {
-  background: linear-gradient(135deg, #ff6b35, #ff8c42);
-  border-color: #ff6b35;
+  background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+  border-color: var(--color-primary);
   color: white;
   transform: scale(1.2);
-  box-shadow: 0 0 20px rgba(255, 107, 53, 0.6);
+  box-shadow: 0 0 20px color-mix(in srgb, var(--color-primary) 60%, transparent);
 }
 
 .progressNumber.completed {
-  background: rgba(255, 107, 53, 0.3);
-  border-color: #ff6b35;
-  color: #ff6b35;
+  background: color-mix(in srgb, var(--color-primary) 30%, transparent);
+  border-color: var(--color-primary);
+  color: var(--color-primary);
 }
 
 /* Responsive */

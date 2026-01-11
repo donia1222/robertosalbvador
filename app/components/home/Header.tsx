@@ -3,7 +3,7 @@ import { useEffect, useState, useRef } from "react";
 import { HiHome, HiSparkles, HiFolder, HiCubeTransparent, HiMail, HiPhone, HiMenu, HiX, HiDownload } from "react-icons/hi";
 import styles from "./Header.module.css";
 import handleDownloadVCard from "~/utils/downloadVCard";
-import { useLanguage } from "~/context";
+import { useLanguage, useColor, type ColorScheme } from "~/context";
 
 const navigationKeys = [
   { key: "nav.inicio", href: "#inicio", icon: HiHome },
@@ -23,6 +23,7 @@ const menuBackgrounds = [
 
 export function Header() {
   const { t, language, setLanguage } = useLanguage();
+  const { color, setColor, colors } = useColor();
   const [activeSection, setActiveSection] = useState(0);
   const [displayedText, setDisplayedText] = useState("");
   const [displayedSubtitle, setDisplayedSubtitle] = useState("");
@@ -241,26 +242,46 @@ export function Header() {
             </button>
           </div>
 
+          {/* Color selector */}
+          <div className={styles.colorSelector}>
+
+            <div className={styles.colorOptions}>
+              {(Object.keys(colors) as ColorScheme[]).map((colorKey) => (
+                <button
+                  key={colorKey}
+                  onClick={() => setColor(colorKey)}
+                  className={`${styles.colorButton} ${color === colorKey ? styles.colorButtonActive : ''}`}
+                  style={{ backgroundColor: colors[colorKey].primary }}
+                  aria-label={`Color ${colors[colorKey].name}`}
+                  title={colors[colorKey].name}
+                />
+              ))}
+            </div>
+          </div>
+
           {/* Language selector */}
           <div className={styles.languageSelector}>
-            <button
-              onClick={() => setLanguage('es')}
-              className={`${styles.languageButton} ${language === 'es' ? styles.languageButtonActive : ''}`}
-            >
-              Español
-            </button>
-            <button
-              onClick={() => setLanguage('de')}
-              className={`${styles.languageButton} ${language === 'de' ? styles.languageButtonActive : ''}`}
-            >
-              Deutsch
-            </button>
-            <button
-              onClick={() => setLanguage('en')}
-              className={`${styles.languageButton} ${language === 'en' ? styles.languageButtonActive : ''}`}
-            >
-              English
-            </button>
+            <span className={styles.selectorLabel}>Language:</span>
+            <div className={styles.languageOptions}>
+              <button
+                onClick={() => setLanguage('es')}
+                className={`${styles.languageButton} ${language === 'es' ? styles.languageButtonActive : ''}`}
+              >
+                Español
+              </button>
+              <button
+                onClick={() => setLanguage('de')}
+                className={`${styles.languageButton} ${language === 'de' ? styles.languageButtonActive : ''}`}
+              >
+                Deutsch
+              </button>
+              <button
+                onClick={() => setLanguage('en')}
+                className={`${styles.languageButton} ${language === 'en' ? styles.languageButtonActive : ''}`}
+              >
+                English
+              </button>
+            </div>
           </div>
         </div>
       </div>

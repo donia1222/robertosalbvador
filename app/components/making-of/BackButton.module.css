@@ -9,7 +9,7 @@
   gap: 0.75rem;
   padding: 0.875rem 1.5rem;
   background: rgba(26, 26, 26, 0.9);
-  border: 1px solid rgba(255, 107, 53, 0.3);
+  border: 1px solid color-mix(in srgb, var(--color-primary) 30%, transparent);
   border-radius: 50px;
   text-decoration: none;
   color: var(--color-text);
@@ -18,17 +18,17 @@
   backdrop-filter: blur(20px);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3),
-              0 0 40px rgba(255, 107, 53, 0.1),
+              0 0 40px color-mix(in srgb, var(--color-primary) 10%, transparent),
               inset 0 1px 0 rgba(255, 255, 255, 0.1);
   overflow: hidden;
 }
 
 .backButton:hover {
   background: rgba(26, 26, 26, 0.95);
-  border-color: rgba(255, 107, 53, 0.5);
+  border-color: color-mix(in srgb, var(--color-primary) 50%, transparent);
   transform: translateX(-4px);
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4),
-              0 0 60px rgba(255, 107, 53, 0.2),
+              0 0 60px color-mix(in srgb, var(--color-primary) 20%, transparent),
               inset 0 1px 0 rgba(255, 255, 255, 0.15);
 }
 

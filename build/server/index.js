@@ -1,14 +1,15 @@
 import { jsx, jsxs, Fragment } from "react/jsx-runtime";
 import { PassThrough } from "node:stream";
 import { createReadableStreamFromReadable, json } from "@remix-run/node";
-import { RemixServer, Outlet, Meta, Links, ScrollRestoration, Scripts, useRouteError, isRouteErrorResponse, Link } from "@remix-run/react";
+import { RemixServer, Outlet, Meta, Links, ScrollRestoration, Scripts, useRouteError, isRouteErrorResponse, Link, useNavigate } from "@remix-run/react";
 import { isbot } from "isbot";
 import { renderToPipeableStream } from "react-dom/server";
 import { Analytics } from "@vercel/analytics/remix";
 import { useState, useEffect, createContext, useContext, useRef } from "react";
 import { HiMenu, HiX, HiHome, HiSparkles, HiFolder, HiCubeTransparent, HiMail, HiPhone, HiDownload, HiLocationMarker } from "react-icons/hi";
-import { SiReact, SiNextdotjs, SiTypescript, SiNodedotjs, SiExpo, SiOpenai, SiSwift, SiXcode, SiFirebase, SiGraphql, SiTailwindcss } from "react-icons/si";
+import { SiReact, SiNodedotjs, SiOpenai, SiApple, SiAndroid, SiNextdotjs, SiTypescript, SiExpo, SiSwift, SiXcode, SiFirebase, SiGraphql, SiTailwindcss } from "react-icons/si";
 import { TbBrandReactNative } from "react-icons/tb";
+import { FaMobileAlt, FaGithub } from "react-icons/fa";
 const ABORT_DELAY = 5e3;
 function handleRequest(request, responseStatusCode, responseHeaders, remixContext, _loadContext) {
   return isbot(request.headers.get("user-agent") || "") ? handleBotRequest(
@@ -180,6 +181,11 @@ const translations = {
     "apps.visit": "Visitar sitio",
     "apps.ios": "iOS",
     "apps.android": "Android",
+    "apps.makingOf": "Ver cómo se hicieron",
+    // Making Of Banner
+    "makingOfBanner.tag": "Detrás de Escena",
+    "makingOfBanner.subtitle": "Descubre el proceso creativo, herramientas y tecnologías detrás del desarrollo de estas aplicaciones",
+    "makingOfBanner.button": "Explora el Proceso",
     // Websites
     "websites.title.part1": "Sitios web",
     "websites.title.highlight": "publicados",
@@ -190,7 +196,15 @@ const translations = {
     "tech.title.part1": "Tecnologías que",
     "tech.title.highlight": "domino",
     "tech.subtitle": "Herramientas y frameworks que uso para crear experiencias increíbles",
+    // Claude Code Banner
+    "claudeCode.badge": "DESDE 2025",
+    "claudeCode.title": "Mi copiloto: Claude Code",
+    "claudeCode.description": "4 agentes especializados entrenados para mis requerimientos. Trabajo mucho más rápido y puedo ofrecer precios inmejorables gracias a esta tecnología de vanguardia.",
+    "claudeCode.agents": "Agentes IA",
+    "claudeCode.speed": "Más rápido",
+    "claudeCode.prices": "Mejores precios",
     // Contact
+    "contact.badge": "Contacto",
     "contact.title": "Contacto",
     "contact.location.title": "Dirección",
     "contact.location.address": "Sevelen, Schweiz",
@@ -203,6 +217,7 @@ const translations = {
     "contact.cta.title": "¿Tienes un proyecto en mente?",
     "contact.cta.subtitle": "Hablemos sobre cómo puedo ayudarte a hacer realidad tu aplicación",
     "contact.cta.button": "Descargar Tarjeta de Visita",
+    "contact.cta.github": "Ver GitHub",
     // Footer
     "footer.copyright": "© 2026 Roberto Salvador Schweiz",
     "footer.legal": "Aviso Legal",
@@ -211,6 +226,116 @@ const translations = {
     "meta.title": "Roberto Salvador | Desarrollador de Apps y Webs Modernas en Suiza | St. Gallen & Liechtenstein",
     "meta.description": "Desarrollador freelance especializado en aplicaciones móviles y páginas webs modernas en Suiza. React Native, Next.js, Remix. Servicios en St. Gallen, Liechtenstein y toda Suiza. +5 años de experiencia, 30+ apps desarrolladas.",
     "meta.keywords": "desarrollador apps Suiza, desarrollador web St. Gallen, React Native Liechtenstein, páginas web modernas Suiza, desarrollo móvil iOS Android, Next.js developer Switzerland, Remix developer, desarrollador freelance Suiza, app developer St. Gallen, web development Liechtenstein, desarrollador React Native Suiza",
+    // Making Of Page
+    "makingOf.badge": "Making Of",
+    "makingOf.title": "Cómo se hicieron",
+    "makingOf.subtitle": "las apps",
+    "makingOf.description": "Descubre el proceso de desarrollo, arquitectura y tecnologías detrás de cada aplicación",
+    "makingOf.viewDetails": "Ver cómo se hizo",
+    "makingOf.back": "Volver",
+    // Modal
+    "makingOf.modal.overview": "Descripción General",
+    "makingOf.modal.techStack": "Stack Tecnológico",
+    "makingOf.modal.features": "Características Principales",
+    "makingOf.modal.integrations": "Integraciones",
+    "makingOf.modal.links": "Enlaces",
+    "makingOf.modal.website": "Sitio Web",
+    // BuyVoice
+    "makingOf.buyvoice.description": "Lista de compras inteligente con reconocimiento de voz y IA",
+    "makingOf.buyvoice.overview": "BuyVoice es una aplicación de lista de compras que utiliza reconocimiento de voz y GPT-4 para crear listas automáticamente. Solo habla lo que necesitas y la IA organiza tu lista de compras de forma inteligente.",
+    "makingOf.buyvoice.features.voice": "Reconocimiento de voz en tiempo real",
+    "makingOf.buyvoice.features.ai": "Procesamiento inteligente con GPT-4",
+    "makingOf.buyvoice.features.offline": "Modo offline con AsyncStorage",
+    "makingOf.buyvoice.features.multilang": "Soporte multiidioma (ES, DE, EN)",
+    "makingOf.buyvoice.architecture.title": "Arquitectura",
+    "makingOf.buyvoice.architecture.contextApi": "Context API para gestión de estado global",
+    "makingOf.buyvoice.architecture.localStorage": "Almacenamiento local para persistencia de datos",
+    "makingOf.buyvoice.architecture.aiIntegration": "Integración con OpenAI para procesamiento de voz",
+    "makingOf.buyvoice.screens.title": "Pantallas Principales",
+    "makingOf.buyvoice.screens.home": "Pantalla principal con entrada de voz",
+    "makingOf.buyvoice.screens.lists": "Gestión de listas de compras",
+    "makingOf.buyvoice.screens.settings": "Configuración y preferencias",
+    // Hundezonen
+    "makingOf.hundezonen.description": "Encuentra zonas para perros en Suiza con mapas interactivos",
+    "makingOf.hundezonen.overview": "Hundezonen es la aplicación definitiva para dueños de perros en Suiza. Encuentra zonas cercanas donde tu perro puede jugar libremente, con información detallada de cada ubicación y navegación GPS.",
+    "makingOf.hundezonen.features.map": "Mapa interactivo con todas las zonas para perros",
+    "makingOf.hundezonen.features.gps": "Navegación GPS a zonas cercanas",
+    "makingOf.hundezonen.features.filters": "Filtros por tipo de zona y servicios",
+    "makingOf.hundezonen.features.offline": "Funcionamiento offline con caché de datos",
+    "makingOf.hundezonen.architecture.title": "Arquitectura",
+    "makingOf.hundezonen.architecture.maps": "React Native Maps para visualización geográfica",
+    "makingOf.hundezonen.architecture.geolocation": "Geolocation API para ubicación en tiempo real",
+    "makingOf.hundezonen.architecture.backend": "Backend PHP/MySQL para gestión de zonas",
+    "makingOf.hundezonen.screens.title": "Pantallas Principales",
+    "makingOf.hundezonen.screens.map": "Vista de mapa con todas las zonas",
+    "makingOf.hundezonen.screens.list": "Lista de zonas con filtros",
+    "makingOf.hundezonen.screens.details": "Detalles de cada zona para perros",
+    "makingOf.hundezonen.screens.favorites": "Zonas favoritas guardadas",
+    // FoodScan AI
+    "makingOf.foodscan.description": "Escanea alimentos y obtén información nutricional con IA",
+    "makingOf.foodscan.overview": "FoodScan AI utiliza la visión por computadora de GPT-4 para analizar alimentos desde la cámara. Obtén información nutricional instantánea, calorías, macros y sugerencias de recetas saludables.",
+    "makingOf.foodscan.features.camera": "Escaneo con cámara en tiempo real",
+    "makingOf.foodscan.features.nutrition": "Análisis nutricional detallado con GPT-4 Vision",
+    "makingOf.foodscan.features.history": "Historial de escaneos y seguimiento diario",
+    "makingOf.foodscan.features.multilang": "Disponible en español, alemán e inglés",
+    "makingOf.foodscan.architecture.title": "Arquitectura",
+    "makingOf.foodscan.architecture.vision": "GPT-4 Vision para reconocimiento de alimentos",
+    "makingOf.foodscan.architecture.imageProcessing": "Procesamiento de imágenes con Expo Camera",
+    "makingOf.foodscan.architecture.caching": "Sistema de caché para respuestas rápidas",
+    "makingOf.foodscan.screens.title": "Pantallas Principales",
+    "makingOf.foodscan.screens.camera": "Cámara con detección automática",
+    "makingOf.foodscan.screens.analysis": "Análisis nutricional detallado",
+    "makingOf.foodscan.screens.history": "Historial de alimentos escaneados",
+    "makingOf.foodscan.screens.profile": "Perfil y objetivos nutricionales",
+    // DogMentor KI
+    "makingOf.dogmentor.description": "Asistente virtual inteligente para entrenamiento canino",
+    "makingOf.dogmentor.overview": "DogMentor es tu entrenador canino personal impulsado por IA. Obtén consejos personalizados sobre comportamiento, entrenamiento y salud de tu perro con respuestas contextuales basadas en GPT-4.",
+    "makingOf.dogmentor.features.chat": "Chat inteligente con GPT-4",
+    "makingOf.dogmentor.features.training": "Guías de entrenamiento personalizadas",
+    "makingOf.dogmentor.features.behavior": "Análisis de comportamiento canino",
+    "makingOf.dogmentor.features.personalized": "Respuestas adaptadas al perfil de tu perro",
+    "makingOf.dogmentor.architecture.title": "Arquitectura",
+    "makingOf.dogmentor.architecture.chat": "Sistema de chat con historial contextual",
+    "makingOf.dogmentor.architecture.context": "Context API para perfil del perro",
+    "makingOf.dogmentor.architecture.prompts": "Prompts especializados para entrenamiento canino",
+    "makingOf.dogmentor.screens.title": "Pantallas Principales",
+    "makingOf.dogmentor.screens.chat": "Chat con el asistente DogMentor",
+    "makingOf.dogmentor.screens.dogProfile": "Perfil del perro (raza, edad, comportamiento)",
+    "makingOf.dogmentor.screens.tips": "Consejos y guías de entrenamiento",
+    "makingOf.dogmentor.screens.settings": "Configuración y preferencias",
+    // KetoRecipeLab
+    "makingOf.ketorecipe.description": "Generador de recetas Keto y Paleo con IA",
+    "makingOf.ketorecipe.overview": "KetoRecipeLab es una aplicación completa para dietas Keto y Paleo. Genera recetas personalizadas con IA, planifica tus comidas semanales, calcula planes nutricionales y guarda tus favoritas. Con suscripción para funciones premium.",
+    "makingOf.ketorecipe.features.aiRecipes": "Generación de recetas con GPT-4",
+    "makingOf.ketorecipe.features.mealPlan": "Planificador de comidas semanal",
+    "makingOf.ketorecipe.features.nutrition": "Cálculo de plan nutricional personalizado",
+    "makingOf.ketorecipe.features.favorites": "Sistema de favoritos y base de datos de recetas",
+    "makingOf.ketorecipe.architecture.title": "Arquitectura",
+    "makingOf.ketorecipe.architecture.contexts": "4 Context Providers (Language, Favorites, Subscription, DietType)",
+    "makingOf.ketorecipe.architecture.services": "Services Layer (MealPlan, NutritionPlan)",
+    "makingOf.ketorecipe.architecture.backend": "Backend PHP/MySQL para almacenamiento de recetas",
+    "makingOf.ketorecipe.screens.title": "Pantallas Principales",
+    "makingOf.ketorecipe.screens.home": "Generador de recetas con IA",
+    "makingOf.ketorecipe.screens.explore": "Explorar recetas con filtros",
+    "makingOf.ketorecipe.screens.favorites": "Recetas favoritas guardadas",
+    "makingOf.ketorecipe.screens.nutrition": "Plan nutricional personalizado",
+    "makingOf.ketorecipe.screens.profile": "Perfil y suscripción",
+    // Work Ti
+    "makingOf.workti.description": "Control de tiempo inteligente para equipos y freelancers",
+    "makingOf.workti.overview": "Work Ti es una aplicación de seguimiento de tiempo diseñada para freelancers y equipos. Registra horas trabajadas, gestiona proyectos, genera reportes detallados y exporta datos para facturación.",
+    "makingOf.workti.features.tracking": "Seguimiento de tiempo en tiempo real",
+    "makingOf.workti.features.reports": "Reportes detallados con gráficos",
+    "makingOf.workti.features.projects": "Gestión de múltiples proyectos",
+    "makingOf.workti.features.export": "Exportación a CSV para facturación",
+    "makingOf.workti.architecture.title": "Arquitectura",
+    "makingOf.workti.architecture.timeTracking": "Sistema de cronómetro con precisión de segundos",
+    "makingOf.workti.architecture.localStorage": "AsyncStorage para persistencia de datos",
+    "makingOf.workti.architecture.charts": "Gráficos interactivos con React Native Charts",
+    "makingOf.workti.screens.title": "Pantallas Principales",
+    "makingOf.workti.screens.timer": "Cronómetro de seguimiento",
+    "makingOf.workti.screens.projects": "Lista de proyectos activos",
+    "makingOf.workti.screens.reports": "Reportes y estadísticas",
+    "makingOf.workti.screens.settings": "Configuración y exportación",
     // Error messages
     "error.oops": "¡Ups!",
     "error.unexpected": "Ha ocurrido un error inesperado.",
@@ -231,7 +356,7 @@ const translations = {
     // Hero
     "hero.greeting": "Hallo, ich bin",
     "hero.title.part1": "Entwickler von",
-    "hero.title.highlight": "herausragenden nativen Apps",
+    "hero.title.highlight": "Mobile Apps",
     "hero.title.part2": "",
     "hero.subtitle": "Spezialisiert auf React Native und Full-Stack-Entwicklung. Ich verwandle Ideen in leistungsstarke mobile und Web-Anwendungen.",
     "hero.experience": "Jahre Erfahrung",
@@ -265,6 +390,11 @@ const translations = {
     "apps.visit": "Website besuchen",
     "apps.ios": "iOS",
     "apps.android": "Android",
+    "apps.makingOf": "Siehe wie sie gemacht wurden",
+    // Making Of Banner
+    "makingOfBanner.tag": "Hinter den Kulissen",
+    "makingOfBanner.subtitle": "Entdecken Sie den kreativen Prozess, die Werkzeuge und Technologien hinter der Entwicklung dieser Anwendungen",
+    "makingOfBanner.button": "Erkunden Sie den Prozess",
     // Websites
     "websites.title.part1": "Veröffentlichte",
     "websites.title.highlight": "Websites",
@@ -275,7 +405,15 @@ const translations = {
     "tech.title.part1": "Technologien, die ich",
     "tech.title.highlight": "beherrsche",
     "tech.subtitle": "Tools und Frameworks, die ich verwende, um unglaubliche Erfahrungen zu schaffen",
+    // Claude Code Banner
+    "claudeCode.badge": "SEIT 2025",
+    "claudeCode.title": "Mein Copilot: Claude Code",
+    "claudeCode.description": "4 spezialisierte Agenten, die für meine Anforderungen trainiert wurden. Ich arbeite viel schneller und kann dank dieser Spitzentechnologie unschlagbare Preise anbieten.",
+    "claudeCode.agents": "KI-Agenten",
+    "claudeCode.speed": "Schneller",
+    "claudeCode.prices": "Beste Preise",
     // Contact
+    "contact.badge": "Kontakt",
     "contact.title": "Kontakt",
     "contact.location.title": "Adresse",
     "contact.location.address": "Sevelen, Schweiz",
@@ -288,6 +426,7 @@ const translations = {
     "contact.cta.title": "Haben Sie ein Projekt im Kopf?",
     "contact.cta.subtitle": "Lassen Sie uns darüber sprechen, wie ich Ihnen helfen kann, Ihre Anwendung zu verwirklichen",
     "contact.cta.button": "Visitenkarte herunterladen",
+    "contact.cta.github": "GitHub ansehen",
     // Footer
     "footer.copyright": "© 2026 Roberto Salvador Schweiz",
     "footer.legal": "Impressum",
@@ -296,21 +435,349 @@ const translations = {
     "meta.title": "Roberto Salvador | Entwickler für moderne Apps und Websites in der Schweiz | St. Gallen & Liechtenstein",
     "meta.description": "Freiberuflicher Entwickler spezialisiert auf mobile Anwendungen und moderne Websites in der Schweiz. React Native, Next.js, Remix. Dienstleistungen in St. Gallen, Liechtenstein und der gesamten Schweiz. +5 Jahre Erfahrung, 30+ entwickelte Apps.",
     "meta.keywords": "App Entwickler Schweiz, Web Entwickler St. Gallen, React Native Liechtenstein, moderne Websites Schweiz, Mobile Entwicklung iOS Android, Next.js Entwickler Schweiz, Remix Entwickler, Freelance Entwickler Schweiz, App Entwickler St. Gallen, Web Entwicklung Liechtenstein, React Native Entwickler Schweiz",
+    // Making Of Page
+    "makingOf.badge": "Making Of",
+    "makingOf.title": "Wie entstanden",
+    "makingOf.subtitle": "die Apps",
+    "makingOf.description": "Entdecken Sie den Entwicklungsprozess, die Architektur und die Technologien hinter jeder Anwendung",
+    "makingOf.viewDetails": "Siehe wie es gemacht wurde",
+    "makingOf.back": "Zurück",
+    // Modal
+    "makingOf.modal.overview": "Übersicht",
+    "makingOf.modal.techStack": "Technologie-Stack",
+    "makingOf.modal.features": "Hauptfunktionen",
+    "makingOf.modal.integrations": "Integrationen",
+    "makingOf.modal.links": "Links",
+    "makingOf.modal.website": "Website",
+    // BuyVoice
+    "makingOf.buyvoice.description": "Intelligente Einkaufsliste mit Spracherkennung und KI",
+    "makingOf.buyvoice.overview": "BuyVoice ist eine Einkaufslisten-App, die Spracherkennung und GPT-4 verwendet, um Listen automatisch zu erstellen. Sprechen Sie einfach, was Sie brauchen, und die KI organisiert Ihre Einkaufsliste intelligent.",
+    "makingOf.buyvoice.features.voice": "Echtzeit-Spracherkennung",
+    "makingOf.buyvoice.features.ai": "Intelligente Verarbeitung mit GPT-4",
+    "makingOf.buyvoice.features.offline": "Offline-Modus mit AsyncStorage",
+    "makingOf.buyvoice.features.multilang": "Mehrsprachig (ES, DE, EN)",
+    "makingOf.buyvoice.architecture.title": "Architektur",
+    "makingOf.buyvoice.architecture.contextApi": "Context API für globales Zustandsmanagement",
+    "makingOf.buyvoice.architecture.localStorage": "Lokale Speicherung für Datenpersistenz",
+    "makingOf.buyvoice.architecture.aiIntegration": "OpenAI-Integration für Sprachverarbeitung",
+    "makingOf.buyvoice.screens.title": "Hauptbildschirme",
+    "makingOf.buyvoice.screens.home": "Hauptbildschirm mit Spracheingabe",
+    "makingOf.buyvoice.screens.lists": "Verwaltung von Einkaufslisten",
+    "makingOf.buyvoice.screens.settings": "Einstellungen und Präferenzen",
+    // Hundezonen
+    "makingOf.hundezonen.description": "Finden Sie Hundezonen in der Schweiz mit interaktiven Karten",
+    "makingOf.hundezonen.overview": "Hundezonen ist die ultimative App für Hundebesitzer in der Schweiz. Finden Sie nahegelegene Zonen, wo Ihr Hund frei spielen kann, mit detaillierten Informationen zu jedem Standort und GPS-Navigation.",
+    "makingOf.hundezonen.features.map": "Interaktive Karte mit allen Hundezonen",
+    "makingOf.hundezonen.features.gps": "GPS-Navigation zu nahegelegenen Zonen",
+    "makingOf.hundezonen.features.filters": "Filter nach Zonentyp und Diensten",
+    "makingOf.hundezonen.features.offline": "Offline-Betrieb mit Daten-Cache",
+    "makingOf.hundezonen.architecture.title": "Architektur",
+    "makingOf.hundezonen.architecture.maps": "React Native Maps für geografische Visualisierung",
+    "makingOf.hundezonen.architecture.geolocation": "Geolocation API für Echtzeit-Standort",
+    "makingOf.hundezonen.architecture.backend": "PHP/MySQL Backend für Zonenverwaltung",
+    "makingOf.hundezonen.screens.title": "Hauptbildschirme",
+    "makingOf.hundezonen.screens.map": "Kartenansicht mit allen Zonen",
+    "makingOf.hundezonen.screens.list": "Zonenliste mit Filtern",
+    "makingOf.hundezonen.screens.details": "Details jeder Hundezone",
+    "makingOf.hundezonen.screens.favorites": "Gespeicherte Lieblingszonen",
+    // FoodScan AI
+    "makingOf.foodscan.description": "Scannen Sie Lebensmittel und erhalten Sie Nährwertinformationen mit KI",
+    "makingOf.foodscan.overview": "FoodScan AI verwendet GPT-4 Computer Vision, um Lebensmittel von der Kamera zu analysieren. Erhalten Sie sofortige Nährwertinformationen, Kalorien, Makros und gesunde Rezeptvorschläge.",
+    "makingOf.foodscan.features.camera": "Echtzeit-Kamera-Scan",
+    "makingOf.foodscan.features.nutrition": "Detaillierte Nährwertanalyse mit GPT-4 Vision",
+    "makingOf.foodscan.features.history": "Scan-Verlauf und tägliche Verfolgung",
+    "makingOf.foodscan.features.multilang": "Verfügbar auf Spanisch, Deutsch und Englisch",
+    "makingOf.foodscan.architecture.title": "Architektur",
+    "makingOf.foodscan.architecture.vision": "GPT-4 Vision für Lebensmittelerkennung",
+    "makingOf.foodscan.architecture.imageProcessing": "Bildverarbeitung mit Expo Camera",
+    "makingOf.foodscan.architecture.caching": "Cache-System für schnelle Antworten",
+    "makingOf.foodscan.screens.title": "Hauptbildschirme",
+    "makingOf.foodscan.screens.camera": "Kamera mit automatischer Erkennung",
+    "makingOf.foodscan.screens.analysis": "Detaillierte Nährwertanalyse",
+    "makingOf.foodscan.screens.history": "Verlauf gescannter Lebensmittel",
+    "makingOf.foodscan.screens.profile": "Profil und Ernährungsziele",
+    // DogMentor KI
+    "makingOf.dogmentor.description": "Intelligenter virtueller Assistent für Hundetraining",
+    "makingOf.dogmentor.overview": "DogMentor ist Ihr persönlicher KI-gesteuerter Hundetrainer. Erhalten Sie personalisierte Ratschläge zu Verhalten, Training und Gesundheit Ihres Hundes mit kontextbasierten Antworten von GPT-4.",
+    "makingOf.dogmentor.features.chat": "Intelligenter Chat mit GPT-4",
+    "makingOf.dogmentor.features.training": "Personalisierte Trainingsanleitungen",
+    "makingOf.dogmentor.features.behavior": "Analyse des Hundeverhaltens",
+    "makingOf.dogmentor.features.personalized": "Antworten angepasst an das Profil Ihres Hundes",
+    "makingOf.dogmentor.architecture.title": "Architektur",
+    "makingOf.dogmentor.architecture.chat": "Chat-System mit Kontextverlauf",
+    "makingOf.dogmentor.architecture.context": "Context API für Hundeprofil",
+    "makingOf.dogmentor.architecture.prompts": "Spezialisierte Prompts für Hundetraining",
+    "makingOf.dogmentor.screens.title": "Hauptbildschirme",
+    "makingOf.dogmentor.screens.chat": "Chat mit DogMentor Assistent",
+    "makingOf.dogmentor.screens.dogProfile": "Hundeprofil (Rasse, Alter, Verhalten)",
+    "makingOf.dogmentor.screens.tips": "Tipps und Trainingsanleitungen",
+    "makingOf.dogmentor.screens.settings": "Einstellungen und Präferenzen",
+    // KetoRecipeLab
+    "makingOf.ketorecipe.description": "Keto- und Paleo-Rezeptgenerator mit KI",
+    "makingOf.ketorecipe.overview": "KetoRecipeLab ist eine vollständige App für Keto- und Paleo-Diäten. Generieren Sie personalisierte Rezepte mit KI, planen Sie Ihre wöchentlichen Mahlzeiten, berechnen Sie Ernährungspläne und speichern Sie Ihre Favoriten. Mit Abonnement für Premium-Funktionen.",
+    "makingOf.ketorecipe.features.aiRecipes": "Rezeptgenerierung mit GPT-4",
+    "makingOf.ketorecipe.features.mealPlan": "Wöchentlicher Mahlzeitenplaner",
+    "makingOf.ketorecipe.features.nutrition": "Personalisierte Ernährungsplan-Berechnung",
+    "makingOf.ketorecipe.features.favorites": "Favoritensystem und Rezeptdatenbank",
+    "makingOf.ketorecipe.architecture.title": "Architektur",
+    "makingOf.ketorecipe.architecture.contexts": "4 Context Provider (Language, Favorites, Subscription, DietType)",
+    "makingOf.ketorecipe.architecture.services": "Services Layer (MealPlan, NutritionPlan)",
+    "makingOf.ketorecipe.architecture.backend": "PHP/MySQL Backend für Rezeptspeicherung",
+    "makingOf.ketorecipe.screens.title": "Hauptbildschirme",
+    "makingOf.ketorecipe.screens.home": "KI-Rezeptgenerator",
+    "makingOf.ketorecipe.screens.explore": "Rezepte mit Filtern erkunden",
+    "makingOf.ketorecipe.screens.favorites": "Gespeicherte Lieblingsrezepte",
+    "makingOf.ketorecipe.screens.nutrition": "Personalisierter Ernährungsplan",
+    "makingOf.ketorecipe.screens.profile": "Profil und Abonnement",
+    // Work Ti
+    "makingOf.workti.description": "Intelligente Zeiterfassung für Teams und Freelancer",
+    "makingOf.workti.overview": "Work Ti ist eine Zeiterfassungs-App für Freelancer und Teams. Erfassen Sie gearbeitete Stunden, verwalten Sie Projekte, generieren Sie detaillierte Berichte und exportieren Sie Daten zur Rechnungsstellung.",
+    "makingOf.workti.features.tracking": "Echtzeit-Zeiterfassung",
+    "makingOf.workti.features.reports": "Detaillierte Berichte mit Grafiken",
+    "makingOf.workti.features.projects": "Verwaltung mehrerer Projekte",
+    "makingOf.workti.features.export": "Export nach CSV für Rechnungsstellung",
+    "makingOf.workti.architecture.title": "Architektur",
+    "makingOf.workti.architecture.timeTracking": "Stoppuhr-System mit Sekundengenauigkeit",
+    "makingOf.workti.architecture.localStorage": "AsyncStorage für Datenpersistenz",
+    "makingOf.workti.architecture.charts": "Interaktive Grafiken mit React Native Charts",
+    "makingOf.workti.screens.title": "Hauptbildschirme",
+    "makingOf.workti.screens.timer": "Tracking-Stoppuhr",
+    "makingOf.workti.screens.projects": "Liste aktiver Projekte",
+    "makingOf.workti.screens.reports": "Berichte und Statistiken",
+    "makingOf.workti.screens.settings": "Einstellungen und Export",
     // Error messages
     "error.oops": "Hoppla!",
     "error.unexpected": "Ein unerwarteter Fehler ist aufgetreten.",
     "error.404": "404",
     "error.notFound": "Die gesuchte Seite existiert nicht.",
     "error.error": "Fehler"
+  },
+  en: {
+    // Header
+    "nav.inicio": "Home",
+    "nav.servicios": "Services",
+    "nav.proyectos": "Projects",
+    "nav.tech": "Tech Stack",
+    "nav.contacto": "Contact",
+    "header.phone": "Phone",
+    "header.email": "Email",
+    "header.download": "Download Contact",
+    // Hero
+    "hero.greeting": "Hi, I'm",
+    "hero.title.part1": "Creator of",
+    "hero.title.highlight": "Native Apps",
+    "hero.title.part2": "",
+    "hero.subtitle": "Specialized in React Native and Full-Stack development. I transform ideas into high-performance mobile and web applications.",
+    "hero.experience": "Years of Experience",
+    "hero.apps": "Developed Apps",
+    "hero.satisfaction": "Client Satisfaction",
+    "hero.cta.projects": "View Projects",
+    "hero.cta.contact": "Contact",
+    // Services
+    "services.title": "Services",
+    "services.mobile.title": "Mobile Applications",
+    "services.mobile.subtitle": "iOS & Android",
+    "services.mobile.description": "Native mobile app development with React Native, optimized for iOS and Android.",
+    "services.web.title": "Web Development",
+    "services.web.subtitle": "Modern & Responsive",
+    "services.web.description": "Modern websites and web applications with Next.js, Remix and the latest technologies.",
+    "services.ai.title": "AI Integration",
+    "services.ai.subtitle": "ChatGPT & More",
+    "services.ai.description": "Integration of artificial intelligence in your applications with OpenAI, chatbots and automation.",
+    "services.consulting.title": "Tech Consulting",
+    "services.consulting.subtitle": "Strategic Solutions",
+    "services.consulting.description": "Specialized technical consulting in architecture, optimization and scalability of projects.",
+    // OtherApps
+    "apps.title": "My apps",
+    "apps.subtitle": "published",
+    "apps.buyvoice.description": "Speak and the list is created automatically. Shopping list with AI.",
+    "apps.hundezonen.description": "The app for you and your dog. Find dog zones near you.",
+    "apps.foodscan.description": "Transform your fridge into recipes! Recipe suggestions with AI.",
+    "apps.dogmentor.description": "Everything you need to know about dogs!",
+    "apps.keto.description": "Create unique Keto and Paleo recipes",
+    "apps.workti.description": "Smart time tracking for teams and freelancers.",
+    "apps.visit": "Visit site",
+    "apps.ios": "iOS",
+    "apps.android": "Android",
+    "apps.makingOf": "See how they were made",
+    // Making Of Banner
+    "makingOfBanner.tag": "Behind the Scenes",
+    "makingOfBanner.subtitle": "Discover the creative process, tools, and technologies behind the development of these applications",
+    "makingOfBanner.button": "Explore the Journey",
+    // Websites
+    "websites.title.part1": "Published",
+    "websites.title.highlight": "Websites",
+    "websites.subtitle": "Professional websites developed",
+    "websites.visit": "Visit",
+    // TechCarousel
+    "tech.badge": "Tech Stack",
+    "tech.title.part1": "Technologies I",
+    "tech.title.highlight": "master",
+    "tech.subtitle": "Tools and frameworks I use to create incredible experiences",
+    // Claude Code Banner
+    "claudeCode.badge": "SINCE 2025",
+    "claudeCode.title": "My copilot: Claude Code",
+    "claudeCode.description": "4 specialized agents trained for my requirements. I work much faster and can offer unbeatable prices thanks to this cutting-edge technology.",
+    "claudeCode.agents": "AI Agents",
+    "claudeCode.speed": "Faster",
+    "claudeCode.prices": "Best prices",
+    // Contact
+    "contact.badge": "Contact",
+    "contact.title": "Contact",
+    "contact.location.title": "Address",
+    "contact.location.address": "Sevelen, Switzerland",
+    "contact.location.postal": "9475",
+    "contact.phone.title": "Phone",
+    "contact.email.title": "Email",
+    "contact.header.title.part1": "Ready to",
+    "contact.header.title.highlight": "work together",
+    "contact.header.title.part2": "?",
+    "contact.cta.title": "Have a project in mind?",
+    "contact.cta.subtitle": "Let's talk about how I can help you bring your application to life",
+    "contact.cta.button": "Download Business Card",
+    "contact.cta.github": "View GitHub",
+    // Footer
+    "footer.copyright": "© 2026 Roberto Salvador Switzerland",
+    "footer.legal": "Legal Notice",
+    "footer.privacy": "Privacy",
+    // Metadata
+    "meta.title": "Roberto Salvador | Modern App & Web Developer in Switzerland | St. Gallen & Liechtenstein",
+    "meta.description": "Freelance developer specialized in mobile applications and modern websites in Switzerland. React Native, Next.js, Remix. Services in St. Gallen, Liechtenstein and all of Switzerland. +5 years of experience, 30+ developed apps.",
+    "meta.keywords": "app developer Switzerland, web developer St. Gallen, React Native Liechtenstein, modern websites Switzerland, mobile development iOS Android, Next.js developer Switzerland, Remix developer, freelance developer Switzerland, app developer St. Gallen, web development Liechtenstein, React Native developer Switzerland",
+    // Making Of Page
+    "makingOf.badge": "Making Of",
+    "makingOf.title": "How were made",
+    "makingOf.subtitle": "the apps",
+    "makingOf.description": "Discover the development process, architecture and technologies behind each application",
+    "makingOf.viewDetails": "See how it was made",
+    "makingOf.back": "Back",
+    // Modal
+    "makingOf.modal.overview": "Overview",
+    "makingOf.modal.techStack": "Tech Stack",
+    "makingOf.modal.features": "Key Features",
+    "makingOf.modal.integrations": "Integrations",
+    "makingOf.modal.links": "Links",
+    "makingOf.modal.website": "Website",
+    // BuyVoice
+    "makingOf.buyvoice.description": "Smart shopping list with voice recognition and AI",
+    "makingOf.buyvoice.overview": "BuyVoice is a shopping list app that uses voice recognition and GPT-4 to create lists automatically. Just speak what you need and the AI organizes your shopping list intelligently.",
+    "makingOf.buyvoice.features.voice": "Real-time voice recognition",
+    "makingOf.buyvoice.features.ai": "Intelligent processing with GPT-4",
+    "makingOf.buyvoice.features.offline": "Offline mode with AsyncStorage",
+    "makingOf.buyvoice.features.multilang": "Multilingual support (ES, DE, EN)",
+    "makingOf.buyvoice.architecture.title": "Architecture",
+    "makingOf.buyvoice.architecture.contextApi": "Context API for global state management",
+    "makingOf.buyvoice.architecture.localStorage": "Local storage for data persistence",
+    "makingOf.buyvoice.architecture.aiIntegration": "OpenAI integration for voice processing",
+    "makingOf.buyvoice.screens.title": "Main Screens",
+    "makingOf.buyvoice.screens.home": "Home screen with voice input",
+    "makingOf.buyvoice.screens.lists": "Shopping list management",
+    "makingOf.buyvoice.screens.settings": "Settings and preferences",
+    // Hundezonen
+    "makingOf.hundezonen.description": "Find dog zones in Switzerland with interactive maps",
+    "makingOf.hundezonen.overview": "Hundezonen is the ultimate app for dog owners in Switzerland. Find nearby zones where your dog can play freely, with detailed information for each location and GPS navigation.",
+    "makingOf.hundezonen.features.map": "Interactive map with all dog zones",
+    "makingOf.hundezonen.features.gps": "GPS navigation to nearby zones",
+    "makingOf.hundezonen.features.filters": "Filters by zone type and services",
+    "makingOf.hundezonen.features.offline": "Offline operation with data cache",
+    "makingOf.hundezonen.architecture.title": "Architecture",
+    "makingOf.hundezonen.architecture.maps": "React Native Maps for geographic visualization",
+    "makingOf.hundezonen.architecture.geolocation": "Geolocation API for real-time location",
+    "makingOf.hundezonen.architecture.backend": "PHP/MySQL backend for zone management",
+    "makingOf.hundezonen.screens.title": "Main Screens",
+    "makingOf.hundezonen.screens.map": "Map view with all zones",
+    "makingOf.hundezonen.screens.list": "Zone list with filters",
+    "makingOf.hundezonen.screens.details": "Details of each dog zone",
+    "makingOf.hundezonen.screens.favorites": "Saved favorite zones",
+    // FoodScan AI
+    "makingOf.foodscan.description": "Scan food and get nutritional information with AI",
+    "makingOf.foodscan.overview": "FoodScan AI uses GPT-4 computer vision to analyze food from the camera. Get instant nutritional information, calories, macros and healthy recipe suggestions.",
+    "makingOf.foodscan.features.camera": "Real-time camera scanning",
+    "makingOf.foodscan.features.nutrition": "Detailed nutritional analysis with GPT-4 Vision",
+    "makingOf.foodscan.features.history": "Scan history and daily tracking",
+    "makingOf.foodscan.features.multilang": "Available in Spanish, German and English",
+    "makingOf.foodscan.architecture.title": "Architecture",
+    "makingOf.foodscan.architecture.vision": "GPT-4 Vision for food recognition",
+    "makingOf.foodscan.architecture.imageProcessing": "Image processing with Expo Camera",
+    "makingOf.foodscan.architecture.caching": "Cache system for fast responses",
+    "makingOf.foodscan.screens.title": "Main Screens",
+    "makingOf.foodscan.screens.camera": "Camera with automatic detection",
+    "makingOf.foodscan.screens.analysis": "Detailed nutritional analysis",
+    "makingOf.foodscan.screens.history": "Scanned food history",
+    "makingOf.foodscan.screens.profile": "Profile and nutrition goals",
+    // DogMentor KI
+    "makingOf.dogmentor.description": "Intelligent virtual assistant for dog training",
+    "makingOf.dogmentor.overview": "DogMentor is your AI-powered personal dog trainer. Get personalized advice on your dog's behavior, training and health with context-based responses from GPT-4.",
+    "makingOf.dogmentor.features.chat": "Smart chat with GPT-4",
+    "makingOf.dogmentor.features.training": "Personalized training guides",
+    "makingOf.dogmentor.features.behavior": "Canine behavior analysis",
+    "makingOf.dogmentor.features.personalized": "Responses adapted to your dog's profile",
+    "makingOf.dogmentor.architecture.title": "Architecture",
+    "makingOf.dogmentor.architecture.chat": "Chat system with contextual history",
+    "makingOf.dogmentor.architecture.context": "Context API for dog profile",
+    "makingOf.dogmentor.architecture.prompts": "Specialized prompts for dog training",
+    "makingOf.dogmentor.screens.title": "Main Screens",
+    "makingOf.dogmentor.screens.chat": "Chat with DogMentor assistant",
+    "makingOf.dogmentor.screens.dogProfile": "Dog profile (breed, age, behavior)",
+    "makingOf.dogmentor.screens.tips": "Tips and training guides",
+    "makingOf.dogmentor.screens.settings": "Settings and preferences",
+    // KetoRecipeLab
+    "makingOf.ketorecipe.description": "Keto and Paleo recipe generator with AI",
+    "makingOf.ketorecipe.overview": "KetoRecipeLab is a complete app for Keto and Paleo diets. Generate personalized recipes with AI, plan your weekly meals, calculate nutrition plans and save your favorites. With subscription for premium features.",
+    "makingOf.ketorecipe.features.aiRecipes": "Recipe generation with GPT-4",
+    "makingOf.ketorecipe.features.mealPlan": "Weekly meal planner",
+    "makingOf.ketorecipe.features.nutrition": "Personalized nutrition plan calculation",
+    "makingOf.ketorecipe.features.favorites": "Favorites system and recipe database",
+    "makingOf.ketorecipe.architecture.title": "Architecture",
+    "makingOf.ketorecipe.architecture.contexts": "4 Context Providers (Language, Favorites, Subscription, DietType)",
+    "makingOf.ketorecipe.architecture.services": "Services Layer (MealPlan, NutritionPlan)",
+    "makingOf.ketorecipe.architecture.backend": "PHP/MySQL backend for recipe storage",
+    "makingOf.ketorecipe.screens.title": "Main Screens",
+    "makingOf.ketorecipe.screens.home": "AI recipe generator",
+    "makingOf.ketorecipe.screens.explore": "Explore recipes with filters",
+    "makingOf.ketorecipe.screens.favorites": "Saved favorite recipes",
+    "makingOf.ketorecipe.screens.nutrition": "Personalized nutrition plan",
+    "makingOf.ketorecipe.screens.profile": "Profile and subscription",
+    // Work Ti
+    "makingOf.workti.description": "Smart time tracking for teams and freelancers",
+    "makingOf.workti.overview": "Work Ti is a time tracking app designed for freelancers and teams. Record worked hours, manage projects, generate detailed reports and export data for billing.",
+    "makingOf.workti.features.tracking": "Real-time time tracking",
+    "makingOf.workti.features.reports": "Detailed reports with charts",
+    "makingOf.workti.features.projects": "Multiple project management",
+    "makingOf.workti.features.export": "Export to CSV for billing",
+    "makingOf.workti.architecture.title": "Architecture",
+    "makingOf.workti.architecture.timeTracking": "Stopwatch system with second precision",
+    "makingOf.workti.architecture.localStorage": "AsyncStorage for data persistence",
+    "makingOf.workti.architecture.charts": "Interactive charts with React Native Charts",
+    "makingOf.workti.screens.title": "Main Screens",
+    "makingOf.workti.screens.timer": "Tracking stopwatch",
+    "makingOf.workti.screens.projects": "Active project list",
+    "makingOf.workti.screens.reports": "Reports and statistics",
+    "makingOf.workti.screens.settings": "Settings and export",
+    // Error messages
+    "error.oops": "Oops!",
+    "error.unexpected": "An unexpected error has occurred.",
+    "error.404": "404",
+    "error.notFound": "The page you are looking for does not exist.",
+    "error.error": "Error"
   }
 };
 function LanguageProvider({ children }) {
   const [language, setLanguageState] = useState("de");
   const [mounted, setMounted] = useState(false);
   useEffect(() => {
+    var _a;
     const savedLanguage = localStorage.getItem("portfolio-language");
-    if (savedLanguage && (savedLanguage === "es" || savedLanguage === "de")) {
+    if (savedLanguage && (savedLanguage === "es" || savedLanguage === "de" || savedLanguage === "en")) {
       setLanguageState(savedLanguage);
+    } else {
+      const browserLang = navigator.language || ((_a = navigator.languages) == null ? void 0 : _a[0]) || "en";
+      const langCode = browserLang.toLowerCase().split("-")[0];
+      if (langCode === "es" || langCode === "de" || langCode === "en") {
+        setLanguageState(langCode);
+      } else {
+        setLanguageState("en");
+      }
     }
     setMounted(true);
   }, []);
@@ -335,42 +802,147 @@ function useLanguage() {
   }
   return context;
 }
-const pageLoader = "_pageLoader_1jypk_3";
-const fadeOut = "_fadeOut_1jypk_15";
-const backgroundImage$1 = "_backgroundImage_1jypk_21";
-const image = "_image_1jypk_30";
-const overlay = "_overlay_1jypk_51";
-const content$1 = "_content_1jypk_77";
-const name = "_name_1jypk_89";
-const nameChar = "_nameChar_1jypk_107";
-const nameSpace = "_nameSpace_1jypk_113";
-const divider = "_divider_1jypk_132";
-const title$6 = "_title_1jypk_156";
-const progressBar = "_progressBar_1jypk_181";
-const progressFill = "_progressFill_1jypk_192";
-const particles$3 = "_particles_1jypk_215";
-const particle$3 = "_particle_1jypk_215";
-const styles$9 = {
+const COLOR_SCHEMES = {
+  orange: {
+    name: "Orange",
+    primary: "#ff6b35",
+    secondary: "#ff8c42",
+    accent: "#ffa366"
+  },
+  blue: {
+    name: "Blue",
+    primary: "#2563eb",
+    // Azul vibrante
+    secondary: "#3b82f6",
+    // Azul medio
+    accent: "#60a5fa"
+    // Azul claro
+  },
+  green: {
+    name: "Green",
+    primary: "#10b981",
+    // Verde esmeralda
+    secondary: "#34d399",
+    // Verde claro
+    accent: "#6ee7b7"
+    // Verde pastel
+  },
+  purple: {
+    name: "Purple",
+    primary: "#8b5cf6",
+    // Púrpura vibrante
+    secondary: "#a78bfa",
+    // Púrpura claro
+    accent: "#c4b5fd"
+    // Lavanda
+  },
+  red: {
+    name: "Red",
+    primary: "#ef4444",
+    // Rojo vibrante
+    secondary: "#f87171",
+    // Rojo cálido
+    accent: "#fca5a5"
+    // Rojo claro
+  },
+  cyan: {
+    name: "Cyan",
+    primary: "#06b6d4",
+    // Cyan vibrante
+    secondary: "#22d3ee",
+    // Cyan brillante
+    accent: "#67e8f9"
+    // Cyan claro
+  },
+  pink: {
+    name: "Pink",
+    primary: "#ec4899",
+    // Rosa vibrante
+    secondary: "#f472b6",
+    // Rosa cálido
+    accent: "#f9a8d4"
+    // Rosa claro
+  }
+};
+const ColorContext = createContext(void 0);
+function ColorProvider({ children }) {
+  const [color, setColorState] = useState("orange");
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => {
+    const savedColor = localStorage.getItem("portfolio-color");
+    if (savedColor && COLOR_SCHEMES[savedColor]) {
+      setColorState(savedColor);
+    }
+    setMounted(true);
+  }, []);
+  useEffect(() => {
+    if (mounted) {
+      localStorage.setItem("portfolio-color", color);
+      const scheme = COLOR_SCHEMES[color];
+      document.documentElement.style.setProperty("--color-primary", scheme.primary);
+      document.documentElement.style.setProperty("--color-secondary", scheme.secondary);
+      document.documentElement.style.setProperty("--color-accent", scheme.accent);
+      document.documentElement.style.setProperty(
+        "--shadow-glow",
+        `0 0 40px ${scheme.primary}66`
+      );
+      const metaThemeColor = document.querySelector('meta[name="theme-color"]');
+      if (metaThemeColor) {
+        metaThemeColor.setAttribute("content", scheme.primary);
+      }
+    }
+  }, [color, mounted]);
+  const setColor = (newColor) => {
+    if (COLOR_SCHEMES[newColor]) {
+      setColorState(newColor);
+    }
+  };
+  return /* @__PURE__ */ jsx(ColorContext.Provider, { value: { color, setColor, mounted, colors: COLOR_SCHEMES }, children });
+}
+function useColor() {
+  const context = useContext(ColorContext);
+  if (context === void 0) {
+    throw new Error("useColor must be used within a ColorProvider");
+  }
+  return context;
+}
+const pageLoader = "_pageLoader_1kt76_3";
+const fadeOut = "_fadeOut_1kt76_15";
+const backgroundImage$1 = "_backgroundImage_1kt76_21";
+const image = "_image_1kt76_30";
+const overlay = "_overlay_1kt76_51";
+const content$2 = "_content_1kt76_77";
+const name = "_name_1kt76_89";
+const nameChar = "_nameChar_1kt76_107";
+const nameSpace = "_nameSpace_1kt76_113";
+const divider = "_divider_1kt76_132";
+const title$7 = "_title_1kt76_156";
+const progressBar = "_progressBar_1kt76_181";
+const progressFill = "_progressFill_1kt76_192";
+const particles$3 = "_particles_1kt76_215";
+const particle$4 = "_particle_1kt76_215";
+const styles$g = {
   pageLoader,
   fadeOut,
   backgroundImage: backgroundImage$1,
   image,
   overlay,
-  content: content$1,
+  content: content$2,
   name,
   nameChar,
   nameSpace,
   divider,
-  title: title$6,
+  title: title$7,
   progressBar,
   progressFill,
   particles: particles$3,
-  particle: particle$3
+  particle: particle$4
 };
 function PageLoader() {
   const [isLoading, setIsLoading] = useState(true);
   const [fadeOut2, setFadeOut] = useState(false);
   useEffect(() => {
+    document.documentElement.style.setProperty("--initial-display", "block");
     const timer = setTimeout(() => {
       setFadeOut(true);
       setTimeout(() => {
@@ -380,43 +952,43 @@ function PageLoader() {
     return () => clearTimeout(timer);
   }, []);
   if (!isLoading) return null;
-  return /* @__PURE__ */ jsxs("div", { className: `${styles$9.pageLoader} ${fadeOut2 ? styles$9.fadeOut : ""}`, children: [
-    /* @__PURE__ */ jsx("div", { className: styles$9.backgroundImage, children: /* @__PURE__ */ jsx(
+  return /* @__PURE__ */ jsxs("div", { className: `${styles$g.pageLoader} ${fadeOut2 ? styles$g.fadeOut : ""}`, children: [
+    /* @__PURE__ */ jsx("div", { className: styles$g.backgroundImage, children: /* @__PURE__ */ jsx(
       "img",
       {
         src: "/15_07_35.png",
         alt: "Roberto Salvador",
-        className: styles$9.image
+        className: styles$g.image
       }
     ) }),
-    /* @__PURE__ */ jsx("div", { className: styles$9.overlay }),
-    /* @__PURE__ */ jsxs("div", { className: styles$9.content, children: [
-      /* @__PURE__ */ jsxs("h1", { className: styles$9.name, children: [
-        /* @__PURE__ */ jsx("span", { className: styles$9.nameChar, style: { animationDelay: "0.5s" }, children: "R" }),
-        /* @__PURE__ */ jsx("span", { className: styles$9.nameChar, style: { animationDelay: "0.6s" }, children: "o" }),
-        /* @__PURE__ */ jsx("span", { className: styles$9.nameChar, style: { animationDelay: "0.7s" }, children: "b" }),
-        /* @__PURE__ */ jsx("span", { className: styles$9.nameChar, style: { animationDelay: "0.8s" }, children: "e" }),
-        /* @__PURE__ */ jsx("span", { className: styles$9.nameChar, style: { animationDelay: "0.9s" }, children: "r" }),
-        /* @__PURE__ */ jsx("span", { className: styles$9.nameChar, style: { animationDelay: "1.0s" }, children: "t" }),
-        /* @__PURE__ */ jsx("span", { className: styles$9.nameChar, style: { animationDelay: "1.1s" }, children: "o" }),
-        /* @__PURE__ */ jsx("span", { className: styles$9.nameSpace, children: " " }),
-        /* @__PURE__ */ jsx("span", { className: styles$9.nameChar, style: { animationDelay: "1.2s" }, children: "S" }),
-        /* @__PURE__ */ jsx("span", { className: styles$9.nameChar, style: { animationDelay: "1.3s" }, children: "a" }),
-        /* @__PURE__ */ jsx("span", { className: styles$9.nameChar, style: { animationDelay: "1.4s" }, children: "l" }),
-        /* @__PURE__ */ jsx("span", { className: styles$9.nameChar, style: { animationDelay: "1.5s" }, children: "v" }),
-        /* @__PURE__ */ jsx("span", { className: styles$9.nameChar, style: { animationDelay: "1.6s" }, children: "a" }),
-        /* @__PURE__ */ jsx("span", { className: styles$9.nameChar, style: { animationDelay: "1.7s" }, children: "d" }),
-        /* @__PURE__ */ jsx("span", { className: styles$9.nameChar, style: { animationDelay: "1.8s" }, children: "o" }),
-        /* @__PURE__ */ jsx("span", { className: styles$9.nameChar, style: { animationDelay: "1.9s" }, children: "r" })
+    /* @__PURE__ */ jsx("div", { className: styles$g.overlay }),
+    /* @__PURE__ */ jsxs("div", { className: styles$g.content, children: [
+      /* @__PURE__ */ jsxs("h1", { className: styles$g.name, children: [
+        /* @__PURE__ */ jsx("span", { className: styles$g.nameChar, style: { animationDelay: "0.5s" }, children: "R" }),
+        /* @__PURE__ */ jsx("span", { className: styles$g.nameChar, style: { animationDelay: "0.6s" }, children: "o" }),
+        /* @__PURE__ */ jsx("span", { className: styles$g.nameChar, style: { animationDelay: "0.7s" }, children: "b" }),
+        /* @__PURE__ */ jsx("span", { className: styles$g.nameChar, style: { animationDelay: "0.8s" }, children: "e" }),
+        /* @__PURE__ */ jsx("span", { className: styles$g.nameChar, style: { animationDelay: "0.9s" }, children: "r" }),
+        /* @__PURE__ */ jsx("span", { className: styles$g.nameChar, style: { animationDelay: "1.0s" }, children: "t" }),
+        /* @__PURE__ */ jsx("span", { className: styles$g.nameChar, style: { animationDelay: "1.1s" }, children: "o" }),
+        /* @__PURE__ */ jsx("span", { className: styles$g.nameSpace, children: " " }),
+        /* @__PURE__ */ jsx("span", { className: styles$g.nameChar, style: { animationDelay: "1.2s" }, children: "S" }),
+        /* @__PURE__ */ jsx("span", { className: styles$g.nameChar, style: { animationDelay: "1.3s" }, children: "a" }),
+        /* @__PURE__ */ jsx("span", { className: styles$g.nameChar, style: { animationDelay: "1.4s" }, children: "l" }),
+        /* @__PURE__ */ jsx("span", { className: styles$g.nameChar, style: { animationDelay: "1.5s" }, children: "v" }),
+        /* @__PURE__ */ jsx("span", { className: styles$g.nameChar, style: { animationDelay: "1.6s" }, children: "a" }),
+        /* @__PURE__ */ jsx("span", { className: styles$g.nameChar, style: { animationDelay: "1.7s" }, children: "d" }),
+        /* @__PURE__ */ jsx("span", { className: styles$g.nameChar, style: { animationDelay: "1.8s" }, children: "o" }),
+        /* @__PURE__ */ jsx("span", { className: styles$g.nameChar, style: { animationDelay: "1.9s" }, children: "r" })
       ] }),
-      /* @__PURE__ */ jsx("div", { className: styles$9.divider }),
-      /* @__PURE__ */ jsx("p", { className: styles$9.title, children: "Full-Stack Developer" }),
-      /* @__PURE__ */ jsx("div", { className: styles$9.progressBar, children: /* @__PURE__ */ jsx("div", { className: styles$9.progressFill }) })
+      /* @__PURE__ */ jsx("div", { className: styles$g.divider }),
+      /* @__PURE__ */ jsx("p", { className: styles$g.title, children: "Full-Stack Developer" }),
+      /* @__PURE__ */ jsx("div", { className: styles$g.progressBar, children: /* @__PURE__ */ jsx("div", { className: styles$g.progressFill }) })
     ] }),
-    /* @__PURE__ */ jsx("div", { className: styles$9.particles, children: [...Array(20)].map((_, i) => /* @__PURE__ */ jsx(
+    /* @__PURE__ */ jsx("div", { className: styles$g.particles, children: [...Array(20)].map((_, i) => /* @__PURE__ */ jsx(
       "div",
       {
-        className: styles$9.particle,
+        className: styles$g.particle,
         style: {
           left: `${Math.random() * 100}%`,
           top: `${Math.random() * 100}%`,
@@ -428,13 +1000,43 @@ function PageLoader() {
     )) })
   ] });
 }
-const styles$8 = "/assets/global-BzwcOZu3.css";
+const styles$f = "/assets/global-BzwcOZu3.css";
 const themeScript = `
   (function() {
     const theme = localStorage.getItem('portfolio-theme');
     if (theme === 'dark' || (!theme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
       document.documentElement.setAttribute('data-theme', 'dark');
     }
+  })();
+`;
+const colorScript = `
+  (function() {
+    const colors = {
+      orange: { primary: '#ff6b35', secondary: '#ff8c42', accent: '#ffa366' },
+      blue: { primary: '#2563eb', secondary: '#3b82f6', accent: '#60a5fa' },
+      green: { primary: '#10b981', secondary: '#34d399', accent: '#6ee7b7' },
+      purple: { primary: '#8b5cf6', secondary: '#a78bfa', accent: '#c4b5fd' },
+      red: { primary: '#ef4444', secondary: '#f87171', accent: '#fca5a5' },
+      cyan: { primary: '#06b6d4', secondary: '#22d3ee', accent: '#67e8f9' },
+      pink: { primary: '#ec4899', secondary: '#f472b6', accent: '#f9a8d4' }
+    };
+    const savedColor = localStorage.getItem('portfolio-color') || 'orange';
+    const scheme = colors[savedColor] || colors.orange;
+    document.documentElement.style.setProperty('--color-primary', scheme.primary);
+    document.documentElement.style.setProperty('--color-secondary', scheme.secondary);
+    document.documentElement.style.setProperty('--color-accent', scheme.accent);
+    document.documentElement.style.setProperty('--shadow-glow', '0 0 40px ' + scheme.primary + '66');
+
+    // Actualizar meta theme-color
+    const metaThemeColor = document.querySelector('meta[name="theme-color"]');
+    if (metaThemeColor) {
+      metaThemeColor.setAttribute('content', scheme.primary);
+    }
+  })();
+`;
+const loaderScript = `
+  (function() {
+    document.documentElement.style.setProperty('--initial-display', 'none');
   })();
 `;
 const links$1 = () => [
@@ -450,7 +1052,7 @@ const links$1 = () => [
     rel: "stylesheet",
     href: "https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&family=Sora:wght@300;400;500;600;700;800&display=swap"
   },
-  { rel: "stylesheet", href: styles$8 }
+  { rel: "stylesheet", href: styles$f }
 ];
 function Layout({ children }) {
   return /* @__PURE__ */ jsxs("html", { lang: "de", suppressHydrationWarning: true, children: [
@@ -459,10 +1061,17 @@ function Layout({ children }) {
       /* @__PURE__ */ jsx("meta", { name: "viewport", content: "width=device-width, initial-scale=1" }),
       /* @__PURE__ */ jsx(Meta, {}),
       /* @__PURE__ */ jsx(Links, {}),
-      /* @__PURE__ */ jsx("script", { dangerouslySetInnerHTML: { __html: themeScript } })
+      /* @__PURE__ */ jsx("script", { dangerouslySetInnerHTML: { __html: themeScript } }),
+      /* @__PURE__ */ jsx("script", { dangerouslySetInnerHTML: { __html: colorScript } }),
+      /* @__PURE__ */ jsx("script", { dangerouslySetInnerHTML: { __html: loaderScript } }),
+      /* @__PURE__ */ jsx("style", { dangerouslySetInnerHTML: { __html: `
+          #root-content {
+            display: var(--initial-display, block);
+          }
+        ` } })
     ] }),
     /* @__PURE__ */ jsxs("body", { children: [
-      children,
+      /* @__PURE__ */ jsx("div", { id: "root-content", children }),
       /* @__PURE__ */ jsx(ScrollRestoration, {}),
       /* @__PURE__ */ jsx(Analytics, {}),
       /* @__PURE__ */ jsx(Scripts, {})
@@ -470,10 +1079,10 @@ function Layout({ children }) {
   ] });
 }
 function App() {
-  return /* @__PURE__ */ jsx(LanguageProvider, { children: /* @__PURE__ */ jsxs(ThemeProvider, { children: [
+  return /* @__PURE__ */ jsx(LanguageProvider, { children: /* @__PURE__ */ jsx(ThemeProvider, { children: /* @__PURE__ */ jsxs(ColorProvider, { children: [
     /* @__PURE__ */ jsx(PageLoader, {}),
     /* @__PURE__ */ jsx(Outlet, {})
-  ] }) });
+  ] }) }) });
 }
 function ErrorBoundary() {
   const error = useRouteError();
@@ -490,6 +1099,12 @@ function ErrorBoundary() {
       unexpected: "Ein unerwarteter Fehler ist aufgetreten.",
       notFound: "Die gesuchte Seite existiert nicht.",
       error: "Fehler"
+    },
+    en: {
+      oops: "Oops!",
+      unexpected: "An unexpected error has occurred.",
+      notFound: "The page you are looking for does not exist.",
+      error: "Error"
     }
   };
   const t = translations2[lang] || translations2.de;
@@ -515,77 +1130,703 @@ const page = "_page_1p1s2_1";
 const main = "_main_1p1s2_7";
 const hero$1 = "_hero_1p1s2_12";
 const heroContent = "_heroContent_1p1s2_26";
-const fadeIn = "_fadeIn_1p1s2_1";
+const fadeIn$1 = "_fadeIn_1p1s2_1";
 const greeting$1 = "_greeting_1p1s2_32";
-const title$5 = "_title_1p1s2_44";
+const title$6 = "_title_1p1s2_44";
 const subtitle$2 = "_subtitle_1p1s2_59";
-const description$1 = "_description_1p1s2_67";
+const description$3 = "_description_1p1s2_67";
 const cta$1 = "_cta_1p1s2_75";
 const home_module = {
   page,
   main,
   hero: hero$1,
   heroContent,
-  fadeIn,
+  fadeIn: fadeIn$1,
   greeting: greeting$1,
-  title: title$5,
+  title: title$6,
   subtitle: subtitle$2,
-  description: description$1,
+  description: description$3,
   cta: cta$1
 };
 const route1 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
   cta: cta$1,
   default: home_module,
-  description: description$1,
-  fadeIn,
+  description: description$3,
+  fadeIn: fadeIn$1,
   greeting: greeting$1,
   hero: hero$1,
   heroContent,
   main,
   page,
   subtitle: subtitle$2,
-  title: title$5
+  title: title$6
 }, Symbol.toStringTag, { value: "Module" }));
-const header$4 = "_header_17ui3_1";
-const navbar = "_navbar_17ui3_23";
-const borderGlow = "_borderGlow_17ui3_48";
-const container$4 = "_container_17ui3_77";
-const logo = "_logo_17ui3_88";
-const logoContainer = "_logoContainer_17ui3_94";
-const logoText = "_logoText_17ui3_100";
-const logoSubtitle = "_logoSubtitle_17ui3_113";
-const cursor = "_cursor_17ui3_131";
-const menuButton = "_menuButton_17ui3_179";
-const menuIcon = "_menuIcon_17ui3_198";
-const menuModal = "_menuModal_17ui3_205";
-const menuModalOpen = "_menuModalOpen_17ui3_214";
-const menuBackground = "_menuBackground_17ui3_220";
-const menuBackgroundImage = "_menuBackgroundImage_17ui3_226";
-const menuBackgroundActive = "_menuBackgroundActive_17ui3_238";
-const menuOverlay = "_menuOverlay_17ui3_243";
-const closeButton$1 = "_closeButton_17ui3_256";
-const closeIcon = "_closeIcon_17ui3_287";
-const menuContent = "_menuContent_17ui3_298";
-const menuLogo = "_menuLogo_17ui3_311";
-const menuLogoText = "_menuLogoText_17ui3_327";
-const menuLogoSubtitle = "_menuLogoSubtitle_17ui3_340";
-const menuNav = "_menuNav_17ui3_348";
-const menuLink = "_menuLink_17ui3_357";
-const menuLinkActive = "_menuLinkActive_17ui3_399";
-const menuLinkIcon = "_menuLinkIcon_17ui3_404";
-const menuLinkText = "_menuLinkText_17ui3_415";
-const menuLinkArrow = "_menuLinkArrow_17ui3_419";
-const menuFooter = "_menuFooter_17ui3_433";
-const menuContactItem = "_menuContactItem_17ui3_449";
-const menuContactIcon = "_menuContactIcon_17ui3_475";
-const languageSelector$1 = "_languageSelector_17ui3_486";
-const languageButton = "_languageButton_17ui3_502";
-const languageButtonActive = "_languageButtonActive_17ui3_522";
-const transitionOverlay = "_transitionOverlay_17ui3_534";
-const devLoader = "_devLoader_17ui3_556";
-const devLetter = "_devLetter_17ui3_563";
-const styles$7 = {
+const wheelContainer = "_wheelContainer_1qnet_2";
+const centerDisplay = "_centerDisplay_1qnet_13";
+const centerIcon = "_centerIcon_1qnet_33";
+const centerTitle = "_centerTitle_1qnet_41";
+const centerPlaceholder = "_centerPlaceholder_1qnet_48";
+const placeholderIcon = "_placeholderIcon_1qnet_55";
+const placeholderText = "_placeholderText_1qnet_60";
+const wheel = "_wheel_1qnet_2";
+const appItem = "_appItem_1qnet_84";
+const appItemSelected = "_appItemSelected_1qnet_121";
+const appIcon = "_appIcon_1qnet_126";
+const orbitRing = "_orbitRing_1qnet_135";
+const styles$e = {
+  wheelContainer,
+  centerDisplay,
+  centerIcon,
+  centerTitle,
+  centerPlaceholder,
+  placeholderIcon,
+  placeholderText,
+  wheel,
+  appItem,
+  appItemSelected,
+  appIcon,
+  orbitRing
+};
+function AppWheel({ apps, selectedApp, onAppClick }) {
+  const [radius, setRadius] = useState(220);
+  useEffect(() => {
+    const updateRadius = () => {
+      if (window.innerWidth <= 480) {
+        setRadius(130);
+      } else if (window.innerWidth <= 768) {
+        setRadius(150);
+      } else {
+        setRadius(220);
+      }
+    };
+    updateRadius();
+    window.addEventListener("resize", updateRadius);
+    return () => window.removeEventListener("resize", updateRadius);
+  }, []);
+  return /* @__PURE__ */ jsxs("div", { className: styles$e.wheelContainer, children: [
+    /* @__PURE__ */ jsx("div", { className: styles$e.centerDisplay, children: selectedApp ? /* @__PURE__ */ jsxs(Fragment, { children: [
+      /* @__PURE__ */ jsx(
+        "img",
+        {
+          src: selectedApp.icon,
+          alt: selectedApp.name,
+          className: styles$e.centerIcon
+        }
+      ),
+      /* @__PURE__ */ jsx("h3", { className: styles$e.centerTitle, children: selectedApp.name })
+    ] }) : /* @__PURE__ */ jsxs("div", { className: styles$e.centerPlaceholder, children: [
+      /* @__PURE__ */ jsx("div", { className: styles$e.placeholderIcon, children: "📱" }),
+      /* @__PURE__ */ jsx("p", { className: styles$e.placeholderText, children: "Selecciona una app" })
+    ] }) }),
+    /* @__PURE__ */ jsx("div", { className: styles$e.wheel, children: apps.map((app, index) => {
+      const anglePerApp = 360 / apps.length;
+      const angle = index * anglePerApp;
+      const x = Math.sin(angle * Math.PI / 180) * radius;
+      const y = -Math.cos(angle * Math.PI / 180) * radius;
+      const isSelected = (selectedApp == null ? void 0 : selectedApp.id) === app.id;
+      return /* @__PURE__ */ jsx(
+        "button",
+        {
+          className: `${styles$e.appItem} ${isSelected ? styles$e.appItemSelected : ""}`,
+          style: {
+            "--x": `${x}px`,
+            "--y": `${y}px`
+          },
+          onClick: () => onAppClick(app),
+          children: /* @__PURE__ */ jsx("img", { src: app.icon, alt: app.name, className: styles$e.appIcon })
+        },
+        app.id
+      );
+    }) }),
+    /* @__PURE__ */ jsx("div", { className: styles$e.orbitRing })
+  ] });
+}
+const modalOverlay = "_modalOverlay_bhg7s_2";
+const modalContent$1 = "_modalContent_bhg7s_25";
+const closeButton$2 = "_closeButton_bhg7s_72";
+const modalHeader = "_modalHeader_bhg7s_104";
+const iconWrapper$2 = "_iconWrapper_bhg7s_115";
+const icon$2 = "_icon_bhg7s_115";
+const iconGlow$1 = "_iconGlow_bhg7s_130";
+const appTitle = "_appTitle_bhg7s_151";
+const appDescription = "_appDescription_bhg7s_159";
+const platforms$1 = "_platforms_bhg7s_167";
+const platformBadge = "_platformBadge_bhg7s_174";
+const platformIcon$1 = "_platformIcon_bhg7s_187";
+const modalBody$1 = "_modalBody_bhg7s_193";
+const section$1 = "_section_bhg7s_201";
+const sectionTitle = "_sectionTitle_bhg7s_207";
+const sectionIcon = "_sectionIcon_bhg7s_217";
+const sectionText = "_sectionText_bhg7s_221";
+const techGrid$1 = "_techGrid_bhg7s_229";
+const techBadge$1 = "_techBadge_bhg7s_235";
+const featureList = "_featureList_bhg7s_254";
+const featureItem = "_featureItem_bhg7s_263";
+const featureBullet = "_featureBullet_bhg7s_272";
+const integrationGrid = "_integrationGrid_bhg7s_279";
+const integrationBadge = "_integrationBadge_bhg7s_285";
+const linksGrid = "_linksGrid_bhg7s_304";
+const linkButton = "_linkButton_bhg7s_310";
+const linkIcon = "_linkIcon_bhg7s_333";
+const styles$d = {
+  modalOverlay,
+  modalContent: modalContent$1,
+  closeButton: closeButton$2,
+  modalHeader,
+  iconWrapper: iconWrapper$2,
+  icon: icon$2,
+  iconGlow: iconGlow$1,
+  appTitle,
+  appDescription,
+  platforms: platforms$1,
+  platformBadge,
+  platformIcon: platformIcon$1,
+  modalBody: modalBody$1,
+  section: section$1,
+  sectionTitle,
+  sectionIcon,
+  sectionText,
+  techGrid: techGrid$1,
+  techBadge: techBadge$1,
+  featureList,
+  featureItem,
+  featureBullet,
+  integrationGrid,
+  integrationBadge,
+  linksGrid,
+  linkButton,
+  linkIcon
+};
+function AppModal({ app, onClose }) {
+  const { t } = useLanguage();
+  useEffect(() => {
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = "auto";
+    };
+  }, []);
+  useEffect(() => {
+    const handleEscape = (e) => {
+      if (e.key === "Escape") {
+        onClose();
+      }
+    };
+    window.addEventListener("keydown", handleEscape);
+    return () => window.removeEventListener("keydown", handleEscape);
+  }, [onClose]);
+  return /* @__PURE__ */ jsx("div", { className: styles$d.modalOverlay, onClick: onClose, children: /* @__PURE__ */ jsxs("div", { className: styles$d.modalContent, onClick: (e) => e.stopPropagation(), children: [
+    /* @__PURE__ */ jsx("button", { className: styles$d.closeButton, onClick: onClose, children: /* @__PURE__ */ jsx("svg", { viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", children: /* @__PURE__ */ jsx("path", { strokeLinecap: "round", strokeLinejoin: "round", strokeWidth: 2, d: "M6 18L18 6M6 6l12 12" }) }) }),
+    /* @__PURE__ */ jsxs("div", { className: styles$d.modalHeader, children: [
+      /* @__PURE__ */ jsxs("div", { className: styles$d.iconWrapper, children: [
+        /* @__PURE__ */ jsx("img", { src: app.icon, alt: app.name, className: styles$d.icon }),
+        /* @__PURE__ */ jsx(
+          "div",
+          {
+            className: styles$d.iconGlow,
+            style: { backgroundColor: app.color }
+          }
+        )
+      ] }),
+      /* @__PURE__ */ jsx("h2", { className: styles$d.appTitle, children: app.name }),
+      /* @__PURE__ */ jsx("p", { className: styles$d.appDescription, children: t(app.descriptionKey) }),
+      /* @__PURE__ */ jsxs("div", { className: styles$d.platforms, children: [
+        app.platforms.includes("ios") && /* @__PURE__ */ jsxs("div", { className: styles$d.platformBadge, children: [
+          /* @__PURE__ */ jsx("svg", { className: styles$d.platformIcon, viewBox: "0 0 24 24", fill: "currentColor", children: /* @__PURE__ */ jsx("path", { d: "M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z" }) }),
+          "iOS"
+        ] }),
+        app.platforms.includes("android") && /* @__PURE__ */ jsxs("div", { className: styles$d.platformBadge, children: [
+          /* @__PURE__ */ jsx("svg", { className: styles$d.platformIcon, viewBox: "0 0 24 24", fill: "currentColor", children: /* @__PURE__ */ jsx("path", { d: "M3,20.5V3.5C3,2.91 3.34,2.39 3.84,2.15L13.69,12L3.84,21.85C3.34,21.6 3,21.09 3,20.5M16.81,15.12L6.05,21.34L14.54,12.85L16.81,15.12M20.16,10.81C20.5,11.08 20.75,11.5 20.75,12C20.75,12.5 20.5,12.92 20.16,13.19L17.89,14.5L15.39,12L17.89,9.5L20.16,10.81M6.05,2.66L16.81,8.88L14.54,11.15L6.05,2.66Z" }) }),
+          "Android"
+        ] })
+      ] })
+    ] }),
+    /* @__PURE__ */ jsxs("div", { className: styles$d.modalBody, children: [
+      /* @__PURE__ */ jsxs("section", { className: styles$d.section, children: [
+        /* @__PURE__ */ jsxs("h3", { className: styles$d.sectionTitle, children: [
+          /* @__PURE__ */ jsx("span", { className: styles$d.sectionIcon, children: "📋" }),
+          t("makingOf.modal.overview")
+        ] }),
+        /* @__PURE__ */ jsx("p", { className: styles$d.sectionText, children: t(app.overviewKey) })
+      ] }),
+      /* @__PURE__ */ jsxs("section", { className: styles$d.section, children: [
+        /* @__PURE__ */ jsxs("h3", { className: styles$d.sectionTitle, children: [
+          /* @__PURE__ */ jsx("span", { className: styles$d.sectionIcon, children: "⚙️" }),
+          t("makingOf.modal.techStack")
+        ] }),
+        /* @__PURE__ */ jsx("div", { className: styles$d.techGrid, children: app.techStack.map((tech) => /* @__PURE__ */ jsx("div", { className: styles$d.techBadge, children: tech }, tech)) })
+      ] }),
+      /* @__PURE__ */ jsxs("section", { className: styles$d.section, children: [
+        /* @__PURE__ */ jsxs("h3", { className: styles$d.sectionTitle, children: [
+          /* @__PURE__ */ jsx("span", { className: styles$d.sectionIcon, children: "✨" }),
+          t("makingOf.modal.features")
+        ] }),
+        /* @__PURE__ */ jsx("ul", { className: styles$d.featureList, children: app.features.map((featureKey) => /* @__PURE__ */ jsxs("li", { className: styles$d.featureItem, children: [
+          /* @__PURE__ */ jsx("span", { className: styles$d.featureBullet, children: "→" }),
+          t(featureKey)
+        ] }, featureKey)) })
+      ] }),
+      /* @__PURE__ */ jsxs("section", { className: styles$d.section, children: [
+        /* @__PURE__ */ jsxs("h3", { className: styles$d.sectionTitle, children: [
+          /* @__PURE__ */ jsx("span", { className: styles$d.sectionIcon, children: "🏗️" }),
+          t(app.architecture.titleKey)
+        ] }),
+        /* @__PURE__ */ jsx("ul", { className: styles$d.featureList, children: app.architecture.items.map((itemKey) => /* @__PURE__ */ jsxs("li", { className: styles$d.featureItem, children: [
+          /* @__PURE__ */ jsx("span", { className: styles$d.featureBullet, children: "→" }),
+          t(itemKey)
+        ] }, itemKey)) })
+      ] }),
+      /* @__PURE__ */ jsxs("section", { className: styles$d.section, children: [
+        /* @__PURE__ */ jsxs("h3", { className: styles$d.sectionTitle, children: [
+          /* @__PURE__ */ jsx("span", { className: styles$d.sectionIcon, children: "📱" }),
+          t(app.screens.titleKey)
+        ] }),
+        /* @__PURE__ */ jsx("ul", { className: styles$d.featureList, children: app.screens.items.map((itemKey) => /* @__PURE__ */ jsxs("li", { className: styles$d.featureItem, children: [
+          /* @__PURE__ */ jsx("span", { className: styles$d.featureBullet, children: "→" }),
+          t(itemKey)
+        ] }, itemKey)) })
+      ] }),
+      /* @__PURE__ */ jsxs("section", { className: styles$d.section, children: [
+        /* @__PURE__ */ jsxs("h3", { className: styles$d.sectionTitle, children: [
+          /* @__PURE__ */ jsx("span", { className: styles$d.sectionIcon, children: "🔌" }),
+          t("makingOf.modal.integrations")
+        ] }),
+        /* @__PURE__ */ jsx("div", { className: styles$d.integrationGrid, children: app.integrations.map((integration) => /* @__PURE__ */ jsx("div", { className: styles$d.integrationBadge, children: integration }, integration)) })
+      ] }),
+      /* @__PURE__ */ jsxs("section", { className: styles$d.section, children: [
+        /* @__PURE__ */ jsxs("h3", { className: styles$d.sectionTitle, children: [
+          /* @__PURE__ */ jsx("span", { className: styles$d.sectionIcon, children: "🔗" }),
+          t("makingOf.modal.links")
+        ] }),
+        /* @__PURE__ */ jsxs("div", { className: styles$d.linksGrid, children: [
+          app.url && /* @__PURE__ */ jsxs(
+            "a",
+            {
+              href: app.url,
+              target: "_blank",
+              rel: "noopener noreferrer",
+              className: styles$d.linkButton,
+              children: [
+                /* @__PURE__ */ jsx("svg", { className: styles$d.linkIcon, viewBox: "0 0 24 24", fill: "currentColor", children: /* @__PURE__ */ jsx("path", { d: "M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z" }) }),
+                t("makingOf.modal.website")
+              ]
+            }
+          ),
+          app.iosUrl && /* @__PURE__ */ jsxs(
+            "a",
+            {
+              href: app.iosUrl,
+              target: "_blank",
+              rel: "noopener noreferrer",
+              className: styles$d.linkButton,
+              children: [
+                /* @__PURE__ */ jsx("svg", { className: styles$d.linkIcon, viewBox: "0 0 24 24", fill: "currentColor", children: /* @__PURE__ */ jsx("path", { d: "M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z" }) }),
+                "App Store"
+              ]
+            }
+          ),
+          app.androidUrl && /* @__PURE__ */ jsxs(
+            "a",
+            {
+              href: app.androidUrl,
+              target: "_blank",
+              rel: "noopener noreferrer",
+              className: styles$d.linkButton,
+              children: [
+                /* @__PURE__ */ jsx("svg", { className: styles$d.linkIcon, viewBox: "0 0 24 24", fill: "currentColor", children: /* @__PURE__ */ jsx("path", { d: "M3,20.5V3.5C3,2.91 3.34,2.39 3.84,2.15L13.69,12L3.84,21.85C3.34,21.6 3,21.09 3,20.5M16.81,15.12L6.05,21.34L14.54,12.85L16.81,15.12M20.16,10.81C20.5,11.08 20.75,11.5 20.75,12C20.75,12.5 20.5,12.92 20.16,13.19L17.89,14.5L15.39,12L17.89,9.5L20.16,10.81M6.05,2.66L16.81,8.88L14.54,11.15L6.05,2.66Z" }) }),
+                "Google Play"
+              ]
+            }
+          )
+        ] })
+      ] })
+    ] })
+  ] }) });
+}
+const backButton = "_backButton_kj7ee_2";
+const iconWrapper$1 = "_iconWrapper_kj7ee_40";
+const icon$1 = "_icon_kj7ee_40";
+const text$1 = "_text_kj7ee_60";
+const glow = "_glow_kj7ee_66";
+const styles$c = {
+  backButton,
+  iconWrapper: iconWrapper$1,
+  icon: icon$1,
+  text: text$1,
+  glow
+};
+function BackButton() {
+  const { t } = useLanguage();
+  return /* @__PURE__ */ jsxs(Link, { to: "/#apps", className: styles$c.backButton, children: [
+    /* @__PURE__ */ jsx("div", { className: styles$c.iconWrapper, children: /* @__PURE__ */ jsx("svg", { className: styles$c.icon, viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", children: /* @__PURE__ */ jsx("path", { strokeLinecap: "round", strokeLinejoin: "round", strokeWidth: 2, d: "M15 19l-7-7 7-7" }) }) }),
+    /* @__PURE__ */ jsx("span", { className: styles$c.text, children: t("makingOf.back") }),
+    /* @__PURE__ */ jsx("div", { className: styles$c.glow })
+  ] });
+}
+const appsData = [
+  {
+    id: "buyvoice",
+    name: "BuyVoice",
+    descriptionKey: "makingOf.buyvoice.description",
+    icon: "/app-icon.png",
+    color: "#ff6b35",
+    platforms: ["ios", "android"],
+    url: "https://www.buyvoice.app",
+    iosUrl: "https://apps.apple.com/app/voice-shopping-list/id6505125372",
+    androidUrl: "https://play.google.com/store/apps/details?id=com.lwebch.VoiceList",
+    overviewKey: "makingOf.buyvoice.overview",
+    techStack: ["React Native", "Expo SDK ~54", "OpenAI GPT-4", "AsyncStorage", "TypeScript"],
+    features: [
+      "makingOf.buyvoice.features.voice",
+      "makingOf.buyvoice.features.ai",
+      "makingOf.buyvoice.features.offline",
+      "makingOf.buyvoice.features.multilang"
+    ],
+    architecture: {
+      titleKey: "makingOf.buyvoice.architecture.title",
+      items: [
+        "makingOf.buyvoice.architecture.contextApi",
+        "makingOf.buyvoice.architecture.localStorage",
+        "makingOf.buyvoice.architecture.aiIntegration"
+      ]
+    },
+    screens: {
+      titleKey: "makingOf.buyvoice.screens.title",
+      items: [
+        "makingOf.buyvoice.screens.home",
+        "makingOf.buyvoice.screens.lists",
+        "makingOf.buyvoice.screens.settings"
+      ]
+    },
+    integrations: ["OpenAI API", "Expo Voice Recognition", "Local Storage"]
+  },
+  {
+    id: "hundezonen",
+    name: "Hundezonen",
+    descriptionKey: "makingOf.hundezonen.description",
+    icon: "/hnde.png",
+    color: "#4a90e2",
+    platforms: ["ios", "android"],
+    url: "https://www.hundezonen.ch",
+    iosUrl: "https://apps.apple.com/us/app/hundezonen/id6745336299",
+    androidUrl: "https://play.google.com/store/apps/details?id=com.lwebch.HundezonenSchweiz&pli=1",
+    overviewKey: "makingOf.hundezonen.overview",
+    techStack: ["React Native", "Expo SDK ~54", "React Native Maps", "Geolocation API", "PHP/MySQL Backend"],
+    features: [
+      "makingOf.hundezonen.features.map",
+      "makingOf.hundezonen.features.gps",
+      "makingOf.hundezonen.features.filters",
+      "makingOf.hundezonen.features.offline"
+    ],
+    architecture: {
+      titleKey: "makingOf.hundezonen.architecture.title",
+      items: [
+        "makingOf.hundezonen.architecture.maps",
+        "makingOf.hundezonen.architecture.geolocation",
+        "makingOf.hundezonen.architecture.backend"
+      ]
+    },
+    screens: {
+      titleKey: "makingOf.hundezonen.screens.title",
+      items: [
+        "makingOf.hundezonen.screens.map",
+        "makingOf.hundezonen.screens.list",
+        "makingOf.hundezonen.screens.details",
+        "makingOf.hundezonen.screens.favorites"
+      ]
+    },
+    integrations: ["Google Maps API", "PHP Backend", "MySQL Database", "Geolocation Services"]
+  },
+  {
+    id: "foodscan",
+    name: "FoodScan AI",
+    descriptionKey: "makingOf.foodscan.description",
+    icon: "/foof.png",
+    color: "#00c853",
+    platforms: ["ios", "android"],
+    url: "https://www.foodscan-ai.com",
+    iosUrl: "https://apps.apple.com/us/app/foodscan-ai/id6472478688",
+    androidUrl: "https://play.google.com/store/apps/details?id=com.lwebch.foodmentoai",
+    overviewKey: "makingOf.foodscan.overview",
+    techStack: ["React Native", "Expo SDK ~54", "OpenAI GPT-4 Vision", "Camera API", "AsyncStorage"],
+    features: [
+      "makingOf.foodscan.features.camera",
+      "makingOf.foodscan.features.nutrition",
+      "makingOf.foodscan.features.history",
+      "makingOf.foodscan.features.multilang"
+    ],
+    architecture: {
+      titleKey: "makingOf.foodscan.architecture.title",
+      items: [
+        "makingOf.foodscan.architecture.vision",
+        "makingOf.foodscan.architecture.imageProcessing",
+        "makingOf.foodscan.architecture.caching"
+      ]
+    },
+    screens: {
+      titleKey: "makingOf.foodscan.screens.title",
+      items: [
+        "makingOf.foodscan.screens.camera",
+        "makingOf.foodscan.screens.analysis",
+        "makingOf.foodscan.screens.history",
+        "makingOf.foodscan.screens.profile"
+      ]
+    },
+    integrations: ["OpenAI Vision API", "Expo Camera", "Expo Image Picker", "AsyncStorage"]
+  },
+  {
+    id: "dogmentor",
+    name: "DogMentor KI",
+    descriptionKey: "makingOf.dogmentor.description",
+    icon: "/dog.jpg",
+    color: "#ff9800",
+    platforms: ["ios"],
+    url: "https://dog-mentor.com",
+    iosUrl: "https://apps.apple.com/us/app/dogmentor/id6467635587",
+    overviewKey: "makingOf.dogmentor.overview",
+    techStack: ["React Native", "Expo SDK ~54", "OpenAI GPT-4", "Context API", "AsyncStorage"],
+    features: [
+      "makingOf.dogmentor.features.chat",
+      "makingOf.dogmentor.features.training",
+      "makingOf.dogmentor.features.behavior",
+      "makingOf.dogmentor.features.personalized"
+    ],
+    architecture: {
+      titleKey: "makingOf.dogmentor.architecture.title",
+      items: [
+        "makingOf.dogmentor.architecture.chat",
+        "makingOf.dogmentor.architecture.context",
+        "makingOf.dogmentor.architecture.prompts"
+      ]
+    },
+    screens: {
+      titleKey: "makingOf.dogmentor.screens.title",
+      items: [
+        "makingOf.dogmentor.screens.chat",
+        "makingOf.dogmentor.screens.dogProfile",
+        "makingOf.dogmentor.screens.tips",
+        "makingOf.dogmentor.screens.settings"
+      ]
+    },
+    integrations: ["OpenAI Chat API", "AsyncStorage", "Push Notifications"]
+  },
+  {
+    id: "ketorecipe",
+    name: "KetoRecipeLab",
+    descriptionKey: "makingOf.ketorecipe.description",
+    icon: "/iconoapp.png",
+    color: "#8e24aa",
+    platforms: ["ios"],
+    url: "https://keto-recipe.app",
+    iosUrl: "https://apps.apple.com/us/app/ketorecipelab/id6757017200",
+    overviewKey: "makingOf.ketorecipe.overview",
+    techStack: ["React Native", "Expo SDK ~54", "OpenAI GPT-4", "RevenueCat", "PHP/MySQL Backend"],
+    features: [
+      "makingOf.ketorecipe.features.aiRecipes",
+      "makingOf.ketorecipe.features.mealPlan",
+      "makingOf.ketorecipe.features.nutrition",
+      "makingOf.ketorecipe.features.favorites"
+    ],
+    architecture: {
+      titleKey: "makingOf.ketorecipe.architecture.title",
+      items: [
+        "makingOf.ketorecipe.architecture.contexts",
+        "makingOf.ketorecipe.architecture.services",
+        "makingOf.ketorecipe.architecture.backend"
+      ]
+    },
+    screens: {
+      titleKey: "makingOf.ketorecipe.screens.title",
+      items: [
+        "makingOf.ketorecipe.screens.home",
+        "makingOf.ketorecipe.screens.explore",
+        "makingOf.ketorecipe.screens.favorites",
+        "makingOf.ketorecipe.screens.nutrition",
+        "makingOf.ketorecipe.screens.profile"
+      ]
+    },
+    integrations: ["OpenAI API", "RevenueCat", "PHP Backend", "MySQL Database", "Image Upload"]
+  },
+  {
+    id: "workti",
+    name: "Work Ti",
+    descriptionKey: "makingOf.workti.description",
+    icon: "/workti.png",
+    color: "#1976d2",
+    platforms: ["ios"],
+    url: "https://www.workti.app",
+    iosUrl: "https://apps.apple.com/us/app/vixtime/id6745336262",
+    overviewKey: "makingOf.workti.overview",
+    techStack: ["React Native", "Expo SDK ~54", "AsyncStorage", "Charts Library", "Date Management"],
+    features: [
+      "makingOf.workti.features.tracking",
+      "makingOf.workti.features.reports",
+      "makingOf.workti.features.projects",
+      "makingOf.workti.features.export"
+    ],
+    architecture: {
+      titleKey: "makingOf.workti.architecture.title",
+      items: [
+        "makingOf.workti.architecture.timeTracking",
+        "makingOf.workti.architecture.localStorage",
+        "makingOf.workti.architecture.charts"
+      ]
+    },
+    screens: {
+      titleKey: "makingOf.workti.screens.title",
+      items: [
+        "makingOf.workti.screens.timer",
+        "makingOf.workti.screens.projects",
+        "makingOf.workti.screens.reports",
+        "makingOf.workti.screens.settings"
+      ]
+    },
+    integrations: ["AsyncStorage", "React Native Charts", "Date-fns", "Export to CSV"]
+  }
+];
+const pageWrapper = "_pageWrapper_1xki8_2";
+const backgroundGradient = "_backgroundGradient_1xki8_12";
+const particlesContainer = "_particlesContainer_1xki8_27";
+const particle$3 = "_particle_1xki8_27";
+const contentWrapper = "_contentWrapper_1xki8_58";
+const header$5 = "_header_1xki8_70";
+const badge$5 = "_badge_1xki8_75";
+const badgeIcon$4 = "_badgeIcon_1xki8_90";
+const badgeText$5 = "_badgeText_1xki8_94";
+const title$5 = "_title_1xki8_99";
+const highlight$5 = "_highlight_1xki8_107";
+const description$2 = "_description_1xki8_114";
+const styles$b = {
+  pageWrapper,
+  backgroundGradient,
+  particlesContainer,
+  particle: particle$3,
+  contentWrapper,
+  header: header$5,
+  badge: badge$5,
+  badgeIcon: badgeIcon$4,
+  badgeText: badgeText$5,
+  title: title$5,
+  highlight: highlight$5,
+  description: description$2
+};
+function MakingOfPage() {
+  const { t } = useLanguage();
+  const [selectedApp, setSelectedApp] = useState(null);
+  const [showModal, setShowModal] = useState(false);
+  const handleAppClick = (app) => {
+    setSelectedApp(app);
+    setShowModal(true);
+  };
+  const handleCloseModal = () => {
+    setShowModal(false);
+  };
+  return /* @__PURE__ */ jsxs("div", { className: styles$b.pageWrapper, children: [
+    /* @__PURE__ */ jsx("div", { className: styles$b.backgroundGradient }),
+    /* @__PURE__ */ jsx("div", { className: styles$b.particlesContainer, children: [...Array(20)].map((_, i) => /* @__PURE__ */ jsx(
+      "div",
+      {
+        className: styles$b.particle,
+        style: {
+          left: `${Math.random() * 100}%`,
+          top: `${Math.random() * 100}%`,
+          animationDelay: `${Math.random() * 5}s`,
+          animationDuration: `${5 + Math.random() * 10}s`
+        }
+      },
+      i
+    )) }),
+    /* @__PURE__ */ jsx(BackButton, {}),
+    /* @__PURE__ */ jsxs("div", { className: styles$b.contentWrapper, children: [
+      /* @__PURE__ */ jsxs("div", { className: styles$b.header, children: [
+        /* @__PURE__ */ jsxs("div", { className: styles$b.badge, children: [
+          /* @__PURE__ */ jsx("span", { className: styles$b.badgeIcon, children: "🎬" }),
+          /* @__PURE__ */ jsx("span", { className: styles$b.badgeText, children: t("makingOf.badge") })
+        ] }),
+        /* @__PURE__ */ jsxs("h1", { className: styles$b.title, children: [
+          t("makingOf.title"),
+          " ",
+          /* @__PURE__ */ jsx("span", { className: styles$b.highlight, children: t("makingOf.subtitle") })
+        ] }),
+        /* @__PURE__ */ jsx("p", { className: styles$b.description, children: t("makingOf.description") })
+      ] }),
+      /* @__PURE__ */ jsx(
+        AppWheel,
+        {
+          apps: appsData,
+          selectedApp,
+          onAppClick: handleAppClick
+        }
+      )
+    ] }),
+    showModal && selectedApp && /* @__PURE__ */ jsx(AppModal, { app: selectedApp, onClose: handleCloseModal })
+  ] });
+}
+const meta$1 = () => {
+  return [
+    { title: "Making Of - Apps | Roberto Salvador" },
+    {
+      name: "description",
+      content: "Descubre cómo fueron creadas mis aplicaciones móviles. Arquitectura, tecnologías y proceso de desarrollo."
+    },
+    { property: "og:title", content: "Making Of - Apps | Roberto Salvador" },
+    { property: "og:description", content: "Descubre cómo fueron creadas mis aplicaciones móviles" },
+    { property: "og:type", content: "website" }
+  ];
+};
+function MakingOf() {
+  return /* @__PURE__ */ jsx(MakingOfPage, {});
+}
+const route2 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+  __proto__: null,
+  default: MakingOf,
+  meta: meta$1
+}, Symbol.toStringTag, { value: "Module" }));
+const header$4 = "_header_g712t_1";
+const navbar = "_navbar_g712t_23";
+const borderGlow = "_borderGlow_g712t_48";
+const container$4 = "_container_g712t_77";
+const logo = "_logo_g712t_88";
+const logoContainer = "_logoContainer_g712t_94";
+const logoText = "_logoText_g712t_100";
+const logoSubtitle = "_logoSubtitle_g712t_113";
+const cursor$1 = "_cursor_g712t_131";
+const menuButton = "_menuButton_g712t_179";
+const menuIcon = "_menuIcon_g712t_198";
+const menuModal = "_menuModal_g712t_205";
+const menuModalOpen = "_menuModalOpen_g712t_214";
+const menuBackground = "_menuBackground_g712t_220";
+const menuBackgroundImage = "_menuBackgroundImage_g712t_226";
+const menuBackgroundActive = "_menuBackgroundActive_g712t_238";
+const menuOverlay = "_menuOverlay_g712t_243";
+const closeButton$1 = "_closeButton_g712t_256";
+const closeIcon = "_closeIcon_g712t_287";
+const menuContent = "_menuContent_g712t_298";
+const menuLogo = "_menuLogo_g712t_311";
+const menuLogoText = "_menuLogoText_g712t_327";
+const menuLogoSubtitle = "_menuLogoSubtitle_g712t_340";
+const menuNav = "_menuNav_g712t_348";
+const menuLink = "_menuLink_g712t_357";
+const menuLinkActive = "_menuLinkActive_g712t_399";
+const menuLinkIcon = "_menuLinkIcon_g712t_404";
+const menuLinkText = "_menuLinkText_g712t_459";
+const menuLinkArrow = "_menuLinkArrow_g712t_510";
+const menuFooter = "_menuFooter_g712t_524";
+const menuContactItem = "_menuContactItem_g712t_540";
+const menuContactIcon = "_menuContactIcon_g712t_566";
+const colorSelector = "_colorSelector_g712t_577";
+const selectorLabel = "_selectorLabel_g712t_594";
+const colorOptions = "_colorOptions_g712t_603";
+const colorButton = "_colorButton_g712t_610";
+const colorButtonActive = "_colorButtonActive_g712t_636";
+const languageSelector$1 = "_languageSelector_g712t_659";
+const languageOptions = "_languageOptions_g712t_676";
+const languageButton = "_languageButton_g712t_683";
+const languageButtonActive = "_languageButtonActive_g712t_703";
+const transitionOverlay$1 = "_transitionOverlay_g712t_715";
+const devLoader = "_devLoader_g712t_737";
+const devLetter = "_devLetter_g712t_744";
+const styles$a = {
   header: header$4,
   navbar,
   borderGlow,
@@ -594,7 +1835,7 @@ const styles$7 = {
   logoContainer,
   logoText,
   logoSubtitle,
-  cursor,
+  cursor: cursor$1,
   menuButton,
   menuIcon,
   menuModal,
@@ -618,10 +1859,16 @@ const styles$7 = {
   menuFooter,
   menuContactItem,
   menuContactIcon,
+  colorSelector,
+  selectorLabel,
+  colorOptions,
+  colorButton,
+  colorButtonActive,
   languageSelector: languageSelector$1,
+  languageOptions,
   languageButton,
   languageButtonActive,
-  transitionOverlay,
+  transitionOverlay: transitionOverlay$1,
   devLoader,
   devLetter
 };
@@ -705,6 +1952,7 @@ const menuBackgrounds = [
 ];
 function Header() {
   const { t, language, setLanguage } = useLanguage();
+  const { color, setColor, colors } = useColor();
   const [activeSection, setActiveSection] = useState(0);
   const [displayedText, setDisplayedText] = useState("");
   const [displayedSubtitle, setDisplayedSubtitle] = useState("");
@@ -752,8 +2000,8 @@ function Header() {
       const sections = navigationKeys.map((item) => item.href.slice(1));
       const scrollPosition = window.scrollY + 200;
       for (let i = sections.length - 1; i >= 0; i--) {
-        const section = document.getElementById(sections[i]);
-        if (section && scrollPosition >= section.offsetTop) {
+        const section2 = document.getElementById(sections[i]);
+        if (section2 && scrollPosition >= section2.offsetTop) {
           setActiveSection(i);
           break;
         }
@@ -779,8 +2027,9 @@ function Header() {
       document.body.style.overflow = "";
     };
   }, [isMenuOpen]);
-  const handleMenuClick = (href) => {
+  const handleMenuClick = (href, index) => {
     setIsMenuOpen(false);
+    setActiveSection(index);
     setIsTransitioning(true);
     setTimeout(() => {
       const element = document.querySelector(href);
@@ -792,73 +2041,73 @@ function Header() {
       }
     }, 800);
   };
-  return /* @__PURE__ */ jsxs("header", { className: styles$7.header, children: [
-    /* @__PURE__ */ jsxs("nav", { ref: navRef, className: styles$7.navbar, children: [
-      /* @__PURE__ */ jsx("div", { className: styles$7.borderGlow }),
-      /* @__PURE__ */ jsxs("div", { className: styles$7.container, children: [
-        /* @__PURE__ */ jsx(Link, { to: "/", className: styles$7.logo, children: /* @__PURE__ */ jsxs("div", { className: styles$7.logoContainer, children: [
-          /* @__PURE__ */ jsxs("span", { className: styles$7.logoText, children: [
+  return /* @__PURE__ */ jsxs("header", { className: styles$a.header, children: [
+    /* @__PURE__ */ jsxs("nav", { ref: navRef, className: styles$a.navbar, children: [
+      /* @__PURE__ */ jsx("div", { className: styles$a.borderGlow }),
+      /* @__PURE__ */ jsxs("div", { className: styles$a.container, children: [
+        /* @__PURE__ */ jsx(Link, { to: "/", className: styles$a.logo, children: /* @__PURE__ */ jsxs("div", { className: styles$a.logoContainer, children: [
+          /* @__PURE__ */ jsxs("span", { className: styles$a.logoText, children: [
             displayedText,
-            isTyping && /* @__PURE__ */ jsx("span", { className: styles$7.cursor, children: "|" })
+            isTyping && /* @__PURE__ */ jsx("span", { className: styles$a.cursor, children: "|" })
           ] }),
-          /* @__PURE__ */ jsxs("span", { className: styles$7.logoSubtitle, children: [
+          /* @__PURE__ */ jsxs("span", { className: styles$a.logoSubtitle, children: [
             displayedSubtitle,
-            isTypingSubtitle && /* @__PURE__ */ jsx("span", { className: styles$7.cursor, children: "|" })
+            isTypingSubtitle && /* @__PURE__ */ jsx("span", { className: styles$a.cursor, children: "|" })
           ] })
         ] }) }),
         /* @__PURE__ */ jsx(
           "button",
           {
-            className: styles$7.menuButton,
+            className: styles$a.menuButton,
             onClick: () => setIsMenuOpen(true),
             "aria-label": "Abrir menú",
-            children: /* @__PURE__ */ jsx(HiMenu, { className: styles$7.menuIcon })
+            children: /* @__PURE__ */ jsx(HiMenu, { className: styles$a.menuIcon })
           }
         )
       ] })
     ] }),
-    /* @__PURE__ */ jsxs("div", { className: `${styles$7.menuModal} ${isMenuOpen ? styles$7.menuModalOpen : ""}`, children: [
-      /* @__PURE__ */ jsxs("div", { className: styles$7.menuBackground, children: [
+    /* @__PURE__ */ jsxs("div", { className: `${styles$a.menuModal} ${isMenuOpen ? styles$a.menuModalOpen : ""}`, children: [
+      /* @__PURE__ */ jsxs("div", { className: styles$a.menuBackground, children: [
         menuBackgrounds.map((bg, index) => /* @__PURE__ */ jsx(
           "img",
           {
             src: bg,
             alt: `Background ${index}`,
-            className: `${styles$7.menuBackgroundImage} ${currentBackground === index ? styles$7.menuBackgroundActive : ""}`
+            className: `${styles$a.menuBackgroundImage} ${currentBackground === index ? styles$a.menuBackgroundActive : ""}`
           },
           bg
         )),
-        /* @__PURE__ */ jsx("div", { className: styles$7.menuOverlay })
+        /* @__PURE__ */ jsx("div", { className: styles$a.menuOverlay })
       ] }),
       /* @__PURE__ */ jsx(
         "button",
         {
-          className: styles$7.closeButton,
+          className: styles$a.closeButton,
           onClick: () => setIsMenuOpen(false),
           "aria-label": "Cerrar menú",
-          children: /* @__PURE__ */ jsx(HiX, { className: styles$7.closeIcon })
+          children: /* @__PURE__ */ jsx(HiX, { className: styles$a.closeIcon })
         }
       ),
-      /* @__PURE__ */ jsxs("div", { className: styles$7.menuContent, children: [
-        /* @__PURE__ */ jsxs("div", { className: styles$7.menuLogo, children: [
-          /* @__PURE__ */ jsx("span", { className: styles$7.menuLogoText, children: "Roberto Salvador" }),
-          /* @__PURE__ */ jsx("span", { className: styles$7.menuLogoSubtitle, children: "React Native Specialist" })
+      /* @__PURE__ */ jsxs("div", { className: styles$a.menuContent, children: [
+        /* @__PURE__ */ jsxs("div", { className: styles$a.menuLogo, children: [
+          /* @__PURE__ */ jsx("span", { className: styles$a.menuLogoText, children: "Roberto Salvador" }),
+          /* @__PURE__ */ jsx("span", { className: styles$a.menuLogoSubtitle, children: "React Native Specialist" })
         ] }),
-        /* @__PURE__ */ jsx("nav", { className: styles$7.menuNav, children: navigationKeys.map((item, index) => {
+        /* @__PURE__ */ jsx("nav", { className: styles$a.menuNav, children: navigationKeys.map((item, index) => {
           const Icon = item.icon;
           return /* @__PURE__ */ jsxs(
             "button",
             {
-              onClick: () => handleMenuClick(item.href),
-              className: `${styles$7.menuLink} ${activeSection === index ? styles$7.menuLinkActive : ""}`,
+              onClick: () => handleMenuClick(item.href, index),
+              className: `${styles$a.menuLink} ${activeSection === index ? styles$a.menuLinkActive : ""}`,
               style: { animationDelay: `${0.2 + index * 0.15}s` },
               children: [
-                /* @__PURE__ */ jsx(Icon, { className: styles$7.menuLinkIcon }),
-                /* @__PURE__ */ jsx("span", { className: styles$7.menuLinkText, children: t(item.key) }),
+                /* @__PURE__ */ jsx(Icon, { className: styles$a.menuLinkIcon }),
+                /* @__PURE__ */ jsx("span", { className: styles$a.menuLinkText, children: t(item.key) }),
                 /* @__PURE__ */ jsx(
                   "svg",
                   {
-                    className: styles$7.menuLinkArrow,
+                    className: styles$a.menuLinkArrow,
                     width: "24",
                     height: "24",
                     viewBox: "0 0 24 24",
@@ -881,105 +2130,130 @@ function Header() {
             item.key
           );
         }) }),
-        /* @__PURE__ */ jsxs("div", { className: styles$7.menuFooter, children: [
-          /* @__PURE__ */ jsx("a", { href: "tel:+41765608645", className: styles$7.menuContactItem, children: /* @__PURE__ */ jsx(HiPhone, { className: styles$7.menuContactIcon }) }),
-          /* @__PURE__ */ jsx("a", { href: "mailto:info@lweb.ch", className: styles$7.menuContactItem, children: /* @__PURE__ */ jsx(HiMail, { className: styles$7.menuContactIcon }) }),
-          /* @__PURE__ */ jsx("button", { onClick: handleDownloadVCard, className: styles$7.menuContactItem, children: /* @__PURE__ */ jsx(HiDownload, { className: styles$7.menuContactIcon }) })
+        /* @__PURE__ */ jsxs("div", { className: styles$a.menuFooter, children: [
+          /* @__PURE__ */ jsx("a", { href: "tel:+41765608645", className: styles$a.menuContactItem, children: /* @__PURE__ */ jsx(HiPhone, { className: styles$a.menuContactIcon }) }),
+          /* @__PURE__ */ jsx("a", { href: "mailto:info@lweb.ch", className: styles$a.menuContactItem, children: /* @__PURE__ */ jsx(HiMail, { className: styles$a.menuContactIcon }) }),
+          /* @__PURE__ */ jsx("button", { onClick: handleDownloadVCard, className: styles$a.menuContactItem, children: /* @__PURE__ */ jsx(HiDownload, { className: styles$a.menuContactIcon }) })
         ] }),
-        /* @__PURE__ */ jsxs("div", { className: styles$7.languageSelector, children: [
-          /* @__PURE__ */ jsx(
+        /* @__PURE__ */ jsxs("div", { className: styles$a.colorSelector, children: [
+          /* @__PURE__ */ jsx("span", { className: styles$a.selectorLabel, children: "Color:" }),
+          /* @__PURE__ */ jsx("div", { className: styles$a.colorOptions, children: Object.keys(colors).map((colorKey) => /* @__PURE__ */ jsx(
             "button",
             {
-              onClick: () => setLanguage("es"),
-              className: `${styles$7.languageButton} ${language === "es" ? styles$7.languageButtonActive : ""}`,
-              children: "Español"
-            }
-          ),
-          /* @__PURE__ */ jsx(
-            "button",
-            {
-              onClick: () => setLanguage("de"),
-              className: `${styles$7.languageButton} ${language === "de" ? styles$7.languageButtonActive : ""}`,
-              children: "Deutsch"
-            }
-          )
+              onClick: () => setColor(colorKey),
+              className: `${styles$a.colorButton} ${color === colorKey ? styles$a.colorButtonActive : ""}`,
+              style: { backgroundColor: colors[colorKey].primary },
+              "aria-label": `Color ${colors[colorKey].name}`,
+              title: colors[colorKey].name
+            },
+            colorKey
+          )) })
+        ] }),
+        /* @__PURE__ */ jsxs("div", { className: styles$a.languageSelector, children: [
+          /* @__PURE__ */ jsx("span", { className: styles$a.selectorLabel, children: "Language:" }),
+          /* @__PURE__ */ jsxs("div", { className: styles$a.languageOptions, children: [
+            /* @__PURE__ */ jsx(
+              "button",
+              {
+                onClick: () => setLanguage("es"),
+                className: `${styles$a.languageButton} ${language === "es" ? styles$a.languageButtonActive : ""}`,
+                children: "Español"
+              }
+            ),
+            /* @__PURE__ */ jsx(
+              "button",
+              {
+                onClick: () => setLanguage("de"),
+                className: `${styles$a.languageButton} ${language === "de" ? styles$a.languageButtonActive : ""}`,
+                children: "Deutsch"
+              }
+            ),
+            /* @__PURE__ */ jsx(
+              "button",
+              {
+                onClick: () => setLanguage("en"),
+                className: `${styles$a.languageButton} ${language === "en" ? styles$a.languageButtonActive : ""}`,
+                children: "English"
+              }
+            )
+          ] })
         ] })
       ] })
     ] }),
-    isTransitioning && /* @__PURE__ */ jsx("div", { className: styles$7.transitionOverlay, children: /* @__PURE__ */ jsxs("div", { className: styles$7.devLoader, children: [
-      /* @__PURE__ */ jsx("span", { className: styles$7.devLetter, style: { animationDelay: "0s" }, children: "D" }),
-      /* @__PURE__ */ jsx("span", { className: styles$7.devLetter, style: { animationDelay: "0.2s" }, children: "E" }),
-      /* @__PURE__ */ jsx("span", { className: styles$7.devLetter, style: { animationDelay: "0.4s" }, children: "V" })
+    isTransitioning && /* @__PURE__ */ jsx("div", { className: styles$a.transitionOverlay, children: /* @__PURE__ */ jsxs("div", { className: styles$a.devLoader, children: [
+      /* @__PURE__ */ jsx("span", { className: styles$a.devLetter, style: { animationDelay: "0s" }, children: "D" }),
+      /* @__PURE__ */ jsx("span", { className: styles$a.devLetter, style: { animationDelay: "0.2s" }, children: "E" }),
+      /* @__PURE__ */ jsx("span", { className: styles$a.devLetter, style: { animationDelay: "0.4s" }, children: "V" })
     ] }) })
   ] });
 }
-const hero = "_hero_1c5nv_1";
-const particles$2 = "_particles_1c5nv_13";
-const particle$2 = "_particle_1c5nv_13";
-const heroContainer = "_heroContainer_1c5nv_42";
-const cardStack = "_cardStack_1c5nv_54";
-const cardBackground = "_cardBackground_1c5nv_64";
-const card$1 = "_card_1c5nv_54";
-const cardGlow$1 = "_cardGlow_1c5nv_105";
-const imageContainer = "_imageContainer_1c5nv_125";
-const profileImage = "_profileImage_1c5nv_132";
-const imageDefault = "_imageDefault_1c5nv_144";
-const imageHover = "_imageHover_1c5nv_148";
-const glitch = "_glitch_1c5nv_154";
-const glitchLayer = "_glitchLayer_1c5nv_179";
-const imageOverlay = "_imageOverlay_1c5nv_201";
-const cardContent$1 = "_cardContent_1c5nv_212";
-const cardTitle$1 = "_cardTitle_1c5nv_259";
-const cardSubtitle = "_cardSubtitle_1c5nv_266";
-const reactIcon = "_reactIcon_1c5nv_275";
-const content = "_content_1c5nv_291";
-const greeting = "_greeting_1c5nv_297";
-const wave = "_wave_1c5nv_306";
-const title$4 = "_title_1c5nv_320";
-const highlight$4 = "_highlight_1c5nv_329";
-const description = "_description_1c5nv_365";
-const stats = "_stats_1c5nv_379";
-const stat = "_stat_1c5nv_379";
-const statNumber = "_statNumber_1c5nv_390";
-const statLabel = "_statLabel_1c5nv_401";
-const cta = "_cta_1c5nv_408";
-const btnPrimary$1 = "_btnPrimary_1c5nv_415";
-const btnOutline = "_btnOutline_1c5nv_416";
-const techIcons = "_techIcons_1c5nv_475";
-const techIcon$1 = "_techIcon_1c5nv_475";
-const styles$6 = {
+const hero = "_hero_yh8s2_1";
+const particles$2 = "_particles_yh8s2_16";
+const particle$2 = "_particle_yh8s2_16";
+const heroContainer = "_heroContainer_yh8s2_45";
+const cardStack = "_cardStack_yh8s2_57";
+const cardBackground = "_cardBackground_yh8s2_67";
+const card = "_card_yh8s2_57";
+const cardGlow$1 = "_cardGlow_yh8s2_111";
+const imageContainer = "_imageContainer_yh8s2_131";
+const profileImage = "_profileImage_yh8s2_138";
+const imageDefault = "_imageDefault_yh8s2_153";
+const imageHover = "_imageHover_yh8s2_157";
+const imageOverlay = "_imageOverlay_yh8s2_210";
+const flashOverlay = "_flashOverlay_yh8s2_229";
+const lightning = "_lightning_yh8s2_247";
+const cardContent$2 = "_cardContent_yh8s2_327";
+const cardTitle$1 = "_cardTitle_yh8s2_378";
+const cardSubtitle = "_cardSubtitle_yh8s2_385";
+const reactIcon = "_reactIcon_yh8s2_394";
+const content$1 = "_content_yh8s2_410";
+const greeting = "_greeting_yh8s2_416";
+const wave = "_wave_yh8s2_425";
+const title$4 = "_title_yh8s2_439";
+const highlight$4 = "_highlight_yh8s2_448";
+const description$1 = "_description_yh8s2_484";
+const stats$1 = "_stats_yh8s2_498";
+const stat$1 = "_stat_yh8s2_498";
+const statNumber$1 = "_statNumber_yh8s2_509";
+const statLabel$1 = "_statLabel_yh8s2_520";
+const cta = "_cta_yh8s2_527";
+const btnPrimary$2 = "_btnPrimary_yh8s2_534";
+const btnOutline$1 = "_btnOutline_yh8s2_535";
+const techIcons = "_techIcons_yh8s2_597";
+const techIcon$1 = "_techIcon_yh8s2_597";
+const styles$9 = {
   hero,
   particles: particles$2,
   particle: particle$2,
   heroContainer,
   cardStack,
   cardBackground,
-  card: card$1,
+  card,
   cardGlow: cardGlow$1,
   imageContainer,
   profileImage,
   imageDefault,
   imageHover,
-  glitch,
-  glitchLayer,
   imageOverlay,
-  cardContent: cardContent$1,
+  flashOverlay,
+  lightning,
+  cardContent: cardContent$2,
   cardTitle: cardTitle$1,
   cardSubtitle,
   reactIcon,
-  content,
+  content: content$1,
   greeting,
   wave,
   title: title$4,
   highlight: highlight$4,
-  description,
-  stats,
-  stat,
-  statNumber,
-  statLabel,
+  description: description$1,
+  stats: stats$1,
+  stat: stat$1,
+  statNumber: statNumber$1,
+  statLabel: statLabel$1,
   cta,
-  btnPrimary: btnPrimary$1,
-  btnOutline,
+  btnPrimary: btnPrimary$2,
+  btnOutline: btnOutline$1,
   techIcons,
   techIcon: techIcon$1
 };
@@ -987,53 +2261,49 @@ function Hero() {
   const { t } = useLanguage();
   const cardRef = useRef(null);
   const heroRef = useRef(null);
-  const [scrollProgress, setScrollProgress] = useState(0);
-  const [isGlitching, setIsGlitching] = useState(false);
   const [isHovering, setIsHovering] = useState(false);
   const [showSecondImage, setShowSecondImage] = useState(false);
-  useEffect(() => {
-    const timeout = setTimeout(() => {
-      setShowSecondImage(true);
-    }, 3e3);
-    return () => clearTimeout(timeout);
-  }, []);
+  const [showFlash, setShowFlash] = useState(false);
+  const [hasScrolled, setHasScrolled] = useState(false);
   useEffect(() => {
     const handleScroll = () => {
-      if (!heroRef.current) return;
-      const heroRect = heroRef.current.getBoundingClientRect();
-      const heroHeight = heroRect.height;
-      const scrolled = -heroRect.top;
-      const progress = Math.min(Math.max(scrolled / heroHeight, 0), 1);
-      setScrollProgress(progress);
-      if (progress > 0.2 && progress < 0.25 && !isGlitching) {
-        setIsGlitching(true);
-        setTimeout(() => setIsGlitching(false), 200);
-      }
-      if (progress > 0.5 && progress < 0.55 && !isGlitching) {
-        setIsGlitching(true);
-        setTimeout(() => setIsGlitching(false), 150);
+      if (!hasScrolled && window.scrollY > 0) {
+        setHasScrolled(true);
+        setShowSecondImage(true);
       }
     };
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
-  }, [isGlitching]);
-  const imageScale = 1 - scrollProgress * 0.3;
-  const imageOpacity = 1 - scrollProgress * 0.8;
-  const cardRotate = scrollProgress * 180;
+  }, [hasScrolled]);
+  useEffect(() => {
+    const triggerFlash = () => {
+      setShowFlash(true);
+      const flashCount = Math.floor(Math.random() * 2) + 3;
+      const flashDuration = 120;
+      for (let i = 0; i < flashCount; i++) {
+        setTimeout(() => {
+          setShowFlash(i % 2 === 0);
+        }, i * flashDuration);
+      }
+      setTimeout(() => {
+        triggerFlash();
+      }, Math.random() * 5e3 + 5e3);
+    };
+    const initialTimeout = setTimeout(() => {
+      triggerFlash();
+    }, 3e3);
+    return () => clearTimeout(initialTimeout);
+  }, []);
   return /* @__PURE__ */ jsxs(
     "section",
     {
       ref: heroRef,
-      className: styles$6.hero,
-      style: {
-        opacity: 1 - scrollProgress * 0.5,
-        transform: `translateY(${scrollProgress * 100}px)`
-      },
+      className: styles$9.hero,
       children: [
-        /* @__PURE__ */ jsx("div", { className: styles$6.particles, children: Array.from({ length: 30 }).map((_, i) => /* @__PURE__ */ jsx(
+        /* @__PURE__ */ jsx("div", { className: styles$9.particles, children: Array.from({ length: 30 }).map((_, i) => /* @__PURE__ */ jsx(
           "div",
           {
-            className: styles$6.particle,
+            className: styles$9.particle,
             style: {
               left: `${Math.random() * 100}%`,
               top: `${Math.random() * 100}%`,
@@ -1043,12 +2313,12 @@ function Hero() {
           },
           i
         )) }),
-        /* @__PURE__ */ jsxs("div", { className: styles$6.heroContainer, children: [
+        /* @__PURE__ */ jsxs("div", { className: styles$9.heroContainer, children: [
           /* @__PURE__ */ jsxs(
             "div",
             {
               ref: cardRef,
-              className: styles$6.cardStack,
+              className: styles$9.cardStack,
               style: {
                 // Si quieres, puedes dejar sólo la perspectiva fija:
                 // transform: "perspective(1000px)",
@@ -1057,112 +2327,100 @@ function Hero() {
                 /* @__PURE__ */ jsx(
                   "div",
                   {
-                    className: styles$6.cardBackground,
+                    className: styles$9.cardBackground,
                     style: { transform: "translateZ(-40px) scale(0.95)" }
                   }
                 ),
                 /* @__PURE__ */ jsx(
                   "div",
                   {
-                    className: styles$6.cardBackground,
+                    className: styles$9.cardBackground,
                     style: { transform: "translateZ(-80px) scale(0.9)" }
                   }
                 ),
-                /* @__PURE__ */ jsxs(
-                  "div",
-                  {
-                    className: styles$6.card,
-                    style: {
-                      transform: `rotateY(${cardRotate}deg)`,
-                      opacity: imageOpacity
-                    },
-                    children: [
-                      /* @__PURE__ */ jsx("div", { className: styles$6.cardGlow }),
-                      /* @__PURE__ */ jsxs(
-                        "div",
-                        {
-                          className: styles$6.imageContainer,
-                          onMouseEnter: () => setIsHovering(true),
-                          onMouseLeave: () => setIsHovering(false),
-                          children: [
-                            /* @__PURE__ */ jsx(
-                              "img",
-                              {
-                                src: "/IMG_6490.jpeg",
-                                alt: "Roberto Salvador",
-                                className: `${styles$6.profileImage} ${styles$6.imageDefault} ${isGlitching ? styles$6.glitch : ""}`,
-                                style: {
-                                  transform: `scale(${imageScale})`,
-                                  filter: isGlitching ? "hue-rotate(90deg) saturate(3)" : "none",
-                                  opacity: !showSecondImage || isHovering ? 1 : 0
-                                }
-                              }
-                            ),
-                            /* @__PURE__ */ jsx(
-                              "img",
-                              {
-                                src: "/IMG_657.jpeg",
-                                alt: "Roberto Salvador",
-                                className: `${styles$6.profileImage} ${styles$6.imageHover} ${isGlitching ? styles$6.glitch : ""}`,
-                                style: {
-                                  transform: `scale(${imageScale})`,
-                                  filter: isGlitching ? "hue-rotate(90deg) saturate(3)" : "none",
-                                  opacity: showSecondImage && !isHovering ? 1 : 0
-                                }
-                              }
-                            ),
-                            /* @__PURE__ */ jsx("div", { className: styles$6.imageOverlay }),
-                            isGlitching && /* @__PURE__ */ jsxs(Fragment, { children: [
-                              /* @__PURE__ */ jsx("div", { className: styles$6.glitchLayer, style: { left: "-5px" } }),
-                              /* @__PURE__ */ jsx("div", { className: styles$6.glitchLayer, style: { left: "5px" } })
-                            ] })
-                          ]
-                        }
-                      ),
-                      /* @__PURE__ */ jsxs("div", { className: styles$6.cardContent, children: [
-                        /* @__PURE__ */ jsx("h3", { className: styles$6.cardTitle, children: "Roberto Salvador" }),
-                        /* @__PURE__ */ jsxs("p", { className: styles$6.cardSubtitle, children: [
-                          /* @__PURE__ */ jsx(SiReact, { className: styles$6.reactIcon }),
-                          "React Native Developer"
+                /* @__PURE__ */ jsxs("div", { className: styles$9.card, children: [
+                  /* @__PURE__ */ jsx("div", { className: styles$9.cardGlow }),
+                  /* @__PURE__ */ jsxs(
+                    "div",
+                    {
+                      className: styles$9.imageContainer,
+                      onMouseEnter: () => setIsHovering(true),
+                      onMouseLeave: () => setIsHovering(false),
+                      children: [
+                        /* @__PURE__ */ jsx(
+                          "img",
+                          {
+                            src: "/IMG_657.jpeg",
+                            alt: "Roberto Salvador",
+                            className: `${styles$9.profileImage} ${styles$9.imageDefault}`,
+                            style: {
+                              opacity: !showSecondImage || isHovering ? 1 : 0
+                            }
+                          }
+                        ),
+                        /* @__PURE__ */ jsx(
+                          "img",
+                          {
+                            src: "/IMG_6490.jpeg",
+                            alt: "Roberto Salvador",
+                            className: `${styles$9.profileImage} ${styles$9.imageHover}`,
+                            style: {
+                              opacity: showSecondImage && !isHovering ? 1 : 0
+                            }
+                          }
+                        ),
+                        /* @__PURE__ */ jsx("div", { className: styles$9.imageOverlay }),
+                        showFlash && /* @__PURE__ */ jsxs(Fragment, { children: [
+                          /* @__PURE__ */ jsx("div", { className: styles$9.flashOverlay }),
+                          /* @__PURE__ */ jsx("div", { className: styles$9.lightning, style: { left: "20%", animationDelay: "0s" } }),
+                          /* @__PURE__ */ jsx("div", { className: styles$9.lightning, style: { left: "50%", animationDelay: "0.1s" } }),
+                          /* @__PURE__ */ jsx("div", { className: styles$9.lightning, style: { left: "80%", animationDelay: "0.05s" } })
                         ] })
-                      ] })
-                    ]
-                  }
-                )
+                      ]
+                    }
+                  ),
+                  /* @__PURE__ */ jsxs("div", { className: styles$9.cardContent, children: [
+                    /* @__PURE__ */ jsx("h3", { className: styles$9.cardTitle, children: "Roberto Salvador" }),
+                    /* @__PURE__ */ jsxs("p", { className: styles$9.cardSubtitle, children: [
+                      /* @__PURE__ */ jsx(SiReact, { className: styles$9.reactIcon }),
+                      "React Native Developer"
+                    ] })
+                  ] })
+                ] })
               ]
             }
           ),
-          /* @__PURE__ */ jsxs("div", { className: styles$6.content, children: [
-            /* @__PURE__ */ jsxs("div", { className: styles$6.greeting, children: [
-              /* @__PURE__ */ jsx("span", { className: styles$6.wave, children: "👋" }),
+          /* @__PURE__ */ jsxs("div", { className: styles$9.content, children: [
+            /* @__PURE__ */ jsxs("div", { className: styles$9.greeting, children: [
+              /* @__PURE__ */ jsx("span", { className: styles$9.wave, children: "👋" }),
               /* @__PURE__ */ jsxs("span", { children: [
                 t("hero.greeting"),
                 " Roberto"
               ] })
             ] }),
-            /* @__PURE__ */ jsxs("h1", { className: styles$6.title, children: [
+            /* @__PURE__ */ jsxs("h1", { className: styles$9.title, children: [
               t("hero.title.part1"),
               " ",
-              /* @__PURE__ */ jsx("span", { className: styles$6.highlight, children: t("hero.title.highlight") }),
+              /* @__PURE__ */ jsx("span", { className: styles$9.highlight, children: t("hero.title.highlight") }),
               t("hero.title.part2") && /* @__PURE__ */ jsx(Fragment, { children: /* @__PURE__ */ jsx("br", {}) })
             ] }),
-            /* @__PURE__ */ jsx("p", { className: styles$6.description, children: t("hero.subtitle") }),
-            /* @__PURE__ */ jsxs("div", { className: styles$6.stats, children: [
-              /* @__PURE__ */ jsxs("div", { className: styles$6.stat, children: [
-                /* @__PURE__ */ jsx("div", { className: styles$6.statNumber, children: "5+" }),
-                /* @__PURE__ */ jsx("div", { className: styles$6.statLabel, children: t("hero.experience") })
+            /* @__PURE__ */ jsx("p", { className: styles$9.description, children: t("hero.subtitle") }),
+            /* @__PURE__ */ jsxs("div", { className: styles$9.stats, children: [
+              /* @__PURE__ */ jsxs("div", { className: styles$9.stat, children: [
+                /* @__PURE__ */ jsx("div", { className: styles$9.statNumber, children: "5+" }),
+                /* @__PURE__ */ jsx("div", { className: styles$9.statLabel, children: t("hero.experience") })
               ] }),
-              /* @__PURE__ */ jsxs("div", { className: styles$6.stat, children: [
-                /* @__PURE__ */ jsx("div", { className: styles$6.statNumber, children: "30+" }),
-                /* @__PURE__ */ jsx("div", { className: styles$6.statLabel, children: t("hero.apps") })
+              /* @__PURE__ */ jsxs("div", { className: styles$9.stat, children: [
+                /* @__PURE__ */ jsx("div", { className: styles$9.statNumber, children: "30+" }),
+                /* @__PURE__ */ jsx("div", { className: styles$9.statLabel, children: t("hero.apps") })
               ] }),
-              /* @__PURE__ */ jsxs("div", { className: styles$6.stat, children: [
-                /* @__PURE__ */ jsx("div", { className: styles$6.statNumber, children: "100%" }),
-                /* @__PURE__ */ jsx("div", { className: styles$6.statLabel, children: t("hero.satisfaction") })
+              /* @__PURE__ */ jsxs("div", { className: styles$9.stat, children: [
+                /* @__PURE__ */ jsx("div", { className: styles$9.statNumber, children: "100%" }),
+                /* @__PURE__ */ jsx("div", { className: styles$9.statLabel, children: t("hero.satisfaction") })
               ] })
             ] }),
-            /* @__PURE__ */ jsxs("div", { className: styles$6.cta, children: [
-              /* @__PURE__ */ jsxs("a", { href: "#proyectos", className: styles$6.btnPrimary, children: [
+            /* @__PURE__ */ jsxs("div", { className: styles$9.cta, children: [
+              /* @__PURE__ */ jsxs("a", { href: "#proyectos", className: styles$9.btnPrimary, children: [
                 /* @__PURE__ */ jsx("span", { children: t("hero.cta.projects") }),
                 /* @__PURE__ */ jsx(
                   "svg",
@@ -1185,44 +2443,44 @@ function Hero() {
                   }
                 )
               ] }),
-              /* @__PURE__ */ jsx("a", { href: "#contacto", className: styles$6.btnOutline })
+              /* @__PURE__ */ jsx("a", { href: "#contacto", className: styles$9.btnOutline })
             ] })
           ] })
         ] }),
-        /* @__PURE__ */ jsxs("div", { className: styles$6.techIcons, children: [
-          /* @__PURE__ */ jsx("div", { className: styles$6.techIcon, style: { top: "20%", left: "10%" }, children: "React" }),
-          /* @__PURE__ */ jsx("div", { className: styles$6.techIcon, style: { top: "60%", left: "15%" }, children: "Native" }),
-          /* @__PURE__ */ jsx("div", { className: styles$6.techIcon, style: { top: "30%", right: "15%" }, children: "TypeScript" }),
-          /* @__PURE__ */ jsx("div", { className: styles$6.techIcon, style: { bottom: "25%", right: "10%" }, children: "iOS" })
+        /* @__PURE__ */ jsxs("div", { className: styles$9.techIcons, children: [
+          /* @__PURE__ */ jsx("div", { className: styles$9.techIcon, style: { top: "20%", left: "10%" }, children: "React" }),
+          /* @__PURE__ */ jsx("div", { className: styles$9.techIcon, style: { top: "60%", left: "15%" }, children: "Native" }),
+          /* @__PURE__ */ jsx("div", { className: styles$9.techIcon, style: { top: "30%", right: "15%" }, children: "TypeScript" }),
+          /* @__PURE__ */ jsx("div", { className: styles$9.techIcon, style: { bottom: "25%", right: "10%" }, children: "iOS" })
         ] })
       ]
     }
   );
 }
-const servicesWrapper = "_servicesWrapper_11w01_1";
-const servicesContainer = "_servicesContainer_11w01_7";
-const particles$1 = "_particles_11w01_20";
-const particle$1 = "_particle_11w01_20";
-const backgroundContainer = "_backgroundContainer_11w01_50";
-const backgroundImage = "_backgroundImage_11w01_59";
-const active = "_active_11w01_71";
-const contentContainer = "_contentContainer_11w01_76";
-const serviceContent = "_serviceContent_11w01_86";
-const serviceCard = "_serviceCard_11w01_103";
-const orange = "_orange_11w01_138";
-const serviceNumber = "_serviceNumber_11w01_145";
-const serviceSubtitle = "_serviceSubtitle_11w01_152";
-const techBadge = "_techBadge_11w01_156";
-const darkGray = "_darkGray_11w01_167";
-const lightGray = "_lightGray_11w01_205";
-const serviceHeader = "_serviceHeader_11w01_252";
-const serviceTitle = "_serviceTitle_11w01_267";
-const serviceDescription = "_serviceDescription_11w01_284";
-const technologies$1 = "_technologies_11w01_292";
-const progressIndicator = "_progressIndicator_11w01_314";
-const progressDot = "_progressDot_11w01_325";
-const completed = "_completed_11w01_358";
-const styles$5 = {
+const servicesWrapper = "_servicesWrapper_1ch7h_1";
+const servicesContainer = "_servicesContainer_1ch7h_7";
+const particles$1 = "_particles_1ch7h_20";
+const particle$1 = "_particle_1ch7h_20";
+const backgroundContainer = "_backgroundContainer_1ch7h_50";
+const backgroundImage = "_backgroundImage_1ch7h_59";
+const active = "_active_1ch7h_71";
+const contentContainer = "_contentContainer_1ch7h_76";
+const serviceContent = "_serviceContent_1ch7h_86";
+const serviceCard = "_serviceCard_1ch7h_103";
+const orange = "_orange_1ch7h_138";
+const serviceNumber = "_serviceNumber_1ch7h_145";
+const serviceSubtitle = "_serviceSubtitle_1ch7h_152";
+const techBadge = "_techBadge_1ch7h_156";
+const darkGray = "_darkGray_1ch7h_167";
+const lightGray = "_lightGray_1ch7h_205";
+const serviceHeader = "_serviceHeader_1ch7h_252";
+const serviceTitle = "_serviceTitle_1ch7h_267";
+const serviceDescription = "_serviceDescription_1ch7h_284";
+const technologies$1 = "_technologies_1ch7h_292";
+const progressIndicator = "_progressIndicator_1ch7h_314";
+const progressDot = "_progressDot_1ch7h_325";
+const completed = "_completed_1ch7h_358";
+const styles$8 = {
   servicesWrapper,
   servicesContainer,
   particles: particles$1,
@@ -1308,11 +2566,11 @@ function Services() {
     handleScroll();
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
-  return /* @__PURE__ */ jsx("div", { ref: containerRef, className: styles$5.servicesWrapper, children: /* @__PURE__ */ jsxs("div", { className: styles$5.servicesContainer, children: [
-    /* @__PURE__ */ jsx("div", { className: styles$5.particles, children: Array.from({ length: 20 }).map((_, i) => /* @__PURE__ */ jsx(
+  return /* @__PURE__ */ jsx("div", { ref: containerRef, className: styles$8.servicesWrapper, children: /* @__PURE__ */ jsxs("div", { className: styles$8.servicesContainer, children: [
+    /* @__PURE__ */ jsx("div", { className: styles$8.particles, children: Array.from({ length: 20 }).map((_, i) => /* @__PURE__ */ jsx(
       "div",
       {
-        className: styles$5.particle,
+        className: styles$8.particle,
         style: {
           left: `${Math.random() * 100}%`,
           top: `${Math.random() * 100}%`,
@@ -1322,113 +2580,152 @@ function Services() {
       },
       i
     )) }),
-    /* @__PURE__ */ jsx("div", { className: styles$5.backgroundContainer, children: services.map((service, index) => /* @__PURE__ */ jsx(
+    /* @__PURE__ */ jsx("div", { className: styles$8.backgroundContainer, children: services.map((service, index) => /* @__PURE__ */ jsx(
       "div",
       {
-        className: `${styles$5.backgroundImage} ${index === currentIndex ? styles$5.active : ""}`,
+        className: `${styles$8.backgroundImage} ${index === currentIndex ? styles$8.active : ""}`,
         style: {
           backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.7)), url(${service.backgroundImage})`
         }
       },
       index
     )) }),
-    /* @__PURE__ */ jsx("div", { className: styles$5.contentContainer, children: services.map((service, index) => {
-      const colorVariant = index % 2 === 0 ? styles$5.orange : index === 1 ? styles$5.darkGray : styles$5.lightGray;
+    /* @__PURE__ */ jsx("div", { className: styles$8.contentContainer, children: services.map((service, index) => {
+      const colorVariant = index % 2 === 0 ? styles$8.orange : index === 1 ? styles$8.darkGray : styles$8.lightGray;
       return /* @__PURE__ */ jsx(
         "div",
         {
-          className: `${styles$5.serviceContent} ${index === currentIndex ? styles$5.active : ""}`,
-          children: /* @__PURE__ */ jsxs("div", { className: `${styles$5.serviceCard} ${colorVariant}`, children: [
-            /* @__PURE__ */ jsxs("div", { className: styles$5.serviceHeader, children: [
-              /* @__PURE__ */ jsxs("span", { className: styles$5.serviceNumber, children: [
+          className: `${styles$8.serviceContent} ${index === currentIndex ? styles$8.active : ""}`,
+          children: /* @__PURE__ */ jsxs("div", { className: `${styles$8.serviceCard} ${colorVariant}`, children: [
+            /* @__PURE__ */ jsxs("div", { className: styles$8.serviceHeader, children: [
+              /* @__PURE__ */ jsxs("span", { className: styles$8.serviceNumber, children: [
                 "0",
                 index + 1
               ] }),
-              /* @__PURE__ */ jsx("h2", { className: styles$5.serviceTitle, children: t(service.titleKey) })
+              /* @__PURE__ */ jsx("h2", { className: styles$8.serviceTitle, children: t(service.titleKey) })
             ] }),
-            /* @__PURE__ */ jsx("h3", { className: styles$5.serviceSubtitle, children: t(service.subtitleKey) }),
-            /* @__PURE__ */ jsx("p", { className: styles$5.serviceDescription, children: t(service.descriptionKey) }),
-            /* @__PURE__ */ jsx("div", { className: styles$5.technologies, children: service.technologies.map((tech, techIndex) => /* @__PURE__ */ jsx("span", { className: styles$5.techBadge, children: tech }, techIndex)) })
+            /* @__PURE__ */ jsx("h3", { className: styles$8.serviceSubtitle, children: t(service.subtitleKey) }),
+            /* @__PURE__ */ jsx("p", { className: styles$8.serviceDescription, children: t(service.descriptionKey) }),
+            /* @__PURE__ */ jsx("div", { className: styles$8.technologies, children: service.technologies.map((tech, techIndex) => /* @__PURE__ */ jsx("span", { className: styles$8.techBadge, children: tech }, techIndex)) })
           ] })
         },
         index
       );
     }) }),
-    /* @__PURE__ */ jsx("div", { className: styles$5.progressIndicator, children: services.map((_, index) => /* @__PURE__ */ jsx(
+    /* @__PURE__ */ jsx("div", { className: styles$8.progressIndicator, children: services.map((_, index) => /* @__PURE__ */ jsx(
       "div",
       {
-        className: `${styles$5.progressDot} ${index === currentIndex ? styles$5.active : ""} ${index < currentIndex ? styles$5.completed : ""}`
+        className: `${styles$8.progressDot} ${index === currentIndex ? styles$8.active : ""} ${index < currentIndex ? styles$8.completed : ""}`
       },
       index
     )) })
   ] }) });
 }
-const otherAppsSection = "_otherAppsSection_2alwg_1";
-const bgIcons = "_bgIcons_2alwg_12";
-const bgIcon = "_bgIcon_2alwg_12";
-const icon1 = "_icon1_2alwg_29";
-const icon2 = "_icon2_2alwg_35";
-const icon3 = "_icon3_2alwg_41";
-const icon4 = "_icon4_2alwg_47";
-const icon5 = "_icon5_2alwg_53";
-const icon6 = "_icon6_2alwg_59";
-const icon7 = "_icon7_2alwg_65";
-const icon8 = "_icon8_2alwg_71";
-const container$3 = "_container_2alwg_117";
-const header$3 = "_header_2alwg_125";
-const badge$3 = "_badge_2alwg_132";
-const badgeIcon$3 = "_badgeIcon_2alwg_144";
-const badgeText$3 = "_badgeText_2alwg_148";
-const title$3 = "_title_2alwg_157";
-const highlight$3 = "_highlight_2alwg_166";
-const stackContainer = "_stackContainer_2alwg_174";
-const stackItem = "_stackItem_2alwg_182";
-const card = "_card_2alwg_222";
-const cardImage = "_cardImage_2alwg_246";
-const cardOverlay = "_cardOverlay_2alwg_267";
-const cardNumber = "_cardNumber_2alwg_294";
-const cardTitle = "_cardTitle_2alwg_312";
-const cardDescription = "_cardDescription_2alwg_329";
-const cardTags = "_cardTags_2alwg_345";
-const tag = "_tag_2alwg_358";
-const cardFooter = "_cardFooter_2alwg_376";
-const viewProject = "_viewProject_2alwg_383";
-const platforms = "_platforms_2alwg_396";
-const platform = "_platform_2alwg_396";
-const styles$4 = {
+const otherAppsSection = "_otherAppsSection_z8n8b_1";
+const container$3 = "_container_z8n8b_9";
+const header$3 = "_header_z8n8b_16";
+const badge$4 = "_badge_z8n8b_23";
+const badgeIcon$3 = "_badgeIcon_z8n8b_35";
+const badgeText$4 = "_badgeText_z8n8b_39";
+const title$3 = "_title_z8n8b_48";
+const highlight$3 = "_highlight_z8n8b_57";
+const stackContainer = "_stackContainer_z8n8b_65";
+const stackCard = "_stackCard_z8n8b_73";
+const cardLink = "_cardLink_z8n8b_83";
+const cardContent$1 = "_cardContent_z8n8b_91";
+const cardImageSection = "_cardImageSection_z8n8b_112";
+const cardInfo = "_cardInfo_z8n8b_137";
+const cardNumber = "_cardNumber_z8n8b_145";
+const cardTitle = "_cardTitle_z8n8b_157";
+const cardDescription = "_cardDescription_z8n8b_168";
+const cardTags = "_cardTags_z8n8b_178";
+const tag = "_tag_z8n8b_187";
+const platforms = "_platforms_z8n8b_204";
+const platformLink = "_platformLink_z8n8b_211";
+const platformIcon = "_platformIcon_z8n8b_221";
+const styles$7 = {
   otherAppsSection,
-  bgIcons,
-  bgIcon,
-  icon1,
-  icon2,
-  icon3,
-  icon4,
-  icon5,
-  icon6,
-  icon7,
-  icon8,
   container: container$3,
   header: header$3,
-  badge: badge$3,
+  badge: badge$4,
   badgeIcon: badgeIcon$3,
-  badgeText: badgeText$3,
+  badgeText: badgeText$4,
   title: title$3,
   highlight: highlight$3,
   stackContainer,
-  stackItem,
-  card,
-  cardImage,
-  cardOverlay,
+  stackCard,
+  cardLink,
+  cardContent: cardContent$1,
+  cardImageSection,
+  cardInfo,
   cardNumber,
   cardTitle,
   cardDescription,
   cardTags,
   tag,
-  cardFooter,
-  viewProject,
   platforms,
-  platform
+  platformLink,
+  platformIcon
 };
+const buttonContainer = "_buttonContainer_1dxwp_2";
+const btnPrimary$1 = "_btnPrimary_1dxwp_11";
+const transitionOverlay = "_transitionOverlay_1dxwp_60";
+const overlayLoader = "_overlayLoader_1dxwp_80";
+const overlayLetter = "_overlayLetter_1dxwp_89";
+const styles$6 = {
+  buttonContainer,
+  btnPrimary: btnPrimary$1,
+  transitionOverlay,
+  overlayLoader,
+  overlayLetter
+};
+function MakingOfBanner() {
+  const { t } = useLanguage();
+  const navigate = useNavigate();
+  const [showOverlay, setShowOverlay] = useState(false);
+  const handleNavigate = () => {
+    setShowOverlay(true);
+    setTimeout(() => {
+      navigate("/making-of");
+    }, 1200);
+  };
+  return /* @__PURE__ */ jsxs("div", { className: styles$6.buttonContainer, children: [
+    /* @__PURE__ */ jsxs("button", { onClick: handleNavigate, className: styles$6.btnPrimary, children: [
+      /* @__PURE__ */ jsx("span", { children: t("makingOfBanner.button") }),
+      /* @__PURE__ */ jsx(
+        "svg",
+        {
+          width: "20",
+          height: "20",
+          viewBox: "0 0 20 20",
+          fill: "none",
+          xmlns: "http://www.w3.org/2000/svg",
+          children: /* @__PURE__ */ jsx(
+            "path",
+            {
+              d: "M7.5 15L12.5 10L7.5 5",
+              stroke: "currentColor",
+              strokeWidth: "2",
+              strokeLinecap: "round",
+              strokeLinejoin: "round"
+            }
+          )
+        }
+      )
+    ] }),
+    showOverlay && /* @__PURE__ */ jsx("div", { className: styles$6.transitionOverlay, children: /* @__PURE__ */ jsxs("div", { className: styles$6.overlayLoader, children: [
+      /* @__PURE__ */ jsx("span", { className: styles$6.overlayLetter, style: { animationDelay: "0s" }, children: "M" }),
+      /* @__PURE__ */ jsx("span", { className: styles$6.overlayLetter, style: { animationDelay: "0.1s" }, children: "a" }),
+      /* @__PURE__ */ jsx("span", { className: styles$6.overlayLetter, style: { animationDelay: "0.2s" }, children: "k" }),
+      /* @__PURE__ */ jsx("span", { className: styles$6.overlayLetter, style: { animationDelay: "0.3s" }, children: "i" }),
+      /* @__PURE__ */ jsx("span", { className: styles$6.overlayLetter, style: { animationDelay: "0.4s" }, children: "n" }),
+      /* @__PURE__ */ jsx("span", { className: styles$6.overlayLetter, style: { animationDelay: "0.5s" }, children: "g" }),
+      /* @__PURE__ */ jsx("span", { className: styles$6.overlayLetter, style: { animationDelay: "0.6s" }, children: " " }),
+      /* @__PURE__ */ jsx("span", { className: styles$6.overlayLetter, style: { animationDelay: "0.7s" }, children: "o" }),
+      /* @__PURE__ */ jsx("span", { className: styles$6.overlayLetter, style: { animationDelay: "0.8s" }, children: "f" })
+    ] }) })
+  ] });
+}
 const otherProjects = [
   {
     name: "BuyVoice",
@@ -1437,147 +2734,204 @@ const otherProjects = [
     tags: ["React Native", "OpenAI"],
     image: "/app-icon.png",
     platforms: ["ios", "android"],
-    url: "https://www.buyvoice.app"
+    url: "https://www.buyvoice.app",
+    iosUrl: "https://apps.apple.com/app/voice-shopping-list/id6505125372",
+    androidUrl: "https://play.google.com/store/apps/details?id=com.lwebch.VoiceList"
   },
   {
     name: "Hundezonen",
     category: "APP",
     descriptionKey: "apps.hundezonen.description",
-    tags: ["React", "Next.js"],
+    tags: ["React  Native"],
     image: "/hnde.png",
     platforms: ["ios", "android"],
-    url: "https://www.hundezonen.ch"
+    url: "https://www.hundezonen.ch",
+    iosUrl: "https://apps.apple.com/us/app/hundezonen/id6745336299",
+    androidUrl: "https://play.google.com/store/apps/details?id=com.lwebch.HundezonenSchweiz&pli=1"
   },
   {
     name: "FoodScan AI",
     category: "APP",
     descriptionKey: "apps.foodscan.description",
-    tags: ["React Native", "OpenAI", "Next.js"],
+    tags: ["React Native", "OpenAI"],
     image: "/foof.png",
     platforms: ["ios", "android"],
-    url: "https://www.foodscan-ai.com"
+    url: "https://www.foodscan-ai.com",
+    iosUrl: "https://apps.apple.com/us/app/foodscan-ai/id6472478688",
+    androidUrl: "https://play.google.com/store/apps/details?id=com.lwebch.foodmentoai"
   },
   {
     name: "DogMentor KI",
     category: "React",
     descriptionKey: "apps.dogmentor.description",
-    tags: ["React Native"],
+    tags: ["React Native", "OpenAI"],
     image: "/dog.jpg",
-    platforms: ["ios", "android"],
-    url: "https://dog-mentor.com"
+    platforms: ["ios"],
+    url: "https://dog-mentor.com",
+    iosUrl: "https://apps.apple.com/us/app/dogmentor/id6467635587"
   },
   {
     name: "KetoRecipeLab",
     category: "APP",
     descriptionKey: "apps.keto.description",
-    tags: ["React", "Next.js"],
+    tags: ["React Native", "OpenAI"],
     image: "/iconoapp.png",
-    platforms: ["ios", "android"],
-    url: "https://keto-recipe.app"
+    platforms: ["ios"],
+    url: "https://keto-recipe.app",
+    iosUrl: "https://apps.apple.com/us/app/ketorecipelab/id6757017200"
   },
   {
     name: "Work Ti",
     category: "APP",
     descriptionKey: "apps.workti.description",
-    tags: ["React", "Next.js"],
+    tags: ["React  Native"],
     image: "/workti.png",
-    platforms: ["ios", "android"],
-    url: "https://www.workti.app"
+    platforms: ["ios"],
+    url: "https://www.workti.app",
+    iosUrl: "https://apps.apple.com/us/app/vixtime/id6745336262"
   }
 ];
 function OtherApps() {
   const { t } = useLanguage();
   const sectionRef = useRef(null);
-  return /* @__PURE__ */ jsxs("section", { ref: sectionRef, className: styles$4.otherAppsSection, children: [
-    /* @__PURE__ */ jsxs("div", { className: styles$4.bgIcons, children: [
-      /* @__PURE__ */ jsx("svg", { className: `${styles$4.bgIcon} ${styles$4.icon1}`, viewBox: "0 0 24 24", fill: "currentColor", children: /* @__PURE__ */ jsx("path", { d: "M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z" }) }),
-      /* @__PURE__ */ jsx("svg", { className: `${styles$4.bgIcon} ${styles$4.icon2}`, viewBox: "0 0 24 24", fill: "currentColor", children: /* @__PURE__ */ jsx("path", { d: "M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z" }) }),
-      /* @__PURE__ */ jsx("svg", { className: `${styles$4.bgIcon} ${styles$4.icon3}`, viewBox: "0 0 24 24", fill: "currentColor", children: /* @__PURE__ */ jsx("path", { d: "M3,20.5V3.5C3,2.91 3.34,2.39 3.84,2.15L13.69,12L3.84,21.85C3.34,21.6 3,21.09 3,20.5M16.81,15.12L6.05,21.34L14.54,12.85L16.81,15.12M20.16,10.81C20.5,11.08 20.75,11.5 20.75,12C20.75,12.5 20.5,12.92 20.16,13.19L17.89,14.5L15.39,12L17.89,9.5L20.16,10.81M6.05,2.66L16.81,8.88L14.54,11.15L6.05,2.66Z" }) }),
-      /* @__PURE__ */ jsx("svg", { className: `${styles$4.bgIcon} ${styles$4.icon4}`, viewBox: "0 0 24 24", fill: "currentColor", children: /* @__PURE__ */ jsx("path", { d: "M3,20.5V3.5C3,2.91 3.34,2.39 3.84,2.15L13.69,12L3.84,21.85C3.34,21.6 3,21.09 3,20.5M16.81,15.12L6.05,21.34L14.54,12.85L16.81,15.12M20.16,10.81C20.5,11.08 20.75,11.5 20.75,12C20.75,12.5 20.5,12.92 20.16,13.19L17.89,14.5L15.39,12L17.89,9.5L20.16,10.81M6.05,2.66L16.81,8.88L14.54,11.15L6.05,2.66Z" }) }),
-      /* @__PURE__ */ jsx("svg", { className: `${styles$4.bgIcon} ${styles$4.icon5}`, viewBox: "0 0 24 24", fill: "currentColor", children: /* @__PURE__ */ jsx("path", { d: "M12,10.11C13.03,10.11 13.87,10.95 13.87,12C13.87,13 13.03,13.85 12,13.85C10.97,13.85 10.13,13 10.13,12C10.13,10.95 10.97,10.11 12,10.11M7.37,20C8,20.38 9.38,19.8 10.97,18.3C9.54,16.88 8.15,15.27 6.89,13.62C6.27,13.72 5.76,13.78 5.37,13.78C4.84,13.78 4.6,13.64 4.5,13.55C4.25,13.33 4.2,12.95 4.2,12.66C4.2,12.11 4.38,11.5 4.68,10.86C5.08,10 5.68,9.23 6.44,8.94C7.29,8.64 8.32,8.89 9.38,9.71C10.08,10.26 10.78,10.92 11.5,11.6C12.18,10.92 12.88,10.26 13.58,9.71C14.64,8.89 15.67,8.64 16.52,8.94C17.28,9.23 17.88,10 18.28,10.86C18.58,11.5 18.76,12.11 18.76,12.66C18.76,12.95 18.71,13.33 18.46,13.55C18.36,13.64 18.12,13.78 17.59,13.78C17.2,13.78 16.69,13.72 16.07,13.62C14.81,15.27 13.42,16.88 11.99,18.3C13.58,19.8 14.96,20.38 15.59,20C16.09,19.66 16.62,18.43 16.84,16.67C16.81,16.67 16.8,16.67 16.77,16.67C15.39,16.67 13.87,17.39 12,18.4C10.13,17.39 8.61,16.67 7.23,16.67C7.2,16.67 7.19,16.67 7.16,16.67C7.38,18.43 7.91,19.66 8.41,20C9.04,20.38 10.42,19.8 12.01,18.3L12,18.3C13.42,16.88 14.81,15.27 16.07,13.62C16.69,13.72 17.2,13.78 17.59,13.78C18.12,13.78 18.36,13.64 18.46,13.55C18.71,13.33 18.76,12.95 18.76,12.66C18.76,12.11 18.58,11.5 18.28,10.86C17.88,10 17.28,9.23 16.52,8.94C15.67,8.64 14.64,8.89 13.58,9.71C12.88,10.26 12.18,10.92 11.5,11.6C10.82,10.92 10.12,10.26 9.42,9.71C8.36,8.89 7.33,8.64 6.48,8.94C5.72,9.23 5.12,10 4.72,10.86C4.42,11.5 4.24,12.11 4.24,12.66C4.24,12.95 4.29,13.33 4.54,13.55C4.64,13.64 4.88,13.78 5.41,13.78C5.8,13.78 6.31,13.72 6.93,13.62C8.19,15.27 9.58,16.88 11.01,18.3C9.42,19.8 8.04,20.38 7.41,20M9.75,12C10.8,13.5 11.9,14.9 13.1,16.2C14.3,14.9 15.4,13.5 16.45,12C15.4,10.5 14.3,9.1 13.1,7.8C11.9,9.1 10.8,10.5 9.75,12Z" }) }),
-      /* @__PURE__ */ jsx("svg", { className: `${styles$4.bgIcon} ${styles$4.icon6}`, viewBox: "0 0 24 24", fill: "currentColor", children: /* @__PURE__ */ jsx("path", { d: "M12,10.11C13.03,10.11 13.87,10.95 13.87,12C13.87,13 13.03,13.85 12,13.85C10.97,13.85 10.13,13 10.13,12C10.13,10.95 10.97,10.11 12,10.11M7.37,20C8,20.38 9.38,19.8 10.97,18.3C9.54,16.88 8.15,15.27 6.89,13.62C6.27,13.72 5.76,13.78 5.37,13.78C4.84,13.78 4.6,13.64 4.5,13.55C4.25,13.33 4.2,12.95 4.2,12.66C4.2,12.11 4.38,11.5 4.68,10.86C5.08,10 5.68,9.23 6.44,8.94C7.29,8.64 8.32,8.89 9.38,9.71C10.08,10.26 10.78,10.92 11.5,11.6C12.18,10.92 12.88,10.26 13.58,9.71C14.64,8.89 15.67,8.64 16.52,8.94C17.28,9.23 17.88,10 18.28,10.86C18.58,11.5 18.76,12.11 18.76,12.66C18.76,12.95 18.71,13.33 18.46,13.55C18.36,13.64 18.12,13.78 17.59,13.78C17.2,13.78 16.69,13.72 16.07,13.62C14.81,15.27 13.42,16.88 11.99,18.3C13.58,19.8 14.96,20.38 15.59,20C16.09,19.66 16.62,18.43 16.84,16.67C16.81,16.67 16.8,16.67 16.77,16.67C15.39,16.67 13.87,17.39 12,18.4C10.13,17.39 8.61,16.67 7.23,16.67C7.2,16.67 7.19,16.67 7.16,16.67C7.38,18.43 7.91,19.66 8.41,20C9.04,20.38 10.42,19.8 12.01,18.3L12,18.3C13.42,16.88 14.81,15.27 16.07,13.62C16.69,13.72 17.2,13.78 17.59,13.78C18.12,13.78 18.36,13.64 18.46,13.55C18.71,13.33 18.76,12.95 18.76,12.66C18.76,12.11 18.58,11.5 18.28,10.86C17.88,10 17.28,9.23 16.52,8.94C15.67,8.64 14.64,8.89 13.58,9.71C12.88,10.26 12.18,10.92 11.5,11.6C10.82,10.92 10.12,10.26 9.42,9.71C8.36,8.89 7.33,8.64 6.48,8.94C5.72,9.23 5.12,10 4.72,10.86C4.42,11.5 4.24,12.11 4.24,12.66C4.24,12.95 4.29,13.33 4.54,13.55C4.64,13.64 4.88,13.78 5.41,13.78C5.8,13.78 6.31,13.72 6.93,13.62C8.19,15.27 9.58,16.88 11.01,18.3C9.42,19.8 8.04,20.38 7.41,20M9.75,12C10.8,13.5 11.9,14.9 13.1,16.2C14.3,14.9 15.4,13.5 16.45,12C15.4,10.5 14.3,9.1 13.1,7.8C11.9,9.1 10.8,10.5 9.75,12Z" }) }),
-      /* @__PURE__ */ jsx("svg", { className: `${styles$4.bgIcon} ${styles$4.icon7}`, viewBox: "0 0 24 24", fill: "currentColor", children: /* @__PURE__ */ jsx("path", { d: "M0,20.0025781 C0,20.5528125 0.44771525,21 1,21 L23,21 C23.5522847,21 24,20.5528125 24,20.0025781 L24,3.9974219 C24,3.4471875 23.5522847,3 23,3 L1,3 C0.44771525,3 0,3.4471875 0,3.9974219 L0,20.0025781 Z M4.5,7 L19.5,7 C20.3284271,7 21,7.67157288 21,8.5 L21,15.5 C21,16.3284271 20.3284271,17 19.5,17 L4.5,17 C3.67157288,17 3,16.3284271 3,15.5 L3,8.5 C3,7.67157288 3.67157288,7 4.5,7 Z" }) }),
-      /* @__PURE__ */ jsx("svg", { className: `${styles$4.bgIcon} ${styles$4.icon8}`, viewBox: "0 0 24 24", fill: "currentColor", children: /* @__PURE__ */ jsx("path", { d: "M0,20.0025781 C0,20.5528125 0.44771525,21 1,21 L23,21 C23.5522847,21 24,20.5528125 24,20.0025781 L24,3.9974219 C24,3.4471875 23.5522847,3 23,3 L1,3 C0.44771525,3 0,3.4471875 0,3.9974219 L0,20.0025781 Z M4.5,7 L19.5,7 C20.3284271,7 21,7.67157288 21,8.5 L21,15.5 C21,16.3284271 20.3284271,17 19.5,17 L4.5,17 C3.67157288,17 3,16.3284271 3,15.5 L3,8.5 C3,7.67157288 3.67157288,7 4.5,7 Z" }) })
-    ] }),
-    /* @__PURE__ */ jsxs("div", { className: styles$4.container, children: [
-      /* @__PURE__ */ jsxs("div", { className: styles$4.header, children: [
-        /* @__PURE__ */ jsxs("div", { className: styles$4.badge, children: [
-          /* @__PURE__ */ jsx("span", { className: styles$4.badgeIcon, children: "📱" }),
-          /* @__PURE__ */ jsx("span", { className: styles$4.badgeText, children: "Portfolio" })
-        ] }),
-        /* @__PURE__ */ jsxs("h2", { className: styles$4.title, children: [
-          t("apps.title"),
-          " ",
-          /* @__PURE__ */ jsx("span", { className: styles$4.highlight, children: t("apps.subtitle") })
-        ] })
+  useEffect(() => {
+    const handleScroll = () => {
+      if (!sectionRef.current) return;
+      const cards = sectionRef.current.querySelectorAll(`.${styles$7.stackCard}`);
+      const section2 = sectionRef.current;
+      const sectionTop = section2.offsetTop;
+      const scrollPos = window.scrollY;
+      cards.forEach((card2, index) => {
+        const cardElement = card2;
+        const cardTop = sectionTop + index * 100;
+        const progress = Math.max(0, Math.min(1, (scrollPos - cardTop) / 400));
+        const scale = 0.95 + progress * 0.05;
+        const yOffset = index * 20;
+        cardElement.style.transform = `translateY(${yOffset}px) scale(${scale})`;
+        cardElement.style.zIndex = `${index + 1}`;
+      });
+    };
+    window.addEventListener("scroll", handleScroll);
+    handleScroll();
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+  return /* @__PURE__ */ jsx("section", { id: "apps", ref: sectionRef, className: styles$7.otherAppsSection, children: /* @__PURE__ */ jsxs("div", { className: styles$7.container, children: [
+    /* @__PURE__ */ jsxs("div", { className: styles$7.header, children: [
+      /* @__PURE__ */ jsxs("div", { className: styles$7.badge, children: [
+        /* @__PURE__ */ jsx("span", { className: styles$7.badgeIcon, children: "📱" }),
+        /* @__PURE__ */ jsx("span", { className: styles$7.badgeText, children: "Portfolio" })
       ] }),
-      /* @__PURE__ */ jsx("div", { className: styles$4.stackContainer, children: otherProjects.map((project, index) => /* @__PURE__ */ jsx("div", { className: styles$4.stackItem, "data-index": index, children: /* @__PURE__ */ jsx(
-        "a",
-        {
-          href: project.url,
-          target: "_blank",
-          rel: "noopener noreferrer",
-          className: styles$4.card,
-          children: /* @__PURE__ */ jsxs("div", { className: styles$4.cardImage, children: [
-            /* @__PURE__ */ jsx("img", { src: project.image, alt: project.name }),
-            /* @__PURE__ */ jsxs("div", { className: styles$4.cardOverlay, children: [
-              /* @__PURE__ */ jsx("span", { className: styles$4.cardNumber, children: String(index + 1).padStart(2, "0") }),
-              /* @__PURE__ */ jsx("h3", { className: styles$4.cardTitle, children: project.name }),
-              /* @__PURE__ */ jsx("p", { className: styles$4.cardDescription, children: t(project.descriptionKey) }),
-              /* @__PURE__ */ jsx("div", { className: styles$4.cardTags, children: project.tags.map((tag2) => /* @__PURE__ */ jsx("span", { className: styles$4.tag, children: tag2 }, tag2)) }),
-              /* @__PURE__ */ jsxs("div", { className: styles$4.cardFooter, children: [
-                /* @__PURE__ */ jsx("span", { className: styles$4.viewProject, children: "Ver Proyecto →" }),
-                /* @__PURE__ */ jsxs("div", { className: styles$4.platforms, children: [
-                  project.platforms.includes("ios") && /* @__PURE__ */ jsx("span", { className: styles$4.platform, title: "iOS", children: "🍎" }),
-                  project.platforms.includes("android") && /* @__PURE__ */ jsx("span", { className: styles$4.platform, title: "Android", children: "🤖" })
-                ] })
-              ] })
+      /* @__PURE__ */ jsxs("h2", { className: styles$7.title, children: [
+        t("apps.title"),
+        " ",
+        /* @__PURE__ */ jsx("span", { className: styles$7.highlight, children: t("apps.subtitle") })
+      ] })
+    ] }),
+    /* @__PURE__ */ jsx("div", { className: styles$7.stackContainer, children: otherProjects.map((project, index) => /* @__PURE__ */ jsx("div", { className: styles$7.stackCard, children: /* @__PURE__ */ jsx(
+      "a",
+      {
+        href: project.url,
+        target: "_blank",
+        rel: "noopener noreferrer",
+        className: styles$7.cardLink,
+        children: /* @__PURE__ */ jsxs("div", { className: styles$7.cardContent, children: [
+          /* @__PURE__ */ jsx("div", { className: styles$7.cardImageSection, children: /* @__PURE__ */ jsx("img", { src: project.image, alt: project.name }) }),
+          /* @__PURE__ */ jsxs("div", { className: styles$7.cardInfo, children: [
+            /* @__PURE__ */ jsxs("div", { className: styles$7.cardNumber, children: [
+              "0",
+              index + 1
+            ] }),
+            /* @__PURE__ */ jsx("h3", { className: styles$7.cardTitle, children: project.name }),
+            /* @__PURE__ */ jsx("p", { className: styles$7.cardDescription, children: t(project.descriptionKey) }),
+            /* @__PURE__ */ jsx("div", { className: styles$7.cardTags, children: project.tags.map((tag2) => /* @__PURE__ */ jsx("span", { className: styles$7.tag, children: tag2 }, tag2)) }),
+            /* @__PURE__ */ jsxs("div", { className: styles$7.platforms, children: [
+              project.url && /* @__PURE__ */ jsx(
+                "a",
+                {
+                  href: project.url,
+                  target: "_blank",
+                  rel: "noopener noreferrer",
+                  className: styles$7.platformLink,
+                  onClick: (e) => e.stopPropagation(),
+                  title: "Landing Page",
+                  children: /* @__PURE__ */ jsx("svg", { className: styles$7.platformIcon, viewBox: "0 0 24 24", fill: "currentColor", children: /* @__PURE__ */ jsx("path", { d: "M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z" }) })
+                }
+              ),
+              project.platforms.includes("ios") && project.iosUrl && /* @__PURE__ */ jsx(
+                "a",
+                {
+                  href: project.iosUrl,
+                  target: "_blank",
+                  rel: "noopener noreferrer",
+                  className: styles$7.platformLink,
+                  onClick: (e) => e.stopPropagation(),
+                  title: "Download on App Store",
+                  children: /* @__PURE__ */ jsx("svg", { className: styles$7.platformIcon, viewBox: "0 0 24 24", fill: "currentColor", children: /* @__PURE__ */ jsx("path", { d: "M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z" }) })
+                }
+              ),
+              project.platforms.includes("android") && project.androidUrl && /* @__PURE__ */ jsx(
+                "a",
+                {
+                  href: project.androidUrl,
+                  target: "_blank",
+                  rel: "noopener noreferrer",
+                  className: styles$7.platformLink,
+                  onClick: (e) => e.stopPropagation(),
+                  title: "Download on Google Play",
+                  children: /* @__PURE__ */ jsx("svg", { className: styles$7.platformIcon, viewBox: "0 0 24 24", fill: "currentColor", children: /* @__PURE__ */ jsx("path", { d: "M3,20.5V3.5C3,2.91 3.34,2.39 3.84,2.15L13.69,12L3.84,21.85C3.34,21.6 3,21.09 3,20.5M16.81,15.12L6.05,21.34L14.54,12.85L16.81,15.12M20.16,10.81C20.5,11.08 20.75,11.5 20.75,12C20.75,12.5 20.5,12.92 20.16,13.19L17.89,14.5L15.39,12L17.89,9.5L20.16,10.81M6.05,2.66L16.81,8.88L14.54,11.15L6.05,2.66Z" }) })
+                }
+              )
             ] })
           ] })
-        }
-      ) }, project.name)) })
-    ] })
-  ] });
+        ] })
+      }
+    ) }, project.name)) }),
+    /* @__PURE__ */ jsx(MakingOfBanner, {})
+  ] }) });
 }
-const websitesSection = "_websitesSection_1b1ke_1";
-const container$2 = "_container_1b1ke_27";
-const header$2 = "_header_1b1ke_35";
-const badge$2 = "_badge_1b1ke_40";
-const badgeIcon$2 = "_badgeIcon_1b1ke_52";
-const badgeText$2 = "_badgeText_1b1ke_56";
-const title$2 = "_title_1b1ke_65";
-const highlight$2 = "_highlight_1b1ke_74";
-const bentoGrid = "_bentoGrid_1b1ke_82";
-const large = "_large_1b1ke_90";
-const medium = "_medium_1b1ke_95";
-const small = "_small_1b1ke_100";
-const bentoItem = "_bentoItem_1b1ke_106";
-const animate = "_animate_1b1ke_123";
-const morphIn = "_morphIn_1b1ke_1";
-const hoveredGrid = "_hoveredGrid_1b1ke_152";
-const pulseGlow = "_pulseGlow_1b1ke_1";
-const featured = "_featured_1b1ke_196";
-const bentoImage = "_bentoImage_1b1ke_201";
-const bentoOverlay = "_bentoOverlay_1b1ke_218";
-const bentoContent = "_bentoContent_1b1ke_240";
-const frameworkBadge = "_frameworkBadge_1b1ke_249";
-const bentoTitle = "_bentoTitle_1b1ke_269";
-const bentoDescription = "_bentoDescription_1b1ke_287";
-const techTags = "_techTags_1b1ke_309";
-const techTag = "_techTag_1b1ke_309";
-const gradientBorder = "_gradientBorder_1b1ke_336";
-const hoverArrow = "_hoverArrow_1b1ke_352";
-const bgDecoration = "_bgDecoration_1b1ke_378";
-const bgBlob1$1 = "_bgBlob1_1b1ke_385";
-const float = "_float_1b1ke_1";
-const bgBlob2$1 = "_bgBlob2_1b1ke_397";
-const styles$3 = {
+const websitesSection = "_websitesSection_72aim_1";
+const container$2 = "_container_72aim_27";
+const header$2 = "_header_72aim_35";
+const badge$3 = "_badge_72aim_40";
+const badgeIcon$2 = "_badgeIcon_72aim_52";
+const badgeText$3 = "_badgeText_72aim_56";
+const title$2 = "_title_72aim_65";
+const highlight$2 = "_highlight_72aim_74";
+const bentoGrid = "_bentoGrid_72aim_82";
+const large = "_large_72aim_90";
+const medium = "_medium_72aim_95";
+const small = "_small_72aim_100";
+const bentoItem = "_bentoItem_72aim_106";
+const cardVisible = "_cardVisible_72aim_124";
+const cardAppear = "_cardAppear_72aim_1";
+const cardHidden = "_cardHidden_72aim_147";
+const animate = "_animate_72aim_174";
+const morphIn = "_morphIn_72aim_1";
+const hoveredGrid = "_hoveredGrid_72aim_203";
+const pulseGlow = "_pulseGlow_72aim_1";
+const featured = "_featured_72aim_247";
+const bentoImage = "_bentoImage_72aim_252";
+const bentoVideo = "_bentoVideo_72aim_259";
+const bentoOverlay = "_bentoOverlay_72aim_271";
+const bentoContent = "_bentoContent_72aim_293";
+const frameworkBadge = "_frameworkBadge_72aim_302";
+const bentoTitle = "_bentoTitle_72aim_322";
+const bentoDescription = "_bentoDescription_72aim_340";
+const techTags = "_techTags_72aim_362";
+const techTag = "_techTag_72aim_362";
+const gradientBorder = "_gradientBorder_72aim_389";
+const hoverArrow = "_hoverArrow_72aim_405";
+const bgDecoration = "_bgDecoration_72aim_431";
+const bgBlob1$1 = "_bgBlob1_72aim_438";
+const float = "_float_72aim_1";
+const bgBlob2$1 = "_bgBlob2_72aim_450";
+const styles$5 = {
   websitesSection,
   container: container$2,
   header: header$2,
-  badge: badge$2,
+  badge: badge$3,
   badgeIcon: badgeIcon$2,
-  badgeText: badgeText$2,
+  badgeText: badgeText$3,
   title: title$2,
   highlight: highlight$2,
   bentoGrid,
@@ -1585,12 +2939,16 @@ const styles$3 = {
   medium,
   small,
   bentoItem,
+  cardVisible,
+  cardAppear,
+  cardHidden,
   animate,
   morphIn,
   hoveredGrid,
   pulseGlow,
   featured,
   bentoImage,
+  bentoVideo,
   bentoOverlay,
   bentoContent,
   frameworkBadge,
@@ -1729,7 +3087,9 @@ function Websites() {
   const { t } = useLanguage();
   const [isVisible, setIsVisible] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
+  const [cardVisibility, setCardVisibility] = useState(new Array(websites.length).fill(false));
   const sectionRef = useRef(null);
+  const cardRefs = useRef([]);
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry2]) => {
@@ -1748,45 +3108,70 @@ function Websites() {
       }
     };
   }, []);
-  return /* @__PURE__ */ jsxs("section", { ref: sectionRef, className: styles$3.websitesSection, children: [
+  useEffect(() => {
+    let ticking = false;
+    const handleScroll = () => {
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          if (!sectionRef.current) return;
+          const newVisibility = [...cardVisibility];
+          cardRefs.current.forEach((card2, index) => {
+            if (!card2) return;
+            const rect = card2.getBoundingClientRect();
+            const windowHeight = window.innerHeight;
+            const isInView = rect.top < windowHeight * 0.85 && rect.bottom > windowHeight * 0.15;
+            newVisibility[index] = isInView;
+          });
+          setCardVisibility(newVisibility);
+          ticking = false;
+        });
+        ticking = true;
+      }
+    };
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    handleScroll();
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+  return /* @__PURE__ */ jsxs("section", { ref: sectionRef, className: styles$5.websitesSection, children: [
     /* @__PURE__ */ jsxs(
       "div",
       {
-        className: styles$3.container,
+        className: styles$5.container,
         onMouseEnter: () => setIsHovered(true),
         onMouseLeave: () => setIsHovered(false),
         children: [
-          /* @__PURE__ */ jsxs("div", { className: styles$3.header, children: [
-            /* @__PURE__ */ jsxs("div", { className: styles$3.badge, children: [
-              /* @__PURE__ */ jsx("span", { className: styles$3.badgeIcon, children: "🌐" }),
-              /* @__PURE__ */ jsx("span", { className: styles$3.badgeText, children: "Portfolio Web" })
+          /* @__PURE__ */ jsxs("div", { className: styles$5.header, children: [
+            /* @__PURE__ */ jsxs("div", { className: styles$5.badge, children: [
+              /* @__PURE__ */ jsx("span", { className: styles$5.badgeIcon, children: "🌐" }),
+              /* @__PURE__ */ jsx("span", { className: styles$5.badgeText, children: "Portfolio Web" })
             ] }),
-            /* @__PURE__ */ jsxs("h2", { className: styles$3.title, children: [
+            /* @__PURE__ */ jsxs("h2", { className: styles$5.title, children: [
               t("websites.title.part1"),
               " ",
-              /* @__PURE__ */ jsx("span", { className: styles$3.highlight, children: t("websites.title.highlight") })
+              /* @__PURE__ */ jsx("span", { className: styles$5.highlight, children: t("websites.title.highlight") })
             ] })
           ] }),
-          /* @__PURE__ */ jsx("div", { className: `${styles$3.bentoGrid} ${isVisible ? styles$3.animate : ""} ${isHovered ? styles$3.hoveredGrid : ""}`, children: websites.map((site, index) => {
+          /* @__PURE__ */ jsx("div", { className: `${styles$5.bentoGrid} ${isVisible ? styles$5.animate : ""} ${isHovered ? styles$5.hoveredGrid : ""}`, children: websites.map((site, index) => {
             const colors = frameworkColors[site.framework] || frameworkColors["Next.js"];
             return /* @__PURE__ */ jsxs(
               "a",
               {
+                ref: (el) => cardRefs.current[index] = el,
                 href: site.projectUrl,
                 target: "_blank",
                 rel: "noopener noreferrer",
-                className: `${styles$3.bentoItem} ${styles$3[site.size]} ${site.featured ? styles$3.featured : ""}`,
+                className: `${styles$5.bentoItem} ${styles$5[site.size]} ${site.featured ? styles$5.featured : ""} ${cardVisibility[index] ? styles$5.cardVisible : styles$5.cardHidden}`,
                 style: { animationDelay: `${index * 0.1}s` },
                 children: [
-                  /* @__PURE__ */ jsxs("div", { className: styles$3.bentoImage, children: [
+                  /* @__PURE__ */ jsxs("div", { className: styles$5.bentoImage, children: [
                     /* @__PURE__ */ jsx("img", { src: site.imageUrl, alt: site.title }),
-                    /* @__PURE__ */ jsx("div", { className: styles$3.bentoOverlay })
+                    /* @__PURE__ */ jsx("div", { className: styles$5.bentoOverlay })
                   ] }),
-                  /* @__PURE__ */ jsxs("div", { className: styles$3.bentoContent, children: [
+                  /* @__PURE__ */ jsxs("div", { className: styles$5.bentoContent, children: [
                     /* @__PURE__ */ jsx(
                       "div",
                       {
-                        className: styles$3.frameworkBadge,
+                        className: styles$5.frameworkBadge,
                         style: {
                           background: colors.bg,
                           borderColor: colors.border,
@@ -1795,12 +3180,12 @@ function Websites() {
                         children: site.framework
                       }
                     ),
-                    /* @__PURE__ */ jsx("h3", { className: styles$3.bentoTitle, children: site.title }),
-                    /* @__PURE__ */ jsx("p", { className: styles$3.bentoDescription, children: site.description }),
-                    /* @__PURE__ */ jsx("div", { className: styles$3.techTags, children: site.technologies.map((tech, i) => /* @__PURE__ */ jsx("span", { className: styles$3.techTag, children: tech }, i)) })
+                    /* @__PURE__ */ jsx("h3", { className: styles$5.bentoTitle, children: site.title }),
+                    /* @__PURE__ */ jsx("p", { className: styles$5.bentoDescription, children: site.description }),
+                    /* @__PURE__ */ jsx("div", { className: styles$5.techTags, children: site.technologies.map((tech, i) => /* @__PURE__ */ jsx("span", { className: styles$5.techTag, children: tech }, i)) })
                   ] }),
-                  /* @__PURE__ */ jsx("div", { className: styles$3.gradientBorder }),
-                  /* @__PURE__ */ jsx("div", { className: styles$3.hoverArrow, children: /* @__PURE__ */ jsx("svg", { width: "24", height: "24", viewBox: "0 0 24 24", fill: "none", children: /* @__PURE__ */ jsx("path", { d: "M7 17L17 7M17 7H7M17 7V17", stroke: "currentColor", strokeWidth: "2", strokeLinecap: "round", strokeLinejoin: "round" }) }) })
+                  /* @__PURE__ */ jsx("div", { className: styles$5.gradientBorder }),
+                  /* @__PURE__ */ jsx("div", { className: styles$5.hoverArrow, children: /* @__PURE__ */ jsx("svg", { width: "24", height: "24", viewBox: "0 0 24 24", fill: "none", children: /* @__PURE__ */ jsx("path", { d: "M7 17L17 7M17 7H7M17 7V17", stroke: "currentColor", strokeWidth: "2", strokeLinecap: "round", strokeLinejoin: "round" }) }) })
                 ]
               },
               site.id
@@ -1809,39 +3194,128 @@ function Websites() {
         ]
       }
     ),
-    /* @__PURE__ */ jsxs("div", { className: styles$3.bgDecoration, children: [
-      /* @__PURE__ */ jsx("div", { className: styles$3.bgBlob1 }),
-      /* @__PURE__ */ jsx("div", { className: styles$3.bgBlob2 })
+    /* @__PURE__ */ jsxs("div", { className: styles$5.bgDecoration, children: [
+      /* @__PURE__ */ jsx("div", { className: styles$5.bgBlob1 }),
+      /* @__PURE__ */ jsx("div", { className: styles$5.bgBlob2 })
     ] })
   ] });
 }
-const carouselSection = "_carouselSection_10cvw_1";
-const loading = "_loading_10cvw_10";
-const loadingPlaceholder = "_loadingPlaceholder_10cvw_16";
-const backgroundDecorations = "_backgroundDecorations_10cvw_31";
-const bgBlob1 = "_bgBlob1_10cvw_38";
-const bgBlob2 = "_bgBlob2_10cvw_49";
-const header$1 = "_header_10cvw_61";
-const badge$1 = "_badge_10cvw_68";
-const badgeIcon$1 = "_badgeIcon_10cvw_80";
-const badgeText$1 = "_badgeText_10cvw_84";
-const title$1 = "_title_10cvw_93";
-const highlight$1 = "_highlight_10cvw_102";
-const subtitle$1 = "_subtitle_10cvw_109";
-const carouselContainer = "_carouselContainer_10cvw_118";
-const gradientLeft = "_gradientLeft_10cvw_123";
-const gradientRight = "_gradientRight_10cvw_124";
-const scrollTrack = "_scrollTrack_10cvw_144";
-const dragging = "_dragging_10cvw_157";
-const techGrid = "_techGrid_10cvw_162";
-const scrolling = "_scrolling_10cvw_169";
-const techItem = "_techItem_10cvw_187";
-const techCard = "_techCard_10cvw_191";
-const cardGlow = "_cardGlow_10cvw_213";
-const techIcon = "_techIcon_10cvw_228";
-const techName = "_techName_10cvw_239";
-const cornerAccent = "_cornerAccent_10cvw_251";
-const styles$2 = {
+const section = "_section_14uli_1";
+const iconsContainer = "_iconsContainer_14uli_8";
+const floatingIcon = "_floatingIcon_14uli_15";
+const content = "_content_14uli_38";
+const text = "_text_14uli_52";
+const styles$4 = {
+  section,
+  iconsContainer,
+  floatingIcon,
+  content,
+  text
+};
+function ScrollTextReveal() {
+  const [scrollProgress, setScrollProgress] = useState(0);
+  const sectionRef = useRef(null);
+  const { language } = useLanguage();
+  const words = {
+    es: ["INNOVACIÓN", "PASIÓN", "FUTURO"],
+    de: ["INNOVATION", "LEIDENSCHAFT", "ZUKUNFT"],
+    en: ["INNOVATION", "PASSION", "FUTURE"]
+  };
+  const currentWords = words[language] || words.en;
+  useEffect(() => {
+    let ticking = false;
+    const handleScroll = () => {
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          if (!sectionRef.current) {
+            ticking = false;
+            return;
+          }
+          const rect = sectionRef.current.getBoundingClientRect();
+          const sectionHeight = sectionRef.current.offsetHeight;
+          const windowHeight = window.innerHeight;
+          const offset = windowHeight * 0.3;
+          const progress = Math.max(0, Math.min(1, (-rect.top + offset) / (sectionHeight - windowHeight + offset)));
+          setScrollProgress(progress);
+          ticking = false;
+        });
+        ticking = true;
+      }
+    };
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    handleScroll();
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+  const wordIndex = Math.floor(scrollProgress * currentWords.length);
+  const currentWord = currentWords[Math.min(wordIndex, currentWords.length - 1)];
+  const primaryColor = typeof window !== "undefined" ? getComputedStyle(document.documentElement).getPropertyValue("--color-primary").trim() : "#ff6b35";
+  const colors = [primaryColor, "#9ca3af"];
+  const currentColor = colors[wordIndex % colors.length];
+  const scale = 0.3 + scrollProgress * 1.3 * 0.9;
+  const opacity = Math.min(1, scrollProgress * 2);
+  const floatingIcons = [
+    { Icon: TbBrandReactNative, position: { top: "15%", left: "10%" }, delay: 0 },
+    { Icon: SiNodedotjs, position: { top: "70%", left: "15%" }, delay: 1 },
+    { Icon: SiOpenai, position: { top: "25%", right: "12%" }, delay: 2 },
+    { Icon: SiApple, position: { top: "60%", right: "18%" }, delay: 3 },
+    { Icon: SiAndroid, position: { top: "80%", left: "50%" }, delay: 4 },
+    { Icon: FaMobileAlt, position: { top: "40%", left: "25%" }, delay: 5 }
+  ];
+  return /* @__PURE__ */ jsxs("section", { ref: sectionRef, className: styles$4.section, children: [
+    /* @__PURE__ */ jsx("div", { className: styles$4.iconsContainer, children: floatingIcons.map((item, index) => /* @__PURE__ */ jsx(
+      "div",
+      {
+        className: styles$4.floatingIcon,
+        style: {
+          ...item.position,
+          animationDelay: `${item.delay}s`
+        },
+        children: /* @__PURE__ */ jsx(item.Icon, {})
+      },
+      index
+    )) }),
+    /* @__PURE__ */ jsx("div", { className: styles$4.content, children: /* @__PURE__ */ jsx(
+      "h2",
+      {
+        className: styles$4.text,
+        style: {
+          transform: `scale3d(${scale}, ${scale}, 1)`,
+          opacity,
+          color: currentColor,
+          textShadow: `0 0 20px ${currentColor}80, 0 0 40px ${currentColor}50`
+        },
+        children: currentWord
+      }
+    ) })
+  ] });
+}
+const carouselSection = "_carouselSection_y522o_1";
+const loading = "_loading_y522o_10";
+const loadingPlaceholder = "_loadingPlaceholder_y522o_16";
+const backgroundDecorations = "_backgroundDecorations_y522o_31";
+const bgBlob1 = "_bgBlob1_y522o_38";
+const bgBlob2 = "_bgBlob2_y522o_49";
+const header$1 = "_header_y522o_61";
+const badge$2 = "_badge_y522o_68";
+const badgeIcon$1 = "_badgeIcon_y522o_80";
+const badgeText$2 = "_badgeText_y522o_84";
+const title$1 = "_title_y522o_93";
+const highlight$1 = "_highlight_y522o_102";
+const subtitle$1 = "_subtitle_y522o_109";
+const carouselContainer = "_carouselContainer_y522o_118";
+const gradientLeft = "_gradientLeft_y522o_123";
+const gradientRight = "_gradientRight_y522o_124";
+const scrollTrack = "_scrollTrack_y522o_144";
+const dragging = "_dragging_y522o_157";
+const techGrid = "_techGrid_y522o_162";
+const scrolling = "_scrolling_y522o_169";
+const techItem = "_techItem_y522o_187";
+const techCard = "_techCard_y522o_191";
+const cardGlow = "_cardGlow_y522o_213";
+const techIcon = "_techIcon_y522o_228";
+const techName = "_techName_y522o_239";
+const cornerAccent = "_cornerAccent_y522o_251";
+const styles$3 = {
   carouselSection,
   loading,
   loadingPlaceholder,
@@ -1849,9 +3323,9 @@ const styles$2 = {
   bgBlob1,
   bgBlob2,
   header: header$1,
-  badge: badge$1,
+  badge: badge$2,
   badgeIcon: badgeIcon$1,
-  badgeText: badgeText$1,
+  badgeText: badgeText$2,
   title: title$1,
   highlight: highlight$1,
   subtitle: subtitle$1,
@@ -1869,6 +3343,165 @@ const styles$2 = {
   techName,
   cornerAccent
 };
+const bannerContainer = "_bannerContainer_3jdc2_2";
+const contentLayer = "_contentLayer_3jdc2_11";
+const badge$1 = "_badge_3jdc2_19";
+const badgeVisible = "_badgeVisible_3jdc2_33";
+const badgeText$1 = "_badgeText_3jdc2_38";
+const terminal = "_terminal_3jdc2_49";
+const terminalVisible = "_terminalVisible_3jdc2_62";
+const terminalHeader = "_terminalHeader_3jdc2_68";
+const terminalDots = "_terminalDots_3jdc2_76";
+const dot = "_dot_3jdc2_81";
+const terminalTitle = "_terminalTitle_3jdc2_87";
+const claudeLogo = "_claudeLogo_3jdc2_99";
+const terminalSpacer = "_terminalSpacer_3jdc2_105";
+const terminalBody = "_terminalBody_3jdc2_110";
+const codeLine = "_codeLine_3jdc2_119";
+const codeLineVisible = "_codeLineVisible_3jdc2_128";
+const lineContent = "_lineContent_3jdc2_133";
+const command = "_command_3jdc2_140";
+const success = "_success_3jdc2_145";
+const info = "_info_3jdc2_149";
+const cursor = "_cursor_3jdc2_153";
+const blink = "_blink_3jdc2_1";
+const processingLine = "_processingLine_3jdc2_170";
+const fadeIn = "_fadeIn_3jdc2_1";
+const description = "_description_3jdc2_189";
+const descriptionVisible = "_descriptionVisible_3jdc2_197";
+const descriptionTitle = "_descriptionTitle_3jdc2_202";
+const descriptionText = "_descriptionText_3jdc2_214";
+const stats = "_stats_3jdc2_225";
+const statsVisible = "_statsVisible_3jdc2_240";
+const stat = "_stat_3jdc2_225";
+const statNumber = "_statNumber_3jdc2_249";
+const statLabel = "_statLabel_3jdc2_261";
+const statDivider = "_statDivider_3jdc2_270";
+const styles$2 = {
+  bannerContainer,
+  contentLayer,
+  badge: badge$1,
+  badgeVisible,
+  badgeText: badgeText$1,
+  terminal,
+  terminalVisible,
+  terminalHeader,
+  terminalDots,
+  dot,
+  terminalTitle,
+  claudeLogo,
+  terminalSpacer,
+  terminalBody,
+  codeLine,
+  codeLineVisible,
+  lineContent,
+  command,
+  success,
+  info,
+  cursor,
+  blink,
+  processingLine,
+  fadeIn,
+  description,
+  descriptionVisible,
+  descriptionTitle,
+  descriptionText,
+  stats,
+  statsVisible,
+  stat,
+  statNumber,
+  statLabel,
+  statDivider
+};
+function ClaudeCodeBanner() {
+  const { t } = useLanguage();
+  const bannerRef = useRef(null);
+  const [isVisible, setIsVisible] = useState(false);
+  const [typedLines, setTypedLines] = useState([]);
+  const codeLines = [
+    { text: "$ claude code --optimize", delay: 0, type: "command" },
+    { text: "✓ Loading AI agents...", delay: 400, type: "success" },
+    { text: "✓ Workflow optimized", delay: 800, type: "success" },
+    { text: "→ Ready to build", delay: 1200, type: "info" }
+  ];
+  useEffect(() => {
+    const handleScroll = () => {
+      if (!bannerRef.current) return;
+      const rect = bannerRef.current.getBoundingClientRect();
+      const windowHeight = window.innerHeight;
+      const visible = rect.top < windowHeight - 100 && rect.bottom > 0;
+      if (visible && !isVisible) {
+        setIsVisible(true);
+      }
+    };
+    window.addEventListener("scroll", handleScroll);
+    handleScroll();
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [isVisible]);
+  useEffect(() => {
+    if (!isVisible) return;
+    codeLines.forEach((line, index) => {
+      setTimeout(() => {
+        setTypedLines((prev) => [...prev, index]);
+      }, line.delay);
+    });
+  }, [isVisible]);
+  return /* @__PURE__ */ jsx("div", { ref: bannerRef, className: styles$2.bannerContainer, children: /* @__PURE__ */ jsxs("div", { className: styles$2.contentLayer, children: [
+    /* @__PURE__ */ jsx("div", { className: `${styles$2.badge} ${isVisible ? styles$2.badgeVisible : ""}`, children: /* @__PURE__ */ jsx("span", { className: styles$2.badgeText, children: t("claudeCode.badge") || "DESDE 2025" }) }),
+    /* @__PURE__ */ jsxs("div", { className: `${styles$2.terminal} ${isVisible ? styles$2.terminalVisible : ""}`, children: [
+      /* @__PURE__ */ jsxs("div", { className: styles$2.terminalHeader, children: [
+        /* @__PURE__ */ jsxs("div", { className: styles$2.terminalDots, children: [
+          /* @__PURE__ */ jsx("span", { className: styles$2.dot, style: { background: "#ff5f56" } }),
+          /* @__PURE__ */ jsx("span", { className: styles$2.dot, style: { background: "#ffbd2e" } }),
+          /* @__PURE__ */ jsx("span", { className: styles$2.dot, style: { background: "#27c93f" } })
+        ] }),
+        /* @__PURE__ */ jsxs("div", { className: styles$2.terminalTitle, children: [
+          /* @__PURE__ */ jsx(
+            "img",
+            {
+              src: "/Claude_AI_symbol.svg.png",
+              alt: "Claude AI",
+              className: styles$2.claudeLogo
+            }
+          ),
+          "claude-code.ai"
+        ] }),
+        /* @__PURE__ */ jsx("div", { className: styles$2.terminalSpacer })
+      ] }),
+      /* @__PURE__ */ jsxs("div", { className: styles$2.terminalBody, children: [
+        codeLines.map((line, index) => /* @__PURE__ */ jsx(
+          "div",
+          {
+            className: `${styles$2.codeLine} ${typedLines.includes(index) ? styles$2.codeLineVisible : ""} ${styles$2[line.type]}`,
+            children: /* @__PURE__ */ jsx("span", { className: styles$2.lineContent, children: line.text })
+          },
+          index
+        )),
+        isVisible && typedLines.length === codeLines.length && /* @__PURE__ */ jsx("div", { className: styles$2.processingLine, children: /* @__PURE__ */ jsx("span", { className: styles$2.cursor, children: "█" }) })
+      ] })
+    ] }),
+    /* @__PURE__ */ jsxs("div", { className: `${styles$2.description} ${isVisible ? styles$2.descriptionVisible : ""}`, children: [
+      /* @__PURE__ */ jsx("h3", { className: styles$2.descriptionTitle, children: t("claudeCode.title") || "Mi copiloto: Claude Code" }),
+      /* @__PURE__ */ jsx("p", { className: styles$2.descriptionText, children: t("claudeCode.description") || "4 agentes especializados entrenados para mis requerimientos. Trabajo mucho más rápido y puedo ofrecer precios inmejorables gracias a esta tecnología de vanguardia." })
+    ] }),
+    /* @__PURE__ */ jsxs("div", { className: `${styles$2.stats} ${isVisible ? styles$2.statsVisible : ""}`, children: [
+      /* @__PURE__ */ jsxs("div", { className: styles$2.stat, children: [
+        /* @__PURE__ */ jsx("div", { className: styles$2.statNumber, children: "4" }),
+        /* @__PURE__ */ jsx("div", { className: styles$2.statLabel, children: t("claudeCode.agents") || "Agentes IA" })
+      ] }),
+      /* @__PURE__ */ jsx("div", { className: styles$2.statDivider }),
+      /* @__PURE__ */ jsxs("div", { className: styles$2.stat, children: [
+        /* @__PURE__ */ jsx("div", { className: styles$2.statNumber, children: "3x" }),
+        /* @__PURE__ */ jsx("div", { className: styles$2.statLabel, children: t("claudeCode.speed") || "Más rápido" })
+      ] }),
+      /* @__PURE__ */ jsx("div", { className: styles$2.statDivider }),
+      /* @__PURE__ */ jsxs("div", { className: styles$2.stat, children: [
+        /* @__PURE__ */ jsx("div", { className: styles$2.statNumber, children: "✓" }),
+        /* @__PURE__ */ jsx("div", { className: styles$2.statLabel, children: t("claudeCode.prices") || "Mejores precios" })
+      ] })
+    ] })
+  ] }) });
+}
 const technologies = [
   { name: "React Native", icon: TbBrandReactNative, color: "#61dafb" },
   { name: "React", icon: SiReact, color: "#61dafb" },
@@ -1928,111 +3561,115 @@ function TechCarousel() {
     setIsDragging(false);
   };
   if (!isClient) {
-    return /* @__PURE__ */ jsx("div", { className: styles$2.loading, children: /* @__PURE__ */ jsx("div", { className: styles$2.loadingPlaceholder }) });
+    return /* @__PURE__ */ jsx("div", { className: styles$3.loading, children: /* @__PURE__ */ jsx("div", { className: styles$3.loadingPlaceholder }) });
   }
   const duplicatedTech = [...technologies, ...technologies];
-  return /* @__PURE__ */ jsxs("section", { className: styles$2.carouselSection, children: [
-    /* @__PURE__ */ jsxs("div", { className: styles$2.backgroundDecorations, children: [
-      /* @__PURE__ */ jsx("div", { className: styles$2.bgBlob1 }),
-      /* @__PURE__ */ jsx("div", { className: styles$2.bgBlob2 })
-    ] }),
-    /* @__PURE__ */ jsxs("div", { className: styles$2.header, children: [
-      /* @__PURE__ */ jsxs("div", { className: styles$2.badge, children: [
-        /* @__PURE__ */ jsx("span", { className: styles$2.badgeIcon, children: "✨" }),
-        /* @__PURE__ */ jsx("span", { className: styles$2.badgeText, children: t("tech.badge") })
+  return /* @__PURE__ */ jsxs(Fragment, { children: [
+    /* @__PURE__ */ jsxs("section", { className: styles$3.carouselSection, children: [
+      /* @__PURE__ */ jsxs("div", { className: styles$3.backgroundDecorations, children: [
+        /* @__PURE__ */ jsx("div", { className: styles$3.bgBlob1 }),
+        /* @__PURE__ */ jsx("div", { className: styles$3.bgBlob2 })
       ] }),
-      /* @__PURE__ */ jsxs("h2", { className: styles$2.title, children: [
-        t("tech.title.part1"),
-        " ",
-        /* @__PURE__ */ jsx("span", { className: styles$2.highlight, children: t("tech.title.highlight") })
+      /* @__PURE__ */ jsxs("div", { className: styles$3.header, children: [
+        /* @__PURE__ */ jsxs("div", { className: styles$3.badge, children: [
+          /* @__PURE__ */ jsx("span", { className: styles$3.badgeIcon, children: "✨" }),
+          /* @__PURE__ */ jsx("span", { className: styles$3.badgeText, children: t("tech.badge") })
+        ] }),
+        /* @__PURE__ */ jsxs("h2", { className: styles$3.title, children: [
+          t("tech.title.part1"),
+          " ",
+          /* @__PURE__ */ jsx("span", { className: styles$3.highlight, children: t("tech.title.highlight") })
+        ] }),
+        /* @__PURE__ */ jsx("p", { className: styles$3.subtitle, children: t("tech.subtitle") })
       ] }),
-      /* @__PURE__ */ jsx("p", { className: styles$2.subtitle, children: t("tech.subtitle") })
+      /* @__PURE__ */ jsxs("div", { className: styles$3.carouselContainer, children: [
+        /* @__PURE__ */ jsx("div", { className: styles$3.gradientLeft }),
+        /* @__PURE__ */ jsx("div", { className: styles$3.gradientRight }),
+        /* @__PURE__ */ jsx(
+          "div",
+          {
+            ref: containerRef,
+            className: `${styles$3.scrollTrack} ${isDragging ? styles$3.dragging : ""}`,
+            onMouseDown: handleMouseDown,
+            onMouseMove: handleMouseMove,
+            onMouseUp: handleMouseUp,
+            onMouseLeave: handleMouseLeave,
+            onTouchStart: handleTouchStart,
+            onTouchMove: handleTouchMove,
+            onTouchEnd: handleTouchEnd,
+            children: /* @__PURE__ */ jsx("div", { className: `${styles$3.techGrid} ${isDragging ? "" : styles$3.scrolling}`, children: duplicatedTech.map((tech, index) => /* @__PURE__ */ jsx(
+              "div",
+              {
+                className: styles$3.techItem,
+                children: /* @__PURE__ */ jsxs("div", { className: styles$3.techCard, children: [
+                  /* @__PURE__ */ jsx("div", { className: styles$3.cardGlow }),
+                  /* @__PURE__ */ jsx("div", { className: styles$3.techIcon, children: /* @__PURE__ */ jsx(tech.icon, { style: { color: tech.color } }) }),
+                  /* @__PURE__ */ jsx("span", { className: styles$3.techName, children: tech.name }),
+                  /* @__PURE__ */ jsx("div", { className: styles$3.cornerAccent })
+                ] })
+              },
+              `${tech.name}-${index}`
+            )) })
+          }
+        )
+      ] })
     ] }),
-    /* @__PURE__ */ jsxs("div", { className: styles$2.carouselContainer, children: [
-      /* @__PURE__ */ jsx("div", { className: styles$2.gradientLeft }),
-      /* @__PURE__ */ jsx("div", { className: styles$2.gradientRight }),
-      /* @__PURE__ */ jsx(
-        "div",
-        {
-          ref: containerRef,
-          className: `${styles$2.scrollTrack} ${isDragging ? styles$2.dragging : ""}`,
-          onMouseDown: handleMouseDown,
-          onMouseMove: handleMouseMove,
-          onMouseUp: handleMouseUp,
-          onMouseLeave: handleMouseLeave,
-          onTouchStart: handleTouchStart,
-          onTouchMove: handleTouchMove,
-          onTouchEnd: handleTouchEnd,
-          children: /* @__PURE__ */ jsx("div", { className: `${styles$2.techGrid} ${isDragging ? "" : styles$2.scrolling}`, children: duplicatedTech.map((tech, index) => /* @__PURE__ */ jsx(
-            "div",
-            {
-              className: styles$2.techItem,
-              children: /* @__PURE__ */ jsxs("div", { className: styles$2.techCard, children: [
-                /* @__PURE__ */ jsx("div", { className: styles$2.cardGlow }),
-                /* @__PURE__ */ jsx("div", { className: styles$2.techIcon, children: /* @__PURE__ */ jsx(tech.icon, { style: { color: tech.color } }) }),
-                /* @__PURE__ */ jsx("span", { className: styles$2.techName, children: tech.name }),
-                /* @__PURE__ */ jsx("div", { className: styles$2.cornerAccent })
-              ] })
-            },
-            `${tech.name}-${index}`
-          )) })
-        }
-      )
-    ] })
+    /* @__PURE__ */ jsx(ClaudeCodeBanner, {})
   ] });
 }
-const contactSection = "_contactSection_lded1_1";
-const backgroundPattern = "_backgroundPattern_lded1_14";
-const gridPattern = "_gridPattern_lded1_21";
-const movingGradient = "_movingGradient_lded1_40";
-const particles = "_particles_lded1_67";
-const particle = "_particle_lded1_67";
-const container$1 = "_container_lded1_96";
-const header = "_header_lded1_104";
-const badge = "_badge_lded1_121";
-const badgePulse = "_badgePulse_lded1_135";
-const badgeIcon = "_badgeIcon_lded1_154";
-const badgeText = "_badgeText_lded1_169";
-const title = "_title_lded1_179";
-const highlight = "_highlight_lded1_189";
-const subtitle = "_subtitle_lded1_207";
-const cardsGrid = "_cardsGrid_lded1_217";
-const contactCard = "_contactCard_lded1_225";
-const cardGlowFollow = "_cardGlowFollow_lded1_276";
-const ripple = "_ripple_lded1_289";
-const cardContent = "_cardContent_lded1_312";
-const iconWrapper = "_iconWrapper_lded1_321";
-const iconGlow = "_iconGlow_lded1_338";
-const icon = "_icon_lded1_321";
-const iconRing = "_iconRing_lded1_364";
-const textContent = "_textContent_lded1_384";
-const label = "_label_lded1_390";
-const value = "_value_lded1_404";
-const flag = "_flag_lded1_419";
-const arrow = "_arrow_lded1_433";
-const cornerTopLeft = "_cornerTopLeft_lded1_458";
-const cornerBottomRight = "_cornerBottomRight_lded1_459";
-const animatedBorder = "_animatedBorder_lded1_495";
-const ctaSection = "_ctaSection_lded1_527";
-const ctaCard = "_ctaCard_lded1_532";
-const ctaVideoContainer = "_ctaVideoContainer_lded1_543";
-const ctaVideo = "_ctaVideo_lded1_543";
-const ctaVideoOverlay = "_ctaVideoOverlay_lded1_562";
-const ctaContent = "_ctaContent_lded1_575";
-const ctaGlow = "_ctaGlow_lded1_582";
-const ctaTitle = "_ctaTitle_lded1_609";
-const ctaText = "_ctaText_lded1_619";
-const ctaButtons = "_ctaButtons_lded1_630";
-const btnPrimary = "_btnPrimary_lded1_637";
-const btnShine = "_btnShine_lded1_667";
-const btnIcon = "_btnIcon_lded1_698";
-const floatingElements = "_floatingElements_lded1_722";
-const floatingCircle1 = "_floatingCircle1_lded1_729";
-const floatingCircle2 = "_floatingCircle2_lded1_730";
-const floatingCircle3 = "_floatingCircle3_lded1_731";
-const languageSelector = "_languageSelector_lded1_790";
-const langButton = "_langButton_lded1_799";
-const langButtonActive = "_langButtonActive_lded1_820";
+const contactSection = "_contactSection_1xxc6_1";
+const backgroundPattern = "_backgroundPattern_1xxc6_14";
+const gridPattern = "_gridPattern_1xxc6_21";
+const movingGradient = "_movingGradient_1xxc6_40";
+const particles = "_particles_1xxc6_67";
+const particle = "_particle_1xxc6_67";
+const container$1 = "_container_1xxc6_96";
+const header = "_header_1xxc6_104";
+const badge = "_badge_1xxc6_121";
+const badgePulse = "_badgePulse_1xxc6_135";
+const badgeIcon = "_badgeIcon_1xxc6_154";
+const badgeText = "_badgeText_1xxc6_169";
+const title = "_title_1xxc6_179";
+const highlight = "_highlight_1xxc6_189";
+const subtitle = "_subtitle_1xxc6_207";
+const cardsGrid = "_cardsGrid_1xxc6_217";
+const contactCard = "_contactCard_1xxc6_225";
+const iconWrapper = "_iconWrapper_1xxc6_248";
+const animatedBorder = "_animatedBorder_1xxc6_252";
+const cardGlowFollow = "_cardGlowFollow_1xxc6_311";
+const ripple = "_ripple_1xxc6_324";
+const cardContent = "_cardContent_1xxc6_347";
+const iconGlow = "_iconGlow_1xxc6_385";
+const icon = "_icon_1xxc6_248";
+const iconRing = "_iconRing_1xxc6_421";
+const textContent = "_textContent_1xxc6_441";
+const label = "_label_1xxc6_447";
+const value = "_value_1xxc6_461";
+const flag = "_flag_1xxc6_476";
+const arrow = "_arrow_1xxc6_490";
+const cornerTopLeft = "_cornerTopLeft_1xxc6_515";
+const cornerBottomRight = "_cornerBottomRight_1xxc6_516";
+const ctaSection = "_ctaSection_1xxc6_594";
+const ctaCard = "_ctaCard_1xxc6_599";
+const ctaVideoContainer = "_ctaVideoContainer_1xxc6_610";
+const ctaVideo = "_ctaVideo_1xxc6_610";
+const ctaVideoOverlay = "_ctaVideoOverlay_1xxc6_639";
+const ctaContent = "_ctaContent_1xxc6_652";
+const ctaGlow = "_ctaGlow_1xxc6_659";
+const ctaTitle = "_ctaTitle_1xxc6_686";
+const ctaText = "_ctaText_1xxc6_696";
+const ctaButtons = "_ctaButtons_1xxc6_707";
+const btnPrimary = "_btnPrimary_1xxc6_714";
+const btnOutline = "_btnOutline_1xxc6_715";
+const btnShine = "_btnShine_1xxc6_747";
+const btnIcon = "_btnIcon_1xxc6_778";
+const floatingElements = "_floatingElements_1xxc6_802";
+const floatingCircle1 = "_floatingCircle1_1xxc6_809";
+const floatingCircle2 = "_floatingCircle2_1xxc6_810";
+const floatingCircle3 = "_floatingCircle3_1xxc6_811";
+const languageSelector = "_languageSelector_1xxc6_870";
+const langButton = "_langButton_1xxc6_879";
+const langButtonActive = "_langButtonActive_1xxc6_900";
 const styles$1 = {
   contactSection,
   backgroundPattern,
@@ -2051,10 +3688,11 @@ const styles$1 = {
   subtitle,
   cardsGrid,
   contactCard,
+  iconWrapper,
+  animatedBorder,
   cardGlowFollow,
   ripple,
   cardContent,
-  iconWrapper,
   iconGlow,
   icon,
   iconRing,
@@ -2065,7 +3703,6 @@ const styles$1 = {
   arrow,
   cornerTopLeft,
   cornerBottomRight,
-  animatedBorder,
   ctaSection,
   ctaCard,
   ctaVideoContainer,
@@ -2077,6 +3714,7 @@ const styles$1 = {
   ctaText,
   ctaButtons,
   btnPrimary,
+  btnOutline,
   btnShine,
   btnIcon,
   floatingElements,
@@ -2155,7 +3793,7 @@ function Contact() {
         /* @__PURE__ */ jsxs("div", { className: styles$1.badge, children: [
           /* @__PURE__ */ jsx("div", { className: styles$1.badgePulse }),
           /* @__PURE__ */ jsx("span", { className: styles$1.badgeIcon, children: "📬" }),
-          /* @__PURE__ */ jsx("span", { className: styles$1.badgeText, children: "Contacto" })
+          /* @__PURE__ */ jsx("span", { className: styles$1.badgeText, children: t("contact.badge") })
         ] }),
         /* @__PURE__ */ jsxs("h2", { className: styles$1.title, children: [
           t("contact.header.title.part1"),
@@ -2251,14 +3889,11 @@ function Contact() {
       /* @__PURE__ */ jsx("div", { className: styles$1.ctaSection, children: /* @__PURE__ */ jsxs("div", { className: styles$1.ctaCard, children: [
         /* @__PURE__ */ jsxs("div", { className: styles$1.ctaVideoContainer, children: [
           /* @__PURE__ */ jsx(
-            "video",
+            "img",
             {
-              autoPlay: true,
-              loop: true,
-              muted: true,
-              playsInline: true,
-              className: styles$1.ctaVideo,
-              children: /* @__PURE__ */ jsx("source", { src: "/copy_7C1BBA34-F73A-4C24-BBCD-896761F89D78.mp4", type: "video/mp4" })
+              src: "IMG_657.jpeg",
+              alt: "Background",
+              className: styles$1.ctaVideo
             }
           ),
           /* @__PURE__ */ jsx("div", { className: styles$1.ctaVideoOverlay })
@@ -2267,11 +3902,27 @@ function Contact() {
           /* @__PURE__ */ jsx("div", { className: styles$1.ctaGlow }),
           /* @__PURE__ */ jsx("h3", { className: styles$1.ctaTitle, children: t("contact.cta.title") }),
           /* @__PURE__ */ jsx("p", { className: styles$1.ctaText, children: t("contact.cta.subtitle") }),
-          /* @__PURE__ */ jsx("div", { className: styles$1.ctaButtons, children: /* @__PURE__ */ jsxs("button", { onClick: handleDownloadVCard, className: styles$1.btnPrimary, children: [
-            /* @__PURE__ */ jsx(HiDownload, { className: styles$1.btnIcon }),
-            /* @__PURE__ */ jsx("span", { children: t("contact.cta.button") }),
-            /* @__PURE__ */ jsx("div", { className: styles$1.btnShine })
-          ] }) })
+          /* @__PURE__ */ jsxs("div", { className: styles$1.ctaButtons, children: [
+            /* @__PURE__ */ jsxs("button", { onClick: handleDownloadVCard, className: styles$1.btnPrimary, children: [
+              /* @__PURE__ */ jsx(HiDownload, { className: styles$1.btnIcon }),
+              /* @__PURE__ */ jsx("span", { children: t("contact.cta.button") }),
+              /* @__PURE__ */ jsx("div", { className: styles$1.btnShine })
+            ] }),
+            /* @__PURE__ */ jsxs(
+              "a",
+              {
+                href: "https://github.com/donia1222",
+                target: "_blank",
+                rel: "noopener noreferrer",
+                className: styles$1.btnOutline,
+                children: [
+                  /* @__PURE__ */ jsx(FaGithub, { className: styles$1.btnIcon }),
+                  /* @__PURE__ */ jsx("span", { children: t("contact.cta.github") }),
+                  /* @__PURE__ */ jsx("div", { className: styles$1.btnShine })
+                ]
+              }
+            )
+          ] })
         ] })
       ] }) }),
       /* @__PURE__ */ jsxs("div", { className: styles$1.languageSelector, children: [
@@ -2290,6 +3941,14 @@ function Contact() {
             className: `${styles$1.langButton} ${language === "de" ? styles$1.langButtonActive : ""}`,
             children: "DE"
           }
+        ),
+        /* @__PURE__ */ jsx(
+          "button",
+          {
+            onClick: () => setLanguage("en"),
+            className: `${styles$1.langButton} ${language === "en" ? styles$1.langButtonActive : ""}`,
+            children: "EN"
+          }
         )
       ] })
     ] }),
@@ -2300,18 +3959,18 @@ function Contact() {
     ] })
   ] });
 }
-const footer = "_footer_m34db_1";
-const container = "_container_m34db_9";
-const copyright = "_copyright_m34db_19";
-const links = "_links_m34db_26";
-const link = "_link_m34db_26";
-const modal = "_modal_m34db_64";
-const modalContent = "_modalContent_m34db_86";
-const closeButton = "_closeButton_m34db_110";
-const modalTitle = "_modalTitle_m34db_134";
-const modalBody = "_modalBody_m34db_146";
-const note = "_note_m34db_181";
-const contact = "_contact_m34db_187";
+const footer = "_footer_119h2_1";
+const container = "_container_119h2_9";
+const copyright = "_copyright_119h2_19";
+const links = "_links_119h2_26";
+const link = "_link_119h2_26";
+const modal = "_modal_119h2_64";
+const modalContent = "_modalContent_119h2_86";
+const closeButton = "_closeButton_119h2_110";
+const modalTitle = "_modalTitle_119h2_134";
+const modalBody = "_modalBody_119h2_146";
+const note = "_note_119h2_181";
+const contact = "_contact_119h2_187";
 const styles = {
   footer,
   container,
@@ -2469,6 +4128,7 @@ const meta = ({ data }) => {
     { name: "language", content: lang === "es" ? "Spanish" : "German" },
     { name: "revisit-after", content: "7 days" },
     { name: "theme-color", content: "#ff6b35" }
+    // Será actualizado dinámicamente
   ];
 };
 function Index() {
@@ -2478,18 +4138,19 @@ function Index() {
     /* @__PURE__ */ jsx("div", { id: "servicios", children: /* @__PURE__ */ jsx(Services, {}) }),
     /* @__PURE__ */ jsx("div", { id: "proyectos", children: /* @__PURE__ */ jsx(OtherApps, {}) }),
     /* @__PURE__ */ jsx(Websites, {}),
+    /* @__PURE__ */ jsx(ScrollTextReveal, {}),
     /* @__PURE__ */ jsx("div", { id: "tech", children: /* @__PURE__ */ jsx(TechCarousel, {}) }),
     /* @__PURE__ */ jsx("div", { id: "contacto", children: /* @__PURE__ */ jsx(Contact, {}) }),
     /* @__PURE__ */ jsx(Footer, {})
   ] });
 }
-const route2 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+const route3 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
   default: Index,
   loader,
   meta
 }, Symbol.toStringTag, { value: "Module" }));
-const serverManifest = { "entry": { "module": "/assets/entry.client-B8IISQVU.js", "imports": ["/assets/components-C5Mjsiww.js"], "css": [] }, "routes": { "root": { "id": "root", "parentId": void 0, "path": "", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasErrorBoundary": true, "module": "/assets/root-BhZPlYAY.js", "imports": ["/assets/components-C5Mjsiww.js", "/assets/LanguageContext-DKIZiKeH.js"], "css": ["/assets/root-DKGt5bSo.css"] }, "routes/home.module": { "id": "routes/home.module", "parentId": "root", "path": "home/module", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasErrorBoundary": false, "module": "/assets/home.module-Cq0dpi_J.js", "imports": [], "css": ["/assets/home-dOusLAbc.css"] }, "routes/_index": { "id": "routes/_index", "parentId": "root", "path": void 0, "index": true, "caseSensitive": void 0, "hasAction": false, "hasLoader": true, "hasClientAction": false, "hasClientLoader": false, "hasErrorBoundary": false, "module": "/assets/_index-DlV8hVki.js", "imports": ["/assets/components-C5Mjsiww.js", "/assets/LanguageContext-DKIZiKeH.js"], "css": ["/assets/_index-D9OUfpGM.css"] } }, "url": "/assets/manifest-5284b8c1.js", "version": "5284b8c1" };
+const serverManifest = { "entry": { "module": "/assets/entry.client-e64VqO2l.js", "imports": ["/assets/components-QMBqyyBs.js"], "css": [] }, "routes": { "root": { "id": "root", "parentId": void 0, "path": "", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasErrorBoundary": true, "module": "/assets/root-CiXl4eiT.js", "imports": ["/assets/components-QMBqyyBs.js", "/assets/LanguageContext-CZtteaVp.js", "/assets/ColorContext-COvWmGp2.js"], "css": ["/assets/root-DZzYiTNF.css"] }, "routes/home.module": { "id": "routes/home.module", "parentId": "root", "path": "home/module", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasErrorBoundary": false, "module": "/assets/home.module-Cq0dpi_J.js", "imports": [], "css": ["/assets/home-dOusLAbc.css"] }, "routes/making-of": { "id": "routes/making-of", "parentId": "root", "path": "making-of", "index": void 0, "caseSensitive": void 0, "hasAction": false, "hasLoader": false, "hasClientAction": false, "hasClientLoader": false, "hasErrorBoundary": false, "module": "/assets/making-of-DSjclT6W.js", "imports": ["/assets/components-QMBqyyBs.js", "/assets/LanguageContext-CZtteaVp.js"], "css": ["/assets/making-of-D5cSVU_A.css"] }, "routes/_index": { "id": "routes/_index", "parentId": "root", "path": void 0, "index": true, "caseSensitive": void 0, "hasAction": false, "hasLoader": true, "hasClientAction": false, "hasClientLoader": false, "hasErrorBoundary": false, "module": "/assets/_index-DV9-iznA.js", "imports": ["/assets/components-QMBqyyBs.js", "/assets/LanguageContext-CZtteaVp.js", "/assets/ColorContext-COvWmGp2.js"], "css": ["/assets/_index-eLWRk14m.css"] } }, "url": "/assets/manifest-60207ccb.js", "version": "60207ccb" };
 const mode = "production";
 const assetsBuildDirectory = "build/client";
 const basename = "/";
@@ -2514,13 +4175,21 @@ const routes = {
     caseSensitive: void 0,
     module: route1
   },
+  "routes/making-of": {
+    id: "routes/making-of",
+    parentId: "root",
+    path: "making-of",
+    index: void 0,
+    caseSensitive: void 0,
+    module: route2
+  },
   "routes/_index": {
     id: "routes/_index",
     parentId: "root",
     path: void 0,
     index: true,
     caseSensitive: void 0,
-    module: route2
+    module: route3
   }
 };
 export {

@@ -6,10 +6,10 @@
 
 /* CSS Variables - Modo Claro */
 :root {
-  /* Colores Naranja + Grises */
-  --color-primary: #ff6b35;        /* Naranja vibrante */
-  --color-secondary: #ff8c42;      /* Naranja cálido */
-  --color-accent: #ffa366;         /* Naranja claro */
+  /* Colores Cyan + Grises (por defecto) */
+  --color-primary: #06b6d4;        /* Cyan vibrante */
+  --color-secondary: #22d3ee;      /* Cyan brillante */
+  --color-accent: #67e8f9;         /* Cyan claro */
 
   /* Fondos y textos */
   --color-bg: #1a1a1a;
@@ -37,9 +37,9 @@
 
 /* CSS Variables - Modo Oscuro */
 [data-theme="dark"] {
-  --color-primary: #ff6b35;        /* Naranja vibrante */
-  --color-secondary: #ff8c42;      /* Naranja cálido */
-  --color-accent: #ffa366;         /* Naranja claro */
+  --color-primary: #06b6d4;        /* Cyan vibrante */
+  --color-secondary: #22d3ee;      /* Cyan brillante */
+  --color-accent: #67e8f9;         /* Cyan claro */
 
   --color-bg: #0f0f0f;
   --color-bg-secondary: #1a1a1a;

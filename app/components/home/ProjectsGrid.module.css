@@ -36,7 +36,7 @@
   transform: translateX(-50%);
   width: 2px;
   height: 100px;
-  background: linear-gradient(180deg, transparent 0%, #ff6b35 50%, transparent 100%);
+  background: linear-gradient(180deg, transparent 0%, var(--color-primary) 50%, transparent 100%);
   opacity: 0;
   transition: opacity 1s ease-out 0.2s;
 }
@@ -91,8 +91,8 @@
 .badge {
   display: inline-block;
   padding: 0.5rem 1.25rem;
-  background: rgba(255, 107, 53, 0.2);
-  border: 1px solid rgba(255, 107, 53, 0.4);
+  background: color-mix(in srgb, var(--color-primary) 20%, transparent);
+  border: 1px solid color-mix(in srgb, var(--color-primary) 40%, transparent);
   border-radius: 100px;
   font-size: 0.875rem;
   font-weight: 600;
@@ -101,16 +101,16 @@
   letter-spacing: 1px;
   margin-bottom: 1.5rem;
   backdrop-filter: blur(10px);
-  box-shadow: 0 4px 12px rgba(255, 107, 53, 0.2);
+  box-shadow: 0 4px 12px color-mix(in srgb, var(--color-primary) 20%, transparent);
   animation: badgePulse 2s ease-in-out infinite;
 }
 
 @keyframes badgePulse {
   0%, 100% {
-    box-shadow: 0 4px 12px rgba(255, 107, 53, 0.2);
+    box-shadow: 0 4px 12px color-mix(in srgb, var(--color-primary) 20%, transparent);
   }
   50% {
-    box-shadow: 0 4px 20px rgba(255, 107, 53, 0.4);
+    box-shadow: 0 4px 20px color-mix(in srgb, var(--color-primary) 40%, transparent);
   }
 }
 
@@ -144,7 +144,7 @@
   transform: translate(-50%, -50%);
   width: 100px;
   height: 100px;
-  border: 3px solid rgba(255, 107, 53, 0.6);
+  border: 3px solid color-mix(in srgb, var(--color-primary) 60%, transparent);
   border-radius: 50%;
   opacity: 0;
   z-index: 4;
@@ -160,7 +160,7 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  border: 2px solid rgba(255, 107, 53, 0.4);
+  border: 2px solid color-mix(in srgb, var(--color-primary) 40%, transparent);
   border-radius: 50%;
   opacity: 0;
   animation: waveExpand 1.5s ease-out forwards;
@@ -212,12 +212,12 @@
   left: 50%;
   width: 8px;
   height: 8px;
-  background: linear-gradient(135deg, #ff6b35, #ff8c42);
+  background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
   border-radius: 50%;
   opacity: 0;
   animation: particleBurst 1.2s ease-out forwards;
   animation-delay: calc(var(--particle-index) * 0.05s + 0.4s);
-  box-shadow: 0 0 15px rgba(255, 107, 53, 0.8);
+  box-shadow: 0 0 15px color-mix(in srgb, var(--color-primary) 80%, transparent);
 }
 
 @keyframes particleBurst {
@@ -278,9 +278,9 @@
   inset: -2px;
   background: linear-gradient(
     135deg,
-    #ff6b35,
-    #ff8c42,
-    #ffa366
+    var(--color-primary),
+    var(--color-secondary),
+    var(--color-accent)
   );
   border-radius: 24px;
   opacity: 0;
@@ -321,8 +321,8 @@
     filter: blur(0) brightness(1.1);
     box-shadow:
       0 25px 70px rgba(0, 0, 0, 0.6),
-      0 0 80px rgba(255, 107, 53, 0.6),
-      0 0 120px rgba(255, 107, 53, 0.3);
+      0 0 80px color-mix(in srgb, var(--color-primary) 60%, transparent),
+      0 0 120px color-mix(in srgb, var(--color-primary) 30%, transparent);
   }
   100% {
     opacity: 1;
@@ -330,16 +330,16 @@
     filter: blur(0) brightness(1);
     box-shadow:
       0 8px 32px rgba(0, 0, 0, 0.3),
-      0 0 20px rgba(255, 107, 53, 0.2);
+      0 0 20px color-mix(in srgb, var(--color-primary) 20%, transparent);
   }
 }
 
 .card:hover {
   transform: translateY(-8px);
-  border-color: rgba(255, 107, 53, 0.4);
+  border-color: color-mix(in srgb, var(--color-primary) 40%, transparent);
   box-shadow:
     0 20px 60px rgba(0, 0, 0, 0.5),
-    0 0 40px rgba(255, 107, 53, 0.2);
+    0 0 40px color-mix(in srgb, var(--color-primary) 20%, transparent);
 }
 
 /* Featured badge */
@@ -356,7 +356,7 @@
   border-radius: 100px;
   text-transform: uppercase;
   letter-spacing: 0.5px;
-  box-shadow: 0 4px 12px rgba(255, 107, 53, 0.4);
+  box-shadow: 0 4px 12px color-mix(in srgb, var(--color-primary) 40%, transparent);
 }
 
 /* Card image */
@@ -400,8 +400,8 @@
 .category {
   display: inline-block;
   padding: 0.25rem 0.75rem;
-  background: rgba(255, 107, 53, 0.2);
-  border: 1px solid rgba(255, 107, 53, 0.3);
+  background: color-mix(in srgb, var(--color-primary) 20%, transparent);
+  border: 1px solid color-mix(in srgb, var(--color-primary) 30%, transparent);
   border-radius: 6px;
   font-size: 0.75rem;
   font-weight: 600;
@@ -445,8 +445,8 @@
 }
 
 .card:hover .tag {
-  background: rgba(255, 107, 53, 0.2);
-  border-color: rgba(255, 107, 53, 0.4);
+  background: color-mix(in srgb, var(--color-primary) 20%, transparent);
+  border-color: color-mix(in srgb, var(--color-primary) 40%, transparent);
 }
 
 /* Card footer */
@@ -475,7 +475,7 @@
 
 .btnView:hover {
   transform: translateX(4px);
-  box-shadow: 0 4px 12px rgba(255, 107, 53, 0.4);
+  box-shadow: 0 4px 12px color-mix(in srgb, var(--color-primary) 40%, transparent);
 }
 
 /* Platforms */

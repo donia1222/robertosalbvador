@@ -76,7 +76,7 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => {
     { name: "robots", content: "index, follow" },
     { name: "language", content: lang === "es" ? "Spanish" : "German" },
     { name: "revisit-after", content: "7 days" },
-    { name: "theme-color", content: "#ff6b35" },
+    { name: "theme-color", content: "#06b6d4" }, // Cyan por defecto, será actualizado dinámicamente
   ];
 };
 

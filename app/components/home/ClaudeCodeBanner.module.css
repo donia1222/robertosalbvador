@@ -22,8 +22,8 @@
   gap: 0.5rem;
   padding: 0.4rem 1.2rem;
   border-radius: 100px;
-  background: rgba(255, 107, 53, 0.1);
-  border: 1px solid rgba(255, 107, 53, 0.3);
+  background: color-mix(in srgb, var(--color-primary) 10%, transparent);
+  border: 1px solid color-mix(in srgb, var(--color-primary) 30%, transparent);
   margin-bottom: 2rem;
   opacity: 0;
   transform: translateY(10px);
@@ -38,7 +38,7 @@
 .badgeText {
   font-size: 0.75rem;
   font-weight: 600;
-  color: #ff8c42;
+  color: var(--color-secondary);
   text-transform: uppercase;
   letter-spacing: 1px;
   font-family: 'Sora', sans-serif;
@@ -48,7 +48,7 @@
 
 .terminal {
   background: rgba(30, 30, 30, 0.7);
-  border: 1px solid rgba(255, 107, 53, 0.2);
+  border: 1px solid color-mix(in srgb, var(--color-primary) 20%, transparent);
   border-radius: 0.75rem;
   overflow: hidden;
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
@@ -69,8 +69,8 @@
   display: flex;
   align-items: center;
   padding: 0.75rem 1rem;
-  background: rgba(255, 107, 53, 0.05);
-  border-bottom: 1px solid rgba(255, 107, 53, 0.1);
+  background: color-mix(in srgb, var(--color-primary) 5%, transparent);
+  border-bottom: 1px solid color-mix(in srgb, var(--color-primary) 10%, transparent);
 }
 
 .terminalDots {
@@ -138,7 +138,7 @@
 
 /* Tipos de líneas */
 .command .lineContent {
-  color: #ff8c42;
+  color: var(--color-secondary);
   font-weight: 500;
 }
 
@@ -152,7 +152,7 @@
 
 .cursor {
   display: inline-block;
-  color: #ff8c42;
+  color: var(--color-secondary);
   animation: blink 1s step-end infinite;
   font-weight: 400;
 }
@@ -205,7 +205,7 @@
   font-weight: 700;
   color: #f5f5f5;
   margin-bottom: 1rem;
-  background: linear-gradient(135deg, #ff6b35, #ff8c42);
+  background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -230,7 +230,7 @@
   padding: 2rem;
   border-radius: 1rem;
   background: rgba(255, 107, 53, 0.08);
-  border: 1px solid rgba(255, 107, 53, 0.2);
+  border: 1px solid color-mix(in srgb, var(--color-primary) 20%, transparent);
   backdrop-filter: blur(10px);
   opacity: 0;
   transform: translateY(15px);
@@ -250,7 +250,7 @@
   font-family: 'Sora', sans-serif;
   font-size: 2.5rem;
   font-weight: 700;
-  background: linear-gradient(135deg, #ff6b35, #ff8c42);
+  background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -273,7 +273,7 @@
   background: linear-gradient(
     180deg,
     transparent 0%,
-    rgba(255, 107, 53, 0.3) 50%,
+    color-mix(in srgb, var(--color-primary) 30%, transparent) 50%,
     transparent 100%
   );
 }
@@ -306,7 +306,7 @@
     background: linear-gradient(
       90deg,
       transparent 0%,
-      rgba(255, 107, 53, 0.3) 50%,
+      color-mix(in srgb, var(--color-primary) 30%, transparent) 50%,
       transparent 100%
     );
   }
