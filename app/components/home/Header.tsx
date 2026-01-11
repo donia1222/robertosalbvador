@@ -261,7 +261,7 @@ export function Header() {
 
           {/* Language selector */}
           <div className={styles.languageSelector}>
-            <span className={styles.selectorLabel}>Language:</span>
+     
             <div className={styles.languageOptions}>
               <button
                 onClick={() => setLanguage('es')}
